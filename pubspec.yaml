@@ -1,0 +1,67 @@
+name: silvio
+description: Krijg beter inzicht in je cijfers
+publish_to: 'none'
+
+# The following defines the version and build number for your application.
+# A version number is three numbers separated by dots, like 1.2.43
+# followed by an optional build number separated by a +.
+# Both the version and the builder number may be overridden in flutter
+# build by specifying --build-name and --build-number, respectively.
+# In Android, build-name is used as versionName while build-number used as versionCode.
+# Read more about Android versioning at https://developer.android.com/studio/publish/versioning
+# In iOS, build-name is used as CFBundleShortVersionString while build-number is used as CFBundleVersion.
+# Read more about iOS versioning at
+# https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
+# In Windows, build-name is used as the major, minor, and patch parts
+# of the product and file versions while build-number is used as the build suffix.
+version: 0.0.1+99
+
+environment:
+  sdk: '>=2.19.6 <3.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations: 
+    sdk: flutter
+
+  cupertino_icons: ^1.0.2
+  pointycastle: ^3.6.2
+  uni_links: ^0.5.1
+  url_launcher: ^6.1.9
+  dio: ^5.1.1
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  fl_chart: ^0.62.0
+  dynamic_color: ^1.6.2
+  background_fetch: ^1.1.5
+  flutter_local_notifications: ^14.1.0
+  webview_flutter: ^4.0.6
+  fluttericon: ^2.0.0
+  intl: ^0.18.0 
+  file_picker: ^5.2.6
+  permission_handler: ^10.2.0
+  collection: ^1.17.0
+  carousel_slider: ^4.2.1
+  provider: ^6.0.5
+  flutter_staggered_grid_view: ^0.6.2
+  qr_flutter: ^4.0.0
+  mobile_scanner: ^3.2.0
+  image_picker: ^0.8.7+4
+  cross_file: ^0.3.3+4
+  package_info_plus: ^4.0.1
+  google_mobile_ads: ^3.0.0
+  app_tracking_transparency: ^2.0.4
+  path_provider: ^2.0.15
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+  hive_generator: ^2.0.0
+  build_runner: ^2.3.3
+
+flutter:
+
+  uses-material-design: true
+  generate: true

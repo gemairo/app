@@ -1,0 +1,182 @@
+{
+  "@loginWith": {
+    "placeholders": {
+      "method": {
+        "type": "String"
+      }
+    }
+  },
+  "@resetTurnedOffGradesExpl": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "@sometimeAgo": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "@termsContent": {
+    "placeholders": {
+      "company": {
+        "type": "String"
+      }
+    }
+  },
+  "@testInClassroom": {
+    "placeholders": {
+      "classroom": {
+        "type": "String"
+      },
+      "schoolHour": {
+        "type": "int"
+      },
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "@totalWeight": {
+    "placeholders": {
+      "weight": {
+        "format": "compact",
+        "type": "double"
+      }
+    }
+  },
+  "accountExistExpl": "Scan the QR-code to share this account with others.\nIt is only valid once.",
+  "accountExistWarning": "This account already exists!",
+  "activeSchoolyears": "Active schoolyears",
+  "activeSchoolyearsExpl": "Active schoolyears",
+  "add": "Add",
+  "addAccount": "Add another account",
+  "agree": "I agree",
+  "amountOfInsufficient": "failing grades",
+  "amountOfSufficient": "sufficient grades",
+  "apiSettings": "Api settings",
+  "apiSettingsExpl": "Api specific settings",
+  "assignment": "Assignment",
+  "autoDarkMode": "Automatic Dark mode",
+  "autoDarkModeExpl": "Follow the system theme",
+  "average": "Average",
+  "averageWeight": "Average weight",
+  "averages": "Averages",
+  "back": "Go back",
+  "calculate": "Calculate",
+  "caluclateWithFoundSubject": "Found subject",
+  "caluclateWithFoundSubjectExpl": "Calculate with the found subject",
+  "changeProfilePicture": "Change your profile picture",
+  "chooseaSchool": "Choose a school",
+  "darkMode": "Dark Mode",
+  "dateRange": "Daterange",
+  "days": "days",
+  "discordExpl": "Get in touch",
+  "exam": "Exam",
+  "exportAccounts": "Export accounts",
+  "exportAccountsExpl": "Archive the logged in accounts for a rainy day in the future",
+  "feedbackAndContact": "Feedback & Contact",
+  "fetchedGrades": "Fetched grades",
+  "filter": "Filter",
+  "filterFor": "Filter for grades, descriptions, and teachers",
+  "filters": "Filters",
+  "gContinue": "Continue",
+  "githubExpl": "All code for this app is publicly available on Github",
+  "grade": "Grade",
+  "gradeSettings": "Grade settings",
+  "grades": "Grades",
+  "highest": "Highest",
+  "histogram": "Histogram",
+  "homework": "Homework",
+  "hours": "hours",
+  "importFromFile": "Import from file",
+  "latestGrade": "Latest grade",
+  "licenses": "Licenses",
+  "licensesExpl": "Look at the licenses",
+  "loadMore": "Load more",
+  "localfileFailedWarning": "It is possible that the account already exists or that the file is invalid.",
+  "loginWith": "Login with {method}",
+  "loginWithQR": "Login with a QR-code",
+  "logout": "Logout",
+  "logoutExpl": "Log this profile out",
+  "lookAndFeel": "Look & Feel",
+  "lowest": "Lowest",
+  "minMax": "Min/Max",
+  "minutes": "minutes",
+  "newGradesNotificationTitle": "New grades in Silvio",
+  "nextTest": "Next test",
+  "noOncomingTests": "No upcoming tests",
+  "noOtherSchoolyears": "No other schoolyears",
+  "noRecentGrades": "No recent grades",
+  "notifications": "Notifications",
+  "notificationsExpl": "Let Silvio notify you about new grades or tests",
+  "notificationsPersonGrades": "Grade notifications",
+  "notificationsPersonTests": "Test notifications",
+  "notificationsPersonGradesExpl": "Use this account when checking for new grades",
+  "notificationsPersonTestsExpl": "Use this account when checking for new tests",
+  "number": "Disabled grades",
+  "oncomingTests": "Upcoming tests",
+  "openInBrowser": "Open in browser",
+  "oralExam": "Oral exam",
+  "other": "Other",
+  "otherSchoolyears": "Other schoolyears",
+  "periods": "Periods",
+  "personalSettings": "Personal settings",
+  "precentInsufficient": "Precent insufficient",
+  "precentSufficient": "Precent sufficient",
+  "profilePicture": "Profile picture",
+  "recentGrades": "Recent grades",
+  "reload": "Reload",
+  "reloadGrade": "Reload this grades",
+  "resetTurnedOffGrades": "Reset grades",
+  "resetTurnedOffGradesExpl": "Reset {number} disabled grades",
+  "rounded": "Rounded",
+  "searchExpl": "Search for grades",
+  "searchForGradesdescriptionsAndTeachers": "Search for values, descriptions and teachers",
+  "searchStatistics": "Search Statistics",
+  "searchView": "Search",
+  "searchaSchool": "Search for schools",
+  "seeStatistics": "See statistics",
+  "settings": "Settings",
+  "somethingWentWrong": "Whoops, something when wrong!",
+  "sometimeAgo": "{time} ago",
+  "subjects": "Subjects",
+  "subjectsView": "Subjects",
+  "subjectsViewExpl": "Go to all subjects",
+  "sufficientBorder": "Sufficient limit",
+  "sufficientBorderExpl": "Set when a grade is a pass.",
+  "teachers": "Teachers",
+  "terms": "Terms",
+  "termsContent": "Silvio is a private initiative and is not affiliated with, or part of, {company}.\nAll data is stored locally and will never be shared with others.\nSometimes the app may not function properly, if this case send an email to silvio@harrydekat.dev or describe the error on Github. For the full privacy policy, visit silvio.harrydekat.dev/privacypolicy and for terms of service, visit silvio.harrydekat.dev/termsofservice. By clicking \"I agree\" you agree to this and {company}'s statements.",
+  "test": "Test",
+  "testInClassroom": "{schoolHour}: {type} in {classroom}",
+  "totalWeight": "Total weight: {weight}",
+  "useLaterReciviedGrades": "Later received grades",
+  "useLaterReciviedGradesExpl": "Use later received grades in calculations",
+  "useMaterialYou": "Use Material You",
+  "useMaterialYouExpl": "Follow the system acccent color (Android S+)",
+  "useThisGradeForCalculations": "Use this grade",
+  "usedLanguage": "Used language",
+  "usedLanguageExpl": "Choose the language you prefer",
+  "warning": "Look out: {warning}",
+  "warningNonSubjectSpecificGrades": "Non-subject specific grades are being used",
+  "warningfilterActive": "A filter is active",
+  "weight": "Weight",
+  "whatIsGoingToBeMyNewAverage": "What is going to be my new average?",
+  "whatIsGoingToBeMyNewAverageRedo": "What is going to be my new average if I retake?",
+  "whatShouldIGet": "What grade should I get?",
+  "whatShouldIGetRedo": "What grade should I get if I retake?",
+  "whileAccountGradesFetched": "Your grades are being fetched, please wait, this can take a while",
+  "whileAccountInformationFetched": "Account information is being fetched",
+  "writtenExam": "Witten exam",
+  "yearView": "Annual overview",
+  "yearViewExpl": "Go to Annual overview",
+  "showPTA": "Show PTA",
+  "showDate": "Show date",
+  "showWeight": "Show weight",
+  "showChangeInAverage": "Show change in average",
+  "showChangeInSubjectAverage": "Show change in subject average"
+}

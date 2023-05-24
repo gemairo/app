@@ -1,0 +1,9 @@
+files:
+  - source: /lib/l10n/app_nl.arb
+    translation: /lib/l10n/app_%two_letters_code%.arb
+targets:
+  - name: Arbs
+    sources:
+      - /lib/l10n/app_nl.arb
+    file: /lib/l10n/app_%two_letters_code%.arb
+    format: arb-export

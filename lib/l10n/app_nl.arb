@@ -1,0 +1,182 @@
+{
+  "@loginWith": {
+    "placeholders": {
+      "method": {
+        "type": "String"
+      }
+    }
+  },
+  "@resetTurnedOffGradesExpl": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "@sometimeAgo": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "@termsContent": {
+    "placeholders": {
+      "company": {
+        "type": "String"
+      }
+    }
+  },
+  "@testInClassroom": {
+    "placeholders": {
+      "classroom": {
+        "type": "String"
+      },
+      "schoolHour": {
+        "type": "int"
+      },
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "@totalWeight": {
+    "placeholders": {
+      "weight": {
+        "format": "compact",
+        "type": "double"
+      }
+    }
+  },
+  "accountExistExpl": "Scan de QR code, om dit account te delen met anderen.\nHij is maar een keer geldig.",
+  "accountExistWarning": "Dit account bestaat al!",
+  "activeSchoolyears": "Active schooljaren",
+  "activeSchoolyearsExpl": "Active schooljaren",
+  "add": "Toevoegen",
+  "addAccount": "Voeg nog een account toe",
+  "agree": "Ik ga akkoord",
+  "amountOfInsufficient": "onvoldoendes",
+  "amountOfSufficient": "voldoendes",
+  "apiSettings": "Api instellingen",
+  "apiSettingsExpl": "Api specifieke instellingen",
+  "assignment": "Opdracht",
+  "autoDarkMode": "Automatische Duistere Modus",
+  "autoDarkModeExpl": "Volg het thema van het systeem",
+  "average": "Gemiddelde",
+  "averageWeight": "Gemiddelde weging",
+  "averages": "Gemiddeldes",
+  "back": "Ga terug",
+  "calculate": "Bereken",
+  "caluclateWithFoundSubject": "Gevonden vak",
+  "caluclateWithFoundSubjectExpl": "Reken met het gevonden vak",
+  "changeProfilePicture": "Verander je profiel foto",
+  "chooseaSchool": "Kies een school",
+  "darkMode": "Duistere Modus",
+  "dateRange": "Datumbereik",
+  "days": "dagen",
+  "discordExpl": "Kom in contact",
+  "exam": "Tentamen",
+  "exportAccounts": "Exporteer accounts",
+  "exportAccountsExpl": "Archiveer de ingelogde accounts voor een regenachtige dag in de toekomst.",
+  "feedbackAndContact": "Feedback & Contact",
+  "fetchedGrades": "Opgehaalde cijfers",
+  "filter": "Filter",
+  "filterFor": "Filter voor waardes, beschrijvingen en docenten",
+  "filters": "Filters",
+  "gContinue": "Ga verder",
+  "githubExpl": "Alle code voor deze app is publiek te vinden op Github",
+  "grade": "Cijfer",
+  "gradeSettings": "Cijfer instellingen",
+  "grades": "Cijfers",
+  "highest": "Hoogste",
+  "histogram": "Histogram",
+  "homework": "Huiswerk",
+  "hours": "uur",
+  "importFromFile": "Importeer van een bestand",
+  "latestGrade": "Laatste cijfer",
+  "licenses": "Licenties",
+  "licensesExpl": "Bestudeer de licenties",
+  "loadMore": "Laad meer",
+  "localfileFailedWarning": "Het is mogelijk dat het account al bestaat of dat het bestand ongeldig is.",
+  "loginWith": "Login met {method}",
+  "loginWithQR": "Inloggen met QR-code",
+  "logout": "Uitloggen",
+  "logoutExpl": "Log dit profiel uit",
+  "lookAndFeel": "Uiterlijk & Gebruik",
+  "lowest": "Laagste",
+  "minMax": "Min/Max",
+  "minutes": "minuten",
+  "newGradesNotificationTitle": "Nieuwe cijfers in Silvio",
+  "nextTest": "Volgende toets",
+  "noOncomingTests": "Geen aankomende toetsen",
+  "noOtherSchoolyears": "Geen andere schooljaren",
+  "noRecentGrades": "Geen recente cijfers",
+  "notifications": "Notificaties",
+  "notificationsExpl": "Krijg een bericht over nieuwe cijfers of toetsen",
+  "notificationsPersonGrades": "Cijfer notificaties",
+  "notificationsPersonTests": "Toets notificaties",
+  "notificationsPersonGradesExpl": "Gebruik dit account bij het controleren voor nieuwe cijfers",
+  "notificationsPersonTestsExpl": "Gebruik dit account bij het controleren voor nieuwe toetsen",
+  "number": "Uitgezette cijfers",
+  "oncomingTests": "Komende toetsen",
+  "openInBrowser": "Open in browser",
+  "oralExam": "Mondelinge overhoring",
+  "other": "Overige",
+  "otherSchoolyears": "Andere schooljaren",
+  "periods": "Periodes",
+  "personalSettings": "Persoonlijke instellingen",
+  "precentInsufficient": "Procent onvoldoende",
+  "precentSufficient": "Procent voldoende",
+  "profilePicture": "Profielfoto",
+  "recentGrades": "Recente cijfers",
+  "reload": "Herlaad",
+  "reloadGrade": "Herlaad dit cijfer",
+  "resetTurnedOffGrades": "Reset cijfers",
+  "resetTurnedOffGradesExpl": "Reset {number} uitgeschakelde cijfers",
+  "rounded": "Afgerond",
+  "searchExpl": "Zoek naar cijfers",
+  "searchForGradesdescriptionsAndTeachers": "Zoek voor waardes, beschrijvingen en docenten",
+  "searchStatistics": "Zoek statistieken",
+  "searchView": "Zoeken",
+  "searchaSchool": "Zoek voor scholen",
+  "seeStatistics": "Zie statistieken",
+  "settings": "Instellingen",
+  "somethingWentWrong": "Oeps, er ging wat fout!",
+  "sometimeAgo": "{time} geleden",
+  "subjects": "Vakken",
+  "subjectsView": "Vakken",
+  "subjectsViewExpl": "Ga naar alle Vakken",
+  "sufficientBorder": "Voldoende grens",
+  "sufficientBorderExpl": "Stel in wanneer een cijfer een voldoende is.",
+  "teachers": "Docenten",
+  "terms": "Voorwaarden",
+  "termsContent": "Silvio is een particulier initiatief en is niet gelieerd aan, of onderdeel van, {company}.\nAlle gegevens worden lokaal opgeslagen en zullen nooit met anderen worden gedeeld.\nSoms werkt de app niet naar behoren, stuur in dit geval een e-mail naar silvio@harrydekat.dev of beschrijf de fout op Github. Ga voor het volledige privacybeleid naar silvio.harrydekat.dev/privacypolicy en ga voor de servicevoorwaarden naar silvio.harrydekat.dev/termsofservice. Door op \"Ik ga akkoord\" te klikken, gaat u akkoord met deze en de verklaringen van {company}.",
+  "test": "Proefwerk",
+  "testInClassroom": "{schoolHour}: {type} in {classroom}",
+  "totalWeight": "Totale weging: {weight}",
+  "useLaterReciviedGrades": "later behaalde cijfers",
+  "useLaterReciviedGradesExpl": "Gebruik later behaalde cijfers in berekeningen",
+  "useMaterialYou": "Gebruik Material You",
+  "useMaterialYouExpl": "Volg de kleur van het systeem (Android S+)",
+  "useThisGradeForCalculations": "Gebruik dit cijfer",
+  "usedLanguage": "Gebruikte taal",
+  "usedLanguageExpl": "Kies de gewenste taal",
+  "warning": "Let op: {warning}",
+  "warningNonSubjectSpecificGrades": "Er worden niet-vakspecifieke cijfers gebruikt",
+  "warningfilterActive": "Er is een filter actief",
+  "weight": "Weging",
+  "whatIsGoingToBeMyNewAverage": "Wat ga ik staan?",
+  "whatIsGoingToBeMyNewAverageRedo": "Wat ga ik staan als ik herkans?",
+  "whatShouldIGet": "Wat moet ik halen?",
+  "whatShouldIGetRedo": "Wat moet ik halen als ik herkans?",
+  "whileAccountGradesFetched": "Je cijfers worden opgehaald, dit kan even duren.",
+  "whileAccountInformationFetched": "Account gegevens worden opgehaald",
+  "writtenExam": "Schriftelijke overhoring",
+  "yearView": "Jaaroverzicht",
+  "yearViewExpl": "Ga naar het Jaaroverzicht",
+  "showPTA": "Toon PTA",
+  "showDate": "Toon datum",
+  "showWeight": "Toon gewicht",
+  "showChangeInAverage": "Toon verandering in het gemiddelde",
+  "showChangeInSubjectAverage": "Toon verandering in het vak gemiddelde"
+}

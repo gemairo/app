@@ -1,0 +1,294 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:silvio/screens/search.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import 'package:silvio/apis/account_manager.dart';
+import 'package:silvio/hive/adapters.dart';
+import 'package:silvio/hive/extentions.dart';
+
+import 'package:silvio/screens/subject.dart';
+import 'package:silvio/screens/subjects.dart';
+import 'package:silvio/screens/year.dart';
+
+List<NavigationDestination> appBarDestinations(BuildContext context) => [
+      NavigationDestination(
+        tooltip: AppLocalizations.of(context)!.yearViewExpl,
+        icon: const Icon(Icons.auto_awesome_outlined),
+        label: AppLocalizations.of(context)!.yearView,
+        selectedIcon: const Icon(Icons.auto_awesome),
+      ),
+      NavigationDestination(
+        tooltip: AppLocalizations.of(context)!.subjectsViewExpl,
+        icon: const Icon(Icons.book_outlined),
+        label: AppLocalizations.of(context)!.subjects,
+        selectedIcon: const Icon(Icons.book),
+      ),
+      NavigationDestination(
+        tooltip: AppLocalizations.of(context)!.searchExpl,
+        icon: const Icon(Icons.search_outlined),
+        label: AppLocalizations.of(context)!.searchView,
+        selectedIcon: const Icon(Icons.search),
+      ),
+    ];
+
+List<NavigationRailDestination> navRailDestinations(BuildContext context) =>
+    appBarDestinations(context)
+        .map(
+          (destination) => NavigationRailDestination(
+            icon: Tooltip(
+              message: destination.label,
+              child: destination.icon,
+            ),
+            selectedIcon: Tooltip(
+              message: destination.label,
+              child: destination.selectedIcon,
+            ),
+            label: Text(destination.label),
+          ),
+        )
+        .toList();
+
+class SilvioNavigationRail extends StatelessWidget {
+  const SilvioNavigationRail({
+    super.key,
+    this.selectedIndex = 0,
+    this.onSelectItem,
+  });
+
+  final void Function(int)? onSelectItem;
+  final int selectedIndex;
+
+  @override
+  Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      systemNavigationBarColor: Colors.transparent,
+    ));
+
+    return NavigationRail(
+      labelType: NavigationRailLabelType.selected,
+      leading: const Padding(
+        padding: EdgeInsets.symmetric(vertical: 16),
+        child: Icon(
+          Icons.query_stats_rounded,
+          size: 24,
+        ),
+      ),
+      destinations: navRailDestinations(context),
+      groupAlignment: 0,
+      selectedIndex: selectedIndex,
+      onDestinationSelected: onSelectItem,
+    );
+  }
+}
+
+class SilvioNavigationDrawer extends StatelessWidget {
+  const SilvioNavigationDrawer({
+    super.key,
+    this.selectedIndex = 0,
+    this.onSelectItem,
+  });
+
+  final void Function(int)? onSelectItem;
+  final int selectedIndex;
+
+  @override
+  Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      systemNavigationBarColor: Colors.transparent,
+    ));
+
+    return NavigationDrawer(
+      selectedIndex: selectedIndex,
+      onDestinationSelected: onSelectItem,
+      children: [
+        const Padding(
+            padding: EdgeInsets.symmetric(vertical: 28),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.query_stats_rounded,
+                ),
+                Text(
+                  " Silvio",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                )
+              ],
+            )),
+        ...navRailDestinations(context)
+            .map((dest) => NavigationDrawerDestination(
+                icon: dest.icon,
+                selectedIcon: dest.selectedIcon,
+                label: dest.label))
+            .toList()
+      ],
+    );
+  }
+}
+
+class SilvioNavigationBar extends StatelessWidget {
+  const SilvioNavigationBar({
+    super.key,
+    this.screenIndex = 0,
+    this.onSelectItem,
+  });
+
+  final int screenIndex;
+  final void Function(int)? onSelectItem;
+
+  @override
+  Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      systemNavigationBarColor:
+          Theme.of(context).navigationBarTheme.backgroundColor,
+    ));
+
+    return NavigationBar(
+      destinations: appBarDestinations(context),
+      selectedIndex: screenIndex,
+      onDestinationSelected: onSelectItem,
+    );
+  }
+}
+
+class ScreensSwitch extends StatelessWidget {
+  const ScreensSwitch({super.key, required this.index});
+  final int index;
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedSwitcher(
+        duration: const Duration(milliseconds: 250),
+        transitionBuilder: (Widget child, Animation<double> animation) {
+          return FadeTransition(opacity: animation, child: child);
+        },
+        child: Builder(
+          key: ValueKey<int>(index),
+          builder: (context) {
+            switch (index) {
+              case 0:
+                return const SchoolYearStatisticsView();
+              case 1:
+                return const SubjectsListView();
+              case 2:
+                return const SearchView();
+              default:
+                return const SchoolYearStatisticsView();
+            }
+          },
+        ));
+  }
+}
+
+void changeSchoolYear(BuildContext context, {required int newid}) {
+  //Clear filters and change the active school year.
+  final AccountProvider acP =
+      Provider.of<AccountProvider>(context, listen: false);
+  acP.changeSchoolYear(newid);
+
+  //If the user is viewing a subject that also exists in the new school year Silvio opens the page on that subject
+  if (ModalRoute.of(context)!.settings.name != null &&
+      ModalRoute.of(context)!.settings.name!.contains("SubjectStatistics")) {
+    //A subject view is open.
+    List<Subject> sameSubjects = acP.person.activeSchoolYear.grades.subjects
+        .where((subject) =>
+            subject.name ==
+            ModalRoute.of(context)!.settings.name!.split("/")[2])
+        .toList();
+
+    if (sameSubjects.isNotEmpty) {
+      //A subject with the same name has been found
+      Navigate().replace(
+          context,
+          SubjectStatisticsView(
+            subject: sameSubjects.first,
+          ),
+          "SubjectStatistics/${sameSubjects.first.id}/${sameSubjects.first.name}");
+    } else {
+      //A subject with the same name has not been found, returning to yearly stats.
+      Navigator.pop(context);
+    }
+  }
+}
+
+void changeProfile(BuildContext context, {required int newid}) {
+  final AccountProvider acP =
+      Provider.of<AccountProvider>(context, listen: false);
+  acP.changeAccount(newid);
+
+  //Is the subject view open?
+  if (ModalRoute.of(context)!.settings.name != null &&
+      ModalRoute.of(context)!.settings.name!.contains("SubjectStatistics")) {
+    //Check if new active profile has same subject as opened.
+    Person newActiveProfile = AccountManager()
+        .personList
+        .firstWhere((person) => person.uuid == newid);
+    List<Subject> sameSubjects = newActiveProfile
+        .activeSchoolYear.grades.subjects
+        .where((subject) =>
+            subject.name ==
+            ModalRoute.of(context)!.settings.name!.split("/")[2])
+        .toList();
+
+    if (sameSubjects.isNotEmpty) {
+      //A subject with the same name has been found
+
+      //Current active QuarterCode filters are compared to the new possible QuarterCode filters
+      Set<String> activeQuarterCodeFilters = newActiveProfile.activeFilters
+          .where((filter) => filter.type == FilterTypes.quarterCode)
+          .map((e) => e.filter.toString())
+          .toSet();
+
+      Set<String> newPossibleQuarterCodes = sameSubjects.first.grades
+          .map((e) => e.schoolQuarter!.id.toString())
+          .toSet();
+
+      Set<String> toBeDisabledFilters =
+          activeQuarterCodeFilters.difference(newPossibleQuarterCodes);
+
+      //Removing all the filters that are not usefull
+      newActiveProfile.activeFilters.removeWhere((filter) =>
+          filter.type == FilterTypes.quarterCode &&
+          toBeDisabledFilters.contains(filter.filter));
+
+      Navigate().replace(
+          context,
+          SubjectStatisticsView(
+            subject: sameSubjects.first,
+          ),
+          "SubjectStatistics/${sameSubjects.first.id}/${sameSubjects.first.name}");
+    } else {
+      //A subject with the same name has not been found, returning to yearly stats.
+      Navigator.pop(context);
+    }
+  }
+}
+
+class Navigate {
+  static String oldName = "";
+
+  void to(BuildContext context, Widget route, String name) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => route, settings: RouteSettings(name: name)));
+  }
+
+  void replace(BuildContext context, Widget route, String name) {
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => route, settings: RouteSettings(name: name)));
+  }
+
+  void replaceAll<T extends Object?>(
+      BuildContext context, Widget route, String name) {
+    Navigator.of(context).popUntil((r) => r.isFirst);
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => route, settings: RouteSettings(name: name)));
+  }
+}
