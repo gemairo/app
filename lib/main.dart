@@ -30,9 +30,11 @@ Future<void> initHive() async {
   if (!Hive.isAdapterRegistered(14)) Hive.registerAdapter(ConfigAdapter());
 
   if (!Hive.isAdapterRegistered(11)) Hive.registerAdapter(SchoolYearAdapter());
-  if (!Hive.isAdapterRegistered(10)) Hive.registerAdapter(SchoolQuarterAdapter());
+  if (!Hive.isAdapterRegistered(10))
+    Hive.registerAdapter(SchoolQuarterAdapter());
   if (!Hive.isAdapterRegistered(9)) Hive.registerAdapter(SubjectAdapter());
-  if (!Hive.isAdapterRegistered(12)) Hive.registerAdapter(CalendarEventAdapter());
+  if (!Hive.isAdapterRegistered(12))
+    Hive.registerAdapter(CalendarEventAdapter());
   if (!Hive.isAdapterRegistered(7)) Hive.registerAdapter(GradeAdapter());
 
   if (!Hive.isAdapterRegistered(1)) Hive.registerAdapter(AccountAdapter());
@@ -41,9 +43,12 @@ Future<void> initHive() async {
   if (!Hive.isAdapterRegistered(4)) Hive.registerAdapter(ApiStorageAdapter());
 
   if (!Hive.isAdapterRegistered(2)) Hive.registerAdapter(AccountTypesAdapter());
-  if (!Hive.isAdapterRegistered(3)) Hive.registerAdapter(AccountAPITypesAdapter());
-  if (!Hive.isAdapterRegistered(15)) Hive.registerAdapter(GradeListBadgesAdapter());
-  if (!Hive.isAdapterRegistered(13)) Hive.registerAdapter(CalendarEventTypesAdapter());
+  if (!Hive.isAdapterRegistered(3))
+    Hive.registerAdapter(AccountAPITypesAdapter());
+  if (!Hive.isAdapterRegistered(15))
+    Hive.registerAdapter(GradeListBadgesAdapter());
+  if (!Hive.isAdapterRegistered(13))
+    Hive.registerAdapter(CalendarEventTypesAdapter());
   if (!Hive.isAdapterRegistered(8)) Hive.registerAdapter(GradeTypeAdapter());
 }
 
@@ -69,9 +74,7 @@ void main() async {
   MobileAds.instance.updateRequestConfiguration(requestConfiguration);
 
   runApp(const Silvio());
-  if (!kIsWeb) {
-    BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
-  }
+  BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
 }
 
 class Silvio extends StatefulWidget {

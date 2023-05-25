@@ -1,13 +1,12 @@
 import 'dart:convert';
 import 'package:collection/collection.dart';
-import 'package:flutter/foundation.dart';
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:silvio/hive/extentions.dart';
 import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'dart:io' show Platform;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:silvio/apis/account_manager.dart';
@@ -95,43 +94,58 @@ class _SettingsView extends State<SettingsView> {
                 Silvio.of(context).update();
               },
             ),
-            SwitchListTile(
-              title: Text(AppLocalizations.of(context)!.useMaterialYou),
-              secondary: const Icon(Icons.color_lens),
-              subtitle: Text(AppLocalizations.of(context)!.useMaterialYouExpl),
-              value: (!kIsWeb && Platform.isAndroid && config.useMaterialYou),
-              onChanged: (!kIsWeb && Platform.isAndroid)
-                  ? (bool value) {
-                      config.useMaterialYou = value;
-                      config.save;
-                      setState(() {});
-                      Silvio.of(context).update();
-                    }
-                  : null,
-            ),
-            if (kIsWeb || !config.useMaterialYou || !Platform.isAndroid)
-              ListTile(
-                leading: const Icon(Icons.format_color_fill),
-                enabled: !config.useMaterialYou,
-                subtitle: Wrap(
-                  alignment: WrapAlignment.spaceEvenly,
+            FutureBuilder(
+              future: DynamicColorPlugin.getCorePalette(),
+              builder: (context, snapshot) {
+                return Column(
                   children: [
-                    ...material3Colors.values.map((value) => IconButton(
-                          icon: const Icon(Icons.radio_button_unchecked),
-                          color: value,
-                          isSelected:
-                              config.activeMaterialYouColorInt == value.value,
-                          selectedIcon: const Icon(Icons.circle),
-                          onPressed: () {
-                            config.activeMaterialYouColorInt = value.value;
-                            config.save();
-                            setState(() {});
-                            Silvio.of(context).update();
-                          },
-                        ))
+                    SwitchListTile(
+                      title: Text(AppLocalizations.of(context)!.useMaterialYou),
+                      secondary: const Icon(Icons.color_lens),
+                      subtitle: Text(
+                          AppLocalizations.of(context)!.useMaterialYouExpl),
+                      value: config.useMaterialYou,
+                      onChanged:
+                          snapshot.connectionState == ConnectionState.done &&
+                                  snapshot.data != null
+                              ? (bool value) {
+                                  config.useMaterialYou = value;
+                                  config.save;
+                                  setState(() {});
+                                  Silvio.of(context).update();
+                                }
+                              : null,
+                    ),
+                    if (!config.useMaterialYou || snapshot.data == null)
+                      ListTile(
+                        leading: const Icon(Icons.format_color_fill),
+                        enabled: !config.useMaterialYou,
+                        subtitle: Wrap(
+                          alignment: WrapAlignment.spaceEvenly,
+                          children: [
+                            ...material3Colors.values.map((value) => IconButton(
+                                  icon:
+                                      const Icon(Icons.radio_button_unchecked),
+                                  color: value,
+                                  isSelected:
+                                      config.activeMaterialYouColorInt ==
+                                          value.value,
+                                  selectedIcon: const Icon(Icons.circle),
+                                  onPressed: () {
+                                    config.activeMaterialYouColorInt =
+                                        value.value;
+                                    config.save();
+                                    setState(() {});
+                                    Silvio.of(context).update();
+                                  },
+                                ))
+                          ],
+                        ),
+                      ),
                   ],
-                ),
-              ),
+                );
+              },
+            ),
             ListTile(
               title: Text(AppLocalizations.of(context)!.sufficientBorder),
               leading: const Icon(Icons.grading),
@@ -190,7 +204,7 @@ class _SettingsView extends State<SettingsView> {
               dense: true,
             ),
             SwitchListTile(
-              title: Text(AppLocalizations.of(context)!.grades),
+              title: Text(AppLocalizations.of(context)!.notifications),
               secondary: const Icon(Icons.notifications_active),
               subtitle: Text(AppLocalizations.of(context)!.notificationsExpl),
               value: config.enableNotifications,
@@ -270,11 +284,14 @@ class _SettingsView extends State<SettingsView> {
                             child: ClipOval(
                                 child: AspectRatio(
                                     aspectRatio: 1,
-                                    child: person.profilePicture != null ? Image.memory(
-                                      base64Decode(person.profilePicture!),
-                                      gaplessPlayback: true,
-                                      fit: BoxFit.cover,
-                                    ) : const Icon(Icons.person)))),
+                                    child: person.profilePicture != null
+                                        ? Image.memory(
+                                            base64Decode(
+                                                person.profilePicture!),
+                                            gaplessPlayback: true,
+                                            fit: BoxFit.cover,
+                                          )
+                                        : const Icon(Icons.person)))),
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: PersonConfig(
@@ -296,6 +313,15 @@ class _SettingsView extends State<SettingsView> {
                 title: const Text("Email"),
                 subtitle: Text(AppLocalizations.of(context)!.discordExpl),
                 leading: const Icon(Icons.mail),
+                trailing: const CircleAvatar(child: Icon(Icons.open_in_new))),
+            ListTile(
+                onTap: () => launchUrl(
+                    Uri.parse(
+                        "https://github.com/HarryDeKat/Silvio/issues/new/choose"),
+                    mode: LaunchMode.externalApplication),
+                title: Text(AppLocalizations.of(context)!.bugReport),
+                subtitle: Text(AppLocalizations.of(context)!.bugReportExpl),
+                leading: const Icon(Icons.bug_report),
                 trailing: const CircleAvatar(child: Icon(Icons.open_in_new))),
             ListTile(
                 onTap: () => launchUrl(
@@ -321,9 +347,10 @@ class _SettingsView extends State<SettingsView> {
                           applicationVersion:
                               "${packageInfo.version} (${packageInfo.buildNumber})",
                           applicationName: packageInfo.appName,
-                          applicationIcon: const Icon(
+                          applicationIcon: Icon(
                             Icons.query_stats_rounded,
-                            size: 32,
+                            size: 64,
+                            color: Theme.of(context).colorScheme.primary,
                           ),
                         );
                       });
@@ -359,9 +386,11 @@ class _PersonConfig extends State<PersonConfig> {
       children: [
         SwitchListTile(
           title: Text(AppLocalizations.of(context)!.notificationsPersonGrades),
-          subtitle: Text(AppLocalizations.of(context)!.notificationsPersonGradesExpl),
+          subtitle:
+              Text(AppLocalizations.of(context)!.notificationsPersonGradesExpl),
           value: widget.person.config.useForGradeCheck,
-          onChanged: config.enableNotifications
+          onChanged: config.enableNotifications &&
+                  (widget.person.parentAccount?.api.isOnline ?? false)
               ? (bool value) {
                   widget.person.config.useForGradeCheck = value;
                   widget.person.save();
@@ -371,9 +400,11 @@ class _PersonConfig extends State<PersonConfig> {
         ),
         SwitchListTile(
           title: Text(AppLocalizations.of(context)!.notificationsPersonTests),
-          subtitle: Text(AppLocalizations.of(context)!.notificationsPersonTestsExpl),
+          subtitle:
+              Text(AppLocalizations.of(context)!.notificationsPersonTestsExpl),
           value: widget.person.config.useForTestCheck,
-          onChanged: config.enableNotifications
+          onChanged: config.enableNotifications &&
+                  (widget.person.parentAccount?.api.isOnline ?? false)
               ? (bool value) {
                   widget.person.config.useForTestCheck = value;
                   widget.person.save();
@@ -404,14 +435,15 @@ class _PersonConfig extends State<PersonConfig> {
                     }
                   },
                   icon: const CircleAvatar(child: Icon(Icons.upload))),
-              IconButton(
-                  onPressed: () async {
-                    await widget.person.parentAccount!.api
-                        .refreshProfilePicture(widget.person);
-                    setState(() {});
-                    widget.callback();
-                  },
-                  icon: const CircleAvatar(child: Icon(Icons.refresh))),
+              if (widget.person.parentAccount?.api.isOnline ?? false)
+                IconButton(
+                    onPressed: () async {
+                      await widget.person.parentAccount!.api
+                          .refreshProfilePicture(widget.person);
+                      setState(() {});
+                      widget.callback();
+                    },
+                    icon: const CircleAvatar(child: Icon(Icons.refresh))),
             ])),
         ListTile(
           title: Text(AppLocalizations.of(context)!.resetTurnedOffGrades),

@@ -178,5 +178,7 @@
   "showDate": "Show date",
   "showWeight": "Show weight",
   "showChangeInAverage": "Show change in average",
-  "showChangeInSubjectAverage": "Show change in subject average"
+  "showChangeInSubjectAverage": "Show change in subject average",
+  "bugReport": "Suggestions and bugs",
+  "bugReportExpl": "Make a suggestion or report a bug"
 }

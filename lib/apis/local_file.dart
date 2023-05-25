@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:silvio/apis/abstact_api.dart';
 import 'package:silvio/hive/adapters.dart';
 import 'package:silvio/main.dart';
@@ -14,6 +13,9 @@ class LocalFile implements Api {
   @override
   Account account;
   LocalFile(this.account);
+
+  @override
+  late bool isOnline = false;
 
   @override
   Widget? buildConfig(BuildContext context, {required Person person}) {
@@ -70,7 +72,7 @@ class LocalFile implements Api {
   Future<void> refreshSchoolYear(Person person, SchoolYear schoolYear,
       void Function(int completed, int total) progress) async {}
 
-  Future<void> restoreHiveBox<T>() async {
+  Future<bool> restoreHiveBox<T>() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
 
     if (result != null) {
@@ -97,6 +99,7 @@ class LocalFile implements Api {
         importedAccount.apiType = AccountAPITypes.localFile;
       }
       Hive.box<Account>('accountList').addAll(importedAccounts);
+      return Future.value(true);
     } else {
       throw 'No file selected';
     }
@@ -108,12 +111,12 @@ class LocalFile implements Api {
 
 Future<void> backupHiveBox<T>(
     {required String boxName, BuildContext? context}) async {
-  String? selectedDirectory = Platform.isAndroid
-      ? await FilePicker.platform.getDirectoryPath()
-      : (await getApplicationDocumentsDirectory()).path;
+  String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
 
   if (selectedDirectory != null &&
-      await Permission.manageExternalStorage.request().isGranted) {
+      ((Platform.isAndroid &&
+              !await Permission.manageExternalStorage.request().isGranted) ||
+          Platform.isIOS)) {
     final box = Hive.box<T>(boxName);
     final boxPath = box.path;
     await box.close();

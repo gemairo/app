@@ -178,5 +178,7 @@
   "showDate": "Toon datum",
   "showWeight": "Toon gewicht",
   "showChangeInAverage": "Toon verandering in het gemiddelde",
-  "showChangeInSubjectAverage": "Toon verandering in het vak gemiddelde"
+  "showChangeInSubjectAverage": "Toon verandering in het vak gemiddelde",
+  "bugReport": "Suggesties en fouten",
+  "bugReportExpl": "Maak een suggestie of rapporteer een fout"
 }

@@ -99,7 +99,9 @@ CalendarEvent? magisterAssignmentToCalendarEvent([Map? event]) {
           .add(const Duration(hours: 1)),
       startHour: 0,
       endHour: 0,
-      subjectsNames: ["${event?["Titel"] ?? ""} (${event?["Vak"] ?? ""})"],
+      subjectsNames: [
+        "${event?["Titel"] ?? ""} ${event?["Vak"] != null && event?["Vak"] != "" ? "(${event?["Vak"]})" : ""}"
+      ],
       teacherNames: [], //Dankjewel Magister
       type: CalendarEventTypes.assignment);
 }
