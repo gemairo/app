@@ -4,6 +4,7 @@ import 'package:silvio/hive/adapters.dart';
 abstract class Api {
   Account account;
   Api(this.account);
+  late bool isOnline;
 
   Future<void> refreshProfilePicture(Person person) async {}
   Future<void> refreshCalendarEvents(Person person) async {}

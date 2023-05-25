@@ -30,6 +30,9 @@ class SomToDay implements Api {
   late SomToDayApi api = SomToDayApi(account);
 
   @override
+  late bool isOnline = true;
+
+  @override
   Widget? buildConfig(BuildContext context, {required Person person}) {
     return null;
   }

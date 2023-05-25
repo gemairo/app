@@ -35,6 +35,9 @@ class Magister implements Api {
   late MagisterApi api = MagisterApi(account);
 
   @override
+  late bool isOnline = true;
+
+  @override
   Widget? buildConfig(BuildContext context, {required Person person}) {
     return null;
   }

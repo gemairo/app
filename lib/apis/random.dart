@@ -20,6 +20,9 @@ class RandomAccount implements Api {
   RandomAccount(this.account);
 
   @override
+  late bool isOnline = false;
+
+  @override
   Future refreshGrade(Person person, Grade grade) async {
     grade = randomGrade(grade.subject);
   }

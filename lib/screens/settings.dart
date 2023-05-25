@@ -270,11 +270,14 @@ class _SettingsView extends State<SettingsView> {
                             child: ClipOval(
                                 child: AspectRatio(
                                     aspectRatio: 1,
-                                    child: person.profilePicture != null ? Image.memory(
-                                      base64Decode(person.profilePicture!),
-                                      gaplessPlayback: true,
-                                      fit: BoxFit.cover,
-                                    ) : const Icon(Icons.person)))),
+                                    child: person.profilePicture != null
+                                        ? Image.memory(
+                                            base64Decode(
+                                                person.profilePicture!),
+                                            gaplessPlayback: true,
+                                            fit: BoxFit.cover,
+                                          )
+                                        : const Icon(Icons.person)))),
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: PersonConfig(
@@ -359,9 +362,11 @@ class _PersonConfig extends State<PersonConfig> {
       children: [
         SwitchListTile(
           title: Text(AppLocalizations.of(context)!.notificationsPersonGrades),
-          subtitle: Text(AppLocalizations.of(context)!.notificationsPersonGradesExpl),
+          subtitle:
+              Text(AppLocalizations.of(context)!.notificationsPersonGradesExpl),
           value: widget.person.config.useForGradeCheck,
-          onChanged: config.enableNotifications
+          onChanged: config.enableNotifications &&
+                  (widget.person.parentAccount?.api.isOnline ?? false)
               ? (bool value) {
                   widget.person.config.useForGradeCheck = value;
                   widget.person.save();
@@ -371,9 +376,11 @@ class _PersonConfig extends State<PersonConfig> {
         ),
         SwitchListTile(
           title: Text(AppLocalizations.of(context)!.notificationsPersonTests),
-          subtitle: Text(AppLocalizations.of(context)!.notificationsPersonTestsExpl),
+          subtitle:
+              Text(AppLocalizations.of(context)!.notificationsPersonTestsExpl),
           value: widget.person.config.useForTestCheck,
-          onChanged: config.enableNotifications
+          onChanged: config.enableNotifications &&
+                  (widget.person.parentAccount?.api.isOnline ?? false)
               ? (bool value) {
                   widget.person.config.useForTestCheck = value;
                   widget.person.save();
@@ -404,14 +411,15 @@ class _PersonConfig extends State<PersonConfig> {
                     }
                   },
                   icon: const CircleAvatar(child: Icon(Icons.upload))),
-              IconButton(
-                  onPressed: () async {
-                    await widget.person.parentAccount!.api
-                        .refreshProfilePicture(widget.person);
-                    setState(() {});
-                    widget.callback();
-                  },
-                  icon: const CircleAvatar(child: Icon(Icons.refresh))),
+              if (widget.person.parentAccount?.api.isOnline ?? false)
+                IconButton(
+                    onPressed: () async {
+                      await widget.person.parentAccount!.api
+                          .refreshProfilePicture(widget.person);
+                      setState(() {});
+                      widget.callback();
+                    },
+                    icon: const CircleAvatar(child: Icon(Icons.refresh))),
             ])),
         ListTile(
           title: Text(AppLocalizations.of(context)!.resetTurnedOffGrades),

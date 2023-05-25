@@ -113,6 +113,7 @@ class _LoginView extends State<LoginView> {
                           )),
                         ))
                     .toList(),
+                Container(height: 11)
               ],
             ),
           )

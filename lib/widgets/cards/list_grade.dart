@@ -63,9 +63,17 @@ class _GradeList extends State<GradeList> {
             return Opacity(
                 opacity: grade.isEnabled ? 1 : .5,
                 child: ListTile(
-                    title: Text(grade.subject.name),
+                    title: Text(
+                      grade.subject.name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                     subtitle: grade.description != ""
-                        ? Text(grade.description)
+                        ? Text(
+                            grade.description,
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                          )
                         : null,
                     onTap: () => showSilvioModalBottomSheet(children: [
                           GradeInformation(
