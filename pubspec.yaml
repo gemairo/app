@@ -52,7 +52,6 @@ dependencies:
   package_info_plus: ^4.0.1
   google_mobile_ads: ^3.0.0
   app_tracking_transparency: ^2.0.4
-  path_provider: ^2.0.15
 
 dev_dependencies:
   flutter_test:
