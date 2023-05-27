@@ -60,6 +60,9 @@ class LocalFile implements Api {
   }
 
   @override
+  Future<void> refreshAll(Person person) async {}
+
+  @override
   Future<void> refreshCalendarEvents(Person person) async {}
 
   @override

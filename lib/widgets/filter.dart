@@ -119,6 +119,19 @@ class FilterMenu extends StatefulWidget {
   State<FilterMenu> createState() => _FilterMenu();
 }
 
+class Filters {
+  String? addition;
+  List<Grade> quaters;
+  List<Grade> subjects;
+  List<Grade> teachers;
+
+  Filters(
+      {this.quaters = const [],
+      this.subjects = const [],
+      this.teachers = const [],
+      this.addition});
+}
+
 class _FilterMenu extends State<FilterMenu> {
   final filterTextController = TextEditingController();
 
@@ -127,25 +140,53 @@ class _FilterMenu extends State<FilterMenu> {
   @override
   Widget build(BuildContext context) {
     final AccountProvider acP = Provider.of<AccountProvider>(context);
-    List<Filter> activeFilters = acP.activeFilters;
-    List<Grade> quaters = widget.isGlobal
-        ? []
-        : widget.grades.useable.unique((Grade gr) => gr.schoolQuarter!.id)
-      ..sort((a, b) => b.schoolQuarter!.shortname
-          .toLowerCase()
-          .compareTo(a.schoolQuarter!.shortname.toLowerCase()));
 
-    List<Grade> subjects = widget.isGlobal
-        ? []
-        : widget.grades.useable.unique((Grade gr) => gr.subject.id)
-      ..sort((a, b) => a.subject.name.compareTo(b.subject.name));
-    List<Grade> teachers = widget.isGlobal
-        ? []
-        : widget.grades.useable
-            .where((g) => g.teacherCode != null)
+    List<Map<String, List<Grade>>> gradesPerSchoolyear = widget.isGlobal
+        ? acP.person.schoolYears
+            .map((e) => {
+                  e.groupCode: e.grades
+                      .where((grade) => widget.grades.contains(grade))
+                      .toList()
+                })
             .toList()
-            .unique((Grade gr) => gr.teacherCode)
-      ..sort((a, b) => a.teacherCode!.compareTo(b.teacherCode!));
+        : [];
+
+    List<Filters> filters = widget.isGlobal
+        ? [
+            ...gradesPerSchoolyear.map((e) => Filters(
+                addition: e.keys.first,
+                quaters: e.values.first.useable
+                    .unique((Grade gr) => gr.schoolQuarter!.id)
+                  ..sort((a, b) => b.schoolQuarter!.shortname
+                      .toLowerCase()
+                      .compareTo(a.schoolQuarter!.shortname.toLowerCase())),
+                subjects: e.values.first.useable
+                    .unique((Grade gr) => gr.subject.id)
+                  ..sort((a, b) => a.subject.name.compareTo(b.subject.name)),
+                teachers: e.values.first.useable
+                    .where((g) => g.teacherCode != null)
+                    .toList()
+                    .unique((Grade gr) => gr.teacherCode)
+                  ..sort((a, b) => a.teacherCode!.compareTo(b.teacherCode!))))
+          ]
+        : [
+            Filters(
+                quaters: widget.grades.useable
+                    .unique((Grade gr) => gr.schoolQuarter!.id)
+                  ..sort((a, b) => b.schoolQuarter!.shortname
+                      .toLowerCase()
+                      .compareTo(a.schoolQuarter!.shortname.toLowerCase())),
+                subjects: widget.grades.useable
+                    .unique((Grade gr) => gr.subject.id)
+                  ..sort((a, b) => a.subject.name.compareTo(b.subject.name)),
+                teachers: widget.grades.useable
+                    .where((g) => g.teacherCode != null)
+                    .toList()
+                    .unique((Grade gr) => gr.teacherCode)
+                  ..sort((a, b) => a.teacherCode!.compareTo(b.teacherCode!)))
+          ];
+
+    List<Filter> activeFilters = acP.activeFilters;
 
     return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -155,41 +196,58 @@ class _FilterMenu extends State<FilterMenu> {
               AppLocalizations.of(context)!.filters,
               style: Theme.of(context).textTheme.titleLarge,
             ),
+            trailing: IconButton(
+                onPressed: () {
+                  acP.removeFromFilterWhere((f) => true);
+                },
+                icon: const Icon(Icons.undo)),
             dense: true,
           ),
-          if (quaters.length > 1)
-            SilvioFilterChipList(
-                title: AppLocalizations.of(context)!.periods,
-                icon: const Icon(Icons.calendar_month),
-                widgets: [
-                  ...quaters.map((Grade grade) => SilvioFilterChip(context,
-                      filter: Filter(
-                          name: grade.schoolQuarter!.shortname,
-                          type: FilterTypes.quarterCode,
-                          filter: grade.schoolQuarter!.id.toString())))
-                ]),
-          if (subjects.length > 1)
-            SilvioFilterChipList(
-                title: AppLocalizations.of(context)!.subjects,
-                icon: const Icon(Icons.book_outlined),
-                widgets: [
-                  ...subjects.map((Grade grade) => SilvioFilterChip(context,
-                      filter: Filter(
-                          name: grade.subject.name,
-                          type: FilterTypes.subject,
-                          filter: grade.subject.id.toString())))
-                ]),
-          if (teachers.length > 1)
-            SilvioFilterChipList(
-                title: AppLocalizations.of(context)!.teachers,
-                icon: const Icon(Icons.supervisor_account),
-                widgets: [
-                  ...teachers.map((Grade grade) => SilvioFilterChip(context,
-                      filter: Filter(
-                          name: grade.teacherCode!,
-                          type: FilterTypes.teacher,
-                          filter: grade.teacherCode!)))
-                ]),
+          if (filters.length > 1 || filters.first.quaters.length > 1)
+            ...filters.map((filter) => SilvioFilterChipList(
+                    title: AppLocalizations.of(context)!.periods +
+                        (filter.addition != null
+                            ? " (${filter.addition})"
+                            : ""),
+                    icon: const Icon(Icons.calendar_month),
+                    widgets: [
+                      ...filter.quaters.map((Grade grade) => SilvioFilterChip(
+                          context,
+                          filter: Filter(
+                              name: grade.schoolQuarter!.shortname,
+                              type: FilterTypes.quarterCode,
+                              filter: grade.schoolQuarter!.id.toString())))
+                    ])),
+          if (filters.length > 1 || filters.first.subjects.length > 1)
+            ...filters.map((filter) => SilvioFilterChipList(
+                    title: AppLocalizations.of(context)!.subjects +
+                        (filter.addition != null
+                            ? " (${filter.addition})"
+                            : ""),
+                    icon: const Icon(Icons.book_outlined),
+                    widgets: [
+                      ...filter.subjects.map((Grade grade) => SilvioFilterChip(
+                          context,
+                          filter: Filter(
+                              name: grade.subject.name,
+                              type: FilterTypes.subject,
+                              filter: grade.subject.id.toString())))
+                    ])),
+          if (filters.length > 1 || filters.first.teachers.length > 1)
+            ...filters.map((filter) => SilvioFilterChipList(
+                    title: AppLocalizations.of(context)!.teachers +
+                        (filter.addition != null
+                            ? " (${filter.addition})"
+                            : ""),
+                    icon: const Icon(Icons.supervisor_account),
+                    widgets: [
+                      ...filter.teachers.map((Grade grade) => SilvioFilterChip(
+                          context,
+                          filter: Filter(
+                              name: grade.teacherCode!,
+                              type: FilterTypes.teacher,
+                              filter: grade.teacherCode!)))
+                    ])),
           SilvioFilterChipList(
               title: AppLocalizations.of(context)!.dateRange,
               icon: const Icon(Icons.date_range_outlined),

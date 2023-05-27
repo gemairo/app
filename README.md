@@ -28,7 +28,7 @@ Silvio is een manier om je cijfers uit het [leerlingvolgsysteem Magister](https:
 
 ![screenshots](https://github.com/HarryDeKat/Silvio/assets/96647011/b8a7b276-47f6-4a9d-a9ae-3b0d7920244f)
 
-## Contributie!
+## Contributie
 
 Alle contributies **zijn erg welkom**, omdat ik dit project niet voor eeuwig zelf kan ondersteunen. Je kan een contributies maken door een pull-request te openen, maar probeer wel een **goede beschijving** van je veranderingen/toevoegingen te maken. Verder, mocht je een UI toevoeging maken, probeer dan waar mogelijk [material 3](https://m3.material.io/) aan te houden.
 

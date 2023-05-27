@@ -45,7 +45,7 @@ class _GradeList extends State<GradeList> {
           cacheExtent: double.maxFinite,
           itemCount: grades.length,
           // itemCount: grades.length + (grades.length~/showAdEveryNth).floor(),
-          maxCrossAxisExtent: 600,
+          maxCrossAxisExtent: 640,
           itemBuilder: (context, index) {
             // if (index % 11 == 10) {
             //   loadedAds++;
@@ -292,7 +292,7 @@ class _GradeInformation extends State<GradeInformation> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: StaggeredGrid.extent(
-              maxCrossAxisExtent: 450,
+              maxCrossAxisExtent: 640,
               crossAxisSpacing: 8,
               mainAxisSpacing: 10,
               children: [
@@ -459,7 +459,7 @@ class RecentGradeCard extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: InkWell(
                         borderRadius:
-                            const BorderRadius.all(Radius.circular(16)),
+                            const BorderRadius.all(Radius.circular(32)),
                         onTap: () => showSilvioModalBottomSheet(children: [
                               GradeInformation(
                                 context: context,

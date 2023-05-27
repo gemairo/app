@@ -191,12 +191,7 @@ class _Start extends State<Start> {
                   onRefresh: () async {
                     AccountProvider acP =
                         Provider.of<AccountProvider>(context, listen: false);
-                    Api api = acP.account.api;
-                    await Future.wait([
-                      Future.wait(acP.person.schoolYears.map((SchoolYear sY) =>
-                          api.refreshSchoolYear(acP.person, sY, (i, t) {}))),
-                      api.refreshCalendarEvents(acP.person)
-                    ]);
+                    await acP.account.api.refreshAll(acP.person);
                     acP.changeAccount(null);
                   },
                   child: ScreensSwitch(index: screenIndex))),
@@ -235,14 +230,7 @@ class _Start extends State<Start> {
                                   AccountProvider acP =
                                       Provider.of<AccountProvider>(context,
                                           listen: false);
-                                  Api api = acP.account.api;
-                                  await Future.wait([
-                                    Future.wait(acP.person.schoolYears.map(
-                                        (SchoolYear sY) =>
-                                            api.refreshSchoolYear(
-                                                acP.person, sY, (i, t) {}))),
-                                    api.refreshCalendarEvents(acP.person)
-                                  ]);
+                                  await acP.account.api.refreshAll(acP.person);
                                   acP.changeAccount(null);
                                 },
                                 child: ScreensSwitch(index: screenIndex))))),

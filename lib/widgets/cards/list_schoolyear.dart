@@ -30,7 +30,7 @@ class RelatedSchoolYearsCard extends StatelessWidget {
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: InkWell(
-                    borderRadius: const BorderRadius.all(Radius.circular(16)),
+                    borderRadius: const BorderRadius.all(Radius.circular(32)),
                     onTap: () => changeSchoolYear(context, newid: sY.id),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,

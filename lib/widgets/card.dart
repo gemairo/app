@@ -37,7 +37,8 @@ class SilvioCard extends StatelessWidget {
                   ),
                   leading: leading,
                   trailing: trailing,
-                  contentPadding: trailing != null ? const EdgeInsets.only(left: 16) : null,
+                  contentPadding:
+                      trailing != null ? const EdgeInsets.only(left: 16) : null,
                   dense: true,
                 ),
               child
@@ -47,7 +48,7 @@ class SilvioCard extends StatelessWidget {
 
 class SilvioCardList extends StatelessWidget {
   const SilvioCardList(
-      {super.key, required this.children, this.maxCrossAxisExtent = 450});
+      {super.key, required this.children, this.maxCrossAxisExtent = 640});
 
   final List<Widget> children;
   final double maxCrossAxisExtent;

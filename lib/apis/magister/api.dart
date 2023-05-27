@@ -165,7 +165,7 @@ class MagisterApi extends Magister {
     person.rawSchoolYears = List.from(person.rawSchoolYears)
       ..addAll(apiSchoolYears.map((e) => magisterSchoolYear(e)!).toList()
         ..removeWhere(
-            (sY) => person.schoolYears.map((e) => e.id).contains(sY.id)));
+            (sY) => person.rawSchoolYears.map((e) => e.id).contains(sY.id)));
     if (account.isInBox) account.save();
   }
 

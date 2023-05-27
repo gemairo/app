@@ -48,6 +48,16 @@ class Magister implements Api {
   }
 
   @override
+  Future<void> refreshAll(Person person) async {
+    await Future.wait([
+      Future.wait(person.schoolYears.map(
+          (SchoolYear sY) => api.refreshSchoolYear(person, sY, (i, t) {}))),
+      api.refreshCalendarEvents(person),
+      api.setSchoolYears(person)
+    ]);
+  }
+
+  @override
   Future<void> refreshCalendarEvents(Person person) async {
     dynamic futures = await Future.wait([
       api.dio.get(
@@ -144,18 +154,45 @@ class Magister implements Api {
   @override
   Future<void> refreshSchoolYear(Person person, SchoolYear schoolYear,
       void Function(int completed, int total) progress) async {
+    //Get new grades from Magister
     List<dynamic> cijferoverzichtvooraanmelding = (await api.dio.get(
             "api/personen/${person.id}/aanmeldingen/${schoolYear.id}/cijfers/cijferoverzichtvooraanmelding?actievePerioden=false&alleenBerekendeKolommen=false&alleenPTAKolommen=false&peildatum=${schoolYear.end.toIso8601String()}"))
         .data["Items"];
+
+    //Remove grades that do not exist on Magisters servers anymore
+    schoolYear.grades.removeWhere((Grade grade) =>
+        !cijferoverzichtvooraanmelding
+            .map((e) => e["CijferKolom"]["Id"])
+            .contains(grade.id));
+
     //Remove useless grades
     cijferoverzichtvooraanmelding.removeWhere((grade) =>
         !grade.keys.contains("CijferKolom") ||
-        grade["CijferKolom"]["KolomSoort"] != 1 ||
-        schoolYear.grades
-            .map(
-              (e) => e.id,
-            )
-            .contains(grade["CijferKolom"]["Id"]));
+        grade["CijferKolom"]["KolomSoort"] != 1);
+
+    //Refresh grades that have been changed
+    List toRemove = [];
+    for (var rawGrade in cijferoverzichtvooraanmelding) {
+      Grade? connectedGrade = schoolYear.grades.firstWhereOrNull(
+          (grade) => grade.id == rawGrade["CijferKolom"]["Id"]);
+      //If the grade already exists and the dates from Magister and the local database do not match, refresh the grade.
+      if (DateTime.parse(rawGrade["DatumIngevoerd"] ??
+                  rawGrade["ingevoerdOp"] ??
+                  "1970-01-01T00:00:00.0000000Z")
+              .toUtc() !=
+          connectedGrade?.addedDate) {
+        if (connectedGrade != null) refreshGrade(person, connectedGrade);
+      }
+      //If grade already exists in local database make the grade for removal
+      if (connectedGrade != null &&
+          rawGrade["CijferKolom"]["Id"] == connectedGrade.id) {
+        toRemove.add(rawGrade);
+      }
+    }
+
+    //Remove grades that were marked for removal
+    cijferoverzichtvooraanmelding
+        .removeWhere((rawGrade) => toRemove.contains(rawGrade));
 
     Future<void> addExtraData(Map<String, dynamic> grade) async {
       Map<String, dynamic> extracijferkolominfo = (await api.dio.get(
@@ -187,6 +224,7 @@ class Magister implements Api {
       ..sort((Grade a, Grade b) => a.addedDate.millisecondsSinceEpoch
           .compareTo(b.addedDate.millisecondsSinceEpoch))
       ..reversed.toList());
+
     if (account.isInBox) account.save();
   }
 
