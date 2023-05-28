@@ -36,10 +36,12 @@ class _SearchView extends State<SearchView> {
 
     void textfieldToFilter() => setState(() {
           if (controller.text != "") {
-            acP.activeFilters.add(Filter(
-                name: "SearchValue",
-                type: FilterTypes.inputString,
-                filter: controller.text));
+            acP.addToFilter(
+                Filter(
+                    name: "SearchValue",
+                    type: FilterTypes.inputString,
+                    filter: controller.text),
+                isGlobal: true);
           }
           controller.clear();
         });
@@ -119,7 +121,7 @@ class _SearchView extends State<SearchView> {
                   name: "SearchValue",
                   type: FilterTypes.inputString,
                   filter: controller.text),
-            ...acP.person.activeFilters
+            ...acP.activeFilters(isGlobal: true)
           ]),
         ),
       ],

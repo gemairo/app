@@ -134,12 +134,11 @@ class Person {
       .firstWhereOrNull((account) => account.profiles.contains(this));
   void save() => parentAccount!.save();
 
-  Person({
-    required this.id,
-    required this.firstName,
-    this.lastName = "",
-    this.profilePicture
-  });
+  Person(
+      {required this.id,
+      required this.firstName,
+      this.lastName = "",
+      this.profilePicture});
 }
 
 @HiveType(typeId: 6)
@@ -155,11 +154,12 @@ class PersonConfig {
 enum FilterTypes { quarterCode, subject, teacher, inputString, pta, dateRange }
 
 class Filter {
-  late String name;
-  late FilterTypes type;
-  late dynamic filter;
+  String name;
+  FilterTypes type;
+  dynamic filter;
+  bool isGlobal;
 
-  Filter({required this.name, required this.type, required this.filter});
+  Filter({required this.name, required this.type, required this.filter, this.isGlobal = false});
 }
 
 @HiveType(typeId: 7)

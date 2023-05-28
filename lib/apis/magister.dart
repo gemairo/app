@@ -213,6 +213,9 @@ class Magister implements Api {
       progress,
     );
 
+    //Get latest schoolQuaters
+    await api.setSchoolQuarters(person, schoolYear);
+
     //Convert all Magister grades to Silvio grades
     schoolYear.grades.addAll(cijferoverzichtvooraanmelding
         .map((cijfer) => magisterGrade(

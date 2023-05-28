@@ -50,7 +50,7 @@ class _SchoolYearStatisticsView extends State<SchoolYearStatisticsView> {
   Widget build(BuildContext context) {
     final AccountProvider acP = Provider.of<AccountProvider>(context);
     List<Grade> allGrades =
-        acP.schoolYear.grades.onlyFilterd(acP.activeFilters);
+        acP.schoolYear.grades.onlyFilterd(acP.activeFilters());
     List<Grade> grades = allGrades.useable;
 
     List<Widget> widgets = [
@@ -103,11 +103,10 @@ class _SchoolYearStatisticsView extends State<SchoolYearStatisticsView> {
         StaggeredGridTile.fit(
             crossAxisCellCount: 4,
             child: SilvioCard(
-                title: 
-                      Text(AppLocalizations.of(context)!.grades),
-                trailing:                       GradeListOptions(
-                        addOrRemoveBadge: addOrRemoveBadge,
-                      ),
+                title: Text(AppLocalizations.of(context)!.grades),
+                trailing: GradeListOptions(
+                  addOrRemoveBadge: addOrRemoveBadge,
+                ),
                 child: GradeList(
                     context: context,
                     showGradeCalculate: true,

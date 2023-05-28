@@ -185,7 +185,11 @@ class _Start extends State<Start> {
 
       if (constraints.maxWidth < 450) {
         return Scaffold(
-          appBar: const SilvioAppBar(),
+          appBar: SilvioAppBar(
+            title: screenIndex == 2
+                ? AppLocalizations.of(context)?.searchView
+                : null,
+          ),
           body: BottomBanner(
               child: RefreshIndicator(
                   onRefresh: () async {

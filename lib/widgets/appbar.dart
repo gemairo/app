@@ -21,6 +21,7 @@ class SilvioAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     final AccountProvider acP = Provider.of<AccountProvider>(context);
     return AppBar(
+      centerTitle: false,
       title: Padding(
           padding: const EdgeInsets.all(4),
           child: title == null ? Text(acP.schoolYear.groupName) : Text(title!)),

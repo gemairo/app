@@ -34,7 +34,7 @@ class _SubjectsListView extends State<SubjectsListView> {
         });
 
     List<Grade> grades =
-        acP.schoolYear.grades.useable.onlyFilterd(acP.activeFilters);
+        acP.schoolYear.grades.useable.onlyFilterd(acP.activeFilters());
 
     List<Widget> widgets = [
       ...grades.subjects.map((e) => ListTile(
@@ -82,8 +82,7 @@ class _SubjectsListView extends State<SubjectsListView> {
                           subjects: grades.numericalGrades.subjects,
                         ))),
                 SilvioCard(
-                    title: Text(AppLocalizations.of(context)!
-                        .averageWeight),
+                    title: Text(AppLocalizations.of(context)!.averageWeight),
                     child: Padding(
                         padding: const EdgeInsets.only(bottom: 8, top: 0),
                         child: BarChartSubjectsWeight(

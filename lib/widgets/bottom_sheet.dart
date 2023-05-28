@@ -2,16 +2,13 @@ import 'package:flutter/material.dart';
 
 showSilvioModalBottomSheet(
     {List<Widget> children = const [], required context}) {
-  double topPadding = View.of(context).padding.top;
   return showModalBottomSheet(
     context: context,
     isScrollControlled: true,
     showDragHandle: true,
     isDismissible: true,
-    useSafeArea: false,
-    constraints: BoxConstraints(
-        maxWidth: 640,
-        maxHeight: MediaQuery.of(context).size.height - topPadding),
+    useSafeArea: true,
+    constraints: const BoxConstraints(maxWidth: 640),
     shape: Theme.of(context).bottomSheetTheme.shape,
     builder: (context) => DraggableScrollableSheet(
       initialChildSize: 0.4,
