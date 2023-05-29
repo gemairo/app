@@ -7,14 +7,8 @@ showSilvioModalBottomSheet(
     isScrollControlled: true,
     showDragHandle: true,
     isDismissible: true,
-    useSafeArea: false,
-    constraints: const BoxConstraints(
-      maxWidth: 640,
-      // maxHeight: MediaQuery.of(context).size.height -
-      //     MediaQueryData.fromWindow(WidgetsBinding.instance.window)
-      //         .padding
-      //         .top
-    ),
+    useSafeArea: true,
+    constraints: const BoxConstraints(maxWidth: 640),
     shape: Theme.of(context).bottomSheetTheme.shape,
     builder: (context) => DraggableScrollableSheet(
       initialChildSize: 0.4,

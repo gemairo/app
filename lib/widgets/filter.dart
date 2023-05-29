@@ -26,13 +26,13 @@ class _FilterChips extends State<FilterChips> {
   @override
   Widget build(BuildContext context) {
     final AccountProvider acP = Provider.of<AccountProvider>(context);
-    List<Filter> activeFilters = acP.activeFilters;
+    List<Filter> activeFilters = acP.activeFilters(isGlobal: widget.isGlobal);
     List<Grade> quaters = widget.isGlobal
         ? []
-        : widget.grades.unique((Grade gr) => gr.schoolQuarter!.id).toList()
-      ..sort((a, b) => b.schoolQuarter!.shortname
+        : widget.grades.unique((Grade gr) => gr.schoolQuarter?.id).toList()
+      ..sort((a, b) => (b.schoolQuarter?.shortname ?? "")
           .toLowerCase()
-          .compareTo(a.schoolQuarter!.shortname.toLowerCase()));
+          .compareTo(a.schoolQuarter?.shortname.toLowerCase() ?? ""));
 
     return SingleChildScrollView(
         scrollDirection: Axis.horizontal,
@@ -92,8 +92,10 @@ class _FilterChips extends State<FilterChips> {
               onSelected: (bool value) {
                 setState(() {
                   if (value) {
-                    acP.addToFilter(Filter(
-                        name: "PTA", type: FilterTypes.pta, filter: "PTA"));
+                    acP.addToFilter(
+                        Filter(
+                            name: "PTA", type: FilterTypes.pta, filter: "PTA"),
+                        isGlobal: widget.isGlobal);
                   } else {
                     acP.removeFromFilterWhere((filter) => filter.name == "PTA");
                   }
@@ -101,10 +103,11 @@ class _FilterChips extends State<FilterChips> {
               },
             ),
           ...quaters.map((sQ) => SilvioFilterChip(context,
+              isGlobal: widget.isGlobal,
               filter: Filter(
-                  name: sQ.schoolQuarter!.shortname,
+                  name: sQ.schoolQuarter?.shortname ?? "*",
                   type: FilterTypes.quarterCode,
-                  filter: sQ.schoolQuarter!.id.toString())))
+                  filter: sQ.schoolQuarter?.id.toString())))
         ]));
   }
 }
@@ -119,6 +122,19 @@ class FilterMenu extends StatefulWidget {
   State<FilterMenu> createState() => _FilterMenu();
 }
 
+class Filters {
+  String? addition;
+  List<Grade> quaters;
+  List<Grade> subjects;
+  List<Grade> teachers;
+
+  Filters(
+      {this.quaters = const [],
+      this.subjects = const [],
+      this.teachers = const [],
+      this.addition});
+}
+
 class _FilterMenu extends State<FilterMenu> {
   final filterTextController = TextEditingController();
 
@@ -127,25 +143,55 @@ class _FilterMenu extends State<FilterMenu> {
   @override
   Widget build(BuildContext context) {
     final AccountProvider acP = Provider.of<AccountProvider>(context);
-    List<Filter> activeFilters = acP.activeFilters;
-    List<Grade> quaters = widget.isGlobal
-        ? []
-        : widget.grades.useable.unique((Grade gr) => gr.schoolQuarter!.id)
-      ..sort((a, b) => b.schoolQuarter!.shortname
-          .toLowerCase()
-          .compareTo(a.schoolQuarter!.shortname.toLowerCase()));
 
-    List<Grade> subjects = widget.isGlobal
-        ? []
-        : widget.grades.useable.unique((Grade gr) => gr.subject.id)
-      ..sort((a, b) => a.subject.name.compareTo(b.subject.name));
-    List<Grade> teachers = widget.isGlobal
-        ? []
-        : widget.grades.useable
-            .where((g) => g.teacherCode != null)
+    List<Map<String, List<Grade>>> gradesPerSchoolyear = widget.isGlobal
+        ? acP.person.schoolYears
+            .map((e) => {
+                  e.groupCode: e.grades
+                      .where((grade) => widget.grades.contains(grade))
+                      .toList()
+                })
             .toList()
-            .unique((Grade gr) => gr.teacherCode)
-      ..sort((a, b) => a.teacherCode!.compareTo(b.teacherCode!));
+        : [];
+
+    List<Filters> filters = widget.isGlobal
+        ? [
+            ...gradesPerSchoolyear.map((e) => Filters(
+                addition: e.keys.first,
+                quaters: e.values.first.useable
+                    .unique((Grade gr) => gr.schoolQuarter?.id)
+                  ..sort((a, b) => (b.schoolQuarter?.shortname ?? "")
+                      .toLowerCase()
+                      .compareTo(
+                          a.schoolQuarter?.shortname.toLowerCase() ?? "")),
+                subjects: e.values.first.useable
+                    .unique((Grade gr) => gr.subject.id)
+                  ..sort((a, b) => a.subject.name.compareTo(b.subject.name)),
+                teachers: e.values.first.useable
+                    .where((g) => g.teacherCode != null)
+                    .toList()
+                    .unique((Grade gr) => gr.teacherCode)
+                  ..sort((a, b) => a.teacherCode!.compareTo(b.teacherCode!))))
+          ]
+        : [
+            Filters(
+                quaters: widget.grades.useable
+                    .unique((Grade gr) => gr.schoolQuarter?.id)
+                  ..sort((a, b) => (b.schoolQuarter?.shortname ?? "")
+                      .toLowerCase()
+                      .compareTo(
+                          a.schoolQuarter?.shortname.toLowerCase() ?? "")),
+                subjects: widget.grades.useable
+                    .unique((Grade gr) => gr.subject.id)
+                  ..sort((a, b) => a.subject.name.compareTo(b.subject.name)),
+                teachers: widget.grades.useable
+                    .where((g) => g.teacherCode != null)
+                    .toList()
+                    .unique((Grade gr) => gr.teacherCode)
+                  ..sort((a, b) => a.teacherCode!.compareTo(b.teacherCode!)))
+          ];
+
+    List<Filter> activeFilters = acP.activeFilters(isGlobal: widget.isGlobal);
 
     return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -155,41 +201,62 @@ class _FilterMenu extends State<FilterMenu> {
               AppLocalizations.of(context)!.filters,
               style: Theme.of(context).textTheme.titleLarge,
             ),
+            trailing: IconButton(
+                onPressed: () {
+                  acP.removeFromFilterWhere(
+                      (f) => widget.isGlobal ? true : !f.isGlobal);
+                },
+                icon: const Icon(Icons.undo)),
             dense: true,
           ),
-          if (quaters.length > 1)
-            SilvioFilterChipList(
-                title: AppLocalizations.of(context)!.periods,
-                icon: const Icon(Icons.calendar_month),
-                widgets: [
-                  ...quaters.map((Grade grade) => SilvioFilterChip(context,
-                      filter: Filter(
-                          name: grade.schoolQuarter!.shortname,
-                          type: FilterTypes.quarterCode,
-                          filter: grade.schoolQuarter!.id.toString())))
-                ]),
-          if (subjects.length > 1)
-            SilvioFilterChipList(
-                title: AppLocalizations.of(context)!.subjects,
-                icon: const Icon(Icons.book_outlined),
-                widgets: [
-                  ...subjects.map((Grade grade) => SilvioFilterChip(context,
-                      filter: Filter(
-                          name: grade.subject.name,
-                          type: FilterTypes.subject,
-                          filter: grade.subject.id.toString())))
-                ]),
-          if (teachers.length > 1)
-            SilvioFilterChipList(
-                title: AppLocalizations.of(context)!.teachers,
-                icon: const Icon(Icons.supervisor_account),
-                widgets: [
-                  ...teachers.map((Grade grade) => SilvioFilterChip(context,
-                      filter: Filter(
-                          name: grade.teacherCode!,
-                          type: FilterTypes.teacher,
-                          filter: grade.teacherCode!)))
-                ]),
+          if (filters.length > 1 || filters.first.quaters.length > 1)
+            ...filters.map((filter) => SilvioFilterChipList(
+                    title: AppLocalizations.of(context)!.periods +
+                        (filter.addition != null
+                            ? " (${filter.addition})"
+                            : ""),
+                    icon: const Icon(Icons.calendar_month),
+                    widgets: [
+                      ...filter.quaters.map((Grade grade) => SilvioFilterChip(
+                          context,
+                          isGlobal: widget.isGlobal,
+                          filter: Filter(
+                              name: grade.schoolQuarter?.shortname ?? "*",
+                              type: FilterTypes.quarterCode,
+                              filter: grade.schoolQuarter?.id.toString())))
+                    ])),
+          if (filters.length > 1 || filters.first.subjects.length > 1)
+            ...filters.map((filter) => SilvioFilterChipList(
+                    title: AppLocalizations.of(context)!.subjects +
+                        (filter.addition != null
+                            ? " (${filter.addition})"
+                            : ""),
+                    icon: const Icon(Icons.book_outlined),
+                    widgets: [
+                      ...filter.subjects.map((Grade grade) => SilvioFilterChip(
+                          context,
+                          isGlobal: widget.isGlobal,
+                          filter: Filter(
+                              name: grade.subject.name,
+                              type: FilterTypes.subject,
+                              filter: grade.subject.id.toString())))
+                    ])),
+          if (filters.length > 1 || filters.first.teachers.length > 1)
+            ...filters.map((filter) => SilvioFilterChipList(
+                    title: AppLocalizations.of(context)!.teachers +
+                        (filter.addition != null
+                            ? " (${filter.addition})"
+                            : ""),
+                    icon: const Icon(Icons.supervisor_account),
+                    widgets: [
+                      ...filter.teachers.map((Grade grade) => SilvioFilterChip(
+                          context,
+                          isGlobal: widget.isGlobal,
+                          filter: Filter(
+                              name: grade.teacherCode!,
+                              type: FilterTypes.teacher,
+                              filter: grade.teacherCode!)))
+                    ])),
           SilvioFilterChipList(
               title: AppLocalizations.of(context)!.dateRange,
               icon: const Icon(Icons.date_range_outlined),
@@ -218,11 +285,13 @@ class _FilterMenu extends State<FilterMenu> {
                     );
                     if (pickedRange != null) {
                       setState(() {
-                        acP.addToFilter(Filter(
-                            name:
-                                "${DateFormat.yMd('nl').format(pickedRange.start)} - ${DateFormat.yMd('nl').format(pickedRange.end)}", //2020/12/12 - 2020/12/13
-                            type: FilterTypes.dateRange,
-                            filter: pickedRange));
+                        acP.addToFilter(
+                            Filter(
+                                name:
+                                    "${DateFormat.yMd('nl').format(pickedRange.start)} - ${DateFormat.yMd('nl').format(pickedRange.end)}", //2020/12/12 - 2020/12/13
+                                type: FilterTypes.dateRange,
+                                filter: pickedRange),
+                            isGlobal: widget.isGlobal);
                       });
                     }
                   },
@@ -263,10 +332,12 @@ class _FilterMenu extends State<FilterMenu> {
                       onSelected: (bool value) {
                         setState(() {
                           if (value) {
-                            acP.addToFilter(Filter(
-                                name: "PTA",
-                                type: FilterTypes.pta,
-                                filter: "PTA"));
+                            acP.addToFilter(
+                                Filter(
+                                    name: "PTA",
+                                    type: FilterTypes.pta,
+                                    filter: "PTA"),
+                                isGlobal: widget.isGlobal);
                           } else {
                             acP.removeFromFilterWhere(
                                 (filter) => filter.name == "PTA");
@@ -312,10 +383,13 @@ class _FilterMenu extends State<FilterMenu> {
                         onPressed: () {
                           if (filterTextController.text == "") return;
                           setState(() {
-                            acP.addToFilter(Filter(
-                                name: "TextSearch",
-                                type: FilterTypes.inputString,
-                                filter: filterTextController.text));
+                            acP.addToFilter(
+                              Filter(
+                                  name: "TextSearch",
+                                  type: FilterTypes.inputString,
+                                  filter: filterTextController.text),
+                              isGlobal: widget.isGlobal,
+                            );
                             filterTextController.clear();
                           });
                         },
@@ -324,10 +398,13 @@ class _FilterMenu extends State<FilterMenu> {
                 onSubmitted: (string) {
                   if (string == "") return;
                   setState(() {
-                    acP.addToFilter(Filter(
-                        name: "TextSearch",
-                        type: FilterTypes.inputString,
-                        filter: string));
+                    acP.addToFilter(
+                      Filter(
+                          name: "TextSearch",
+                          type: FilterTypes.inputString,
+                          filter: string),
+                      isGlobal: widget.isGlobal,
+                    );
                     filterTextController.clear();
                   });
                 },
@@ -361,9 +438,11 @@ class SilvioFilterChipList extends StatelessWidget {
 }
 
 class SilvioFilterChip extends StatefulWidget {
-  const SilvioFilterChip(context, {super.key, required this.filter});
+  const SilvioFilterChip(context,
+      {super.key, required this.filter, this.isGlobal = false});
 
   final Filter filter;
+  final bool isGlobal;
 
   @override
   State<SilvioFilterChip> createState() => _SilvioFilterChip();
@@ -373,7 +452,7 @@ class _SilvioFilterChip extends State<SilvioFilterChip> {
   @override
   Widget build(BuildContext context) {
     final AccountProvider acP = Provider.of<AccountProvider>(context);
-    List<Filter> activeFilters = acP.activeFilters;
+    List<Filter> activeFilters = acP.activeFilters(isGlobal: widget.isGlobal);
     return FilterChip(
       label: Text(widget.filter.name),
       selected:
@@ -384,7 +463,10 @@ class _SilvioFilterChip extends State<SilvioFilterChip> {
             if (!activeFilters
                 .map((e) => e.filter)
                 .contains(widget.filter.filter)) {
-              acP.addToFilter(widget.filter);
+              acP.addToFilter(
+                widget.filter,
+                isGlobal: widget.isGlobal,
+              );
             }
           } else {
             acP.removeFromFilterWhere(

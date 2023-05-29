@@ -52,8 +52,11 @@ class AccountProvider extends ChangeNotifier {
   SchoolYear get schoolYear =>
       AccountManager().getActive().activeProfile!.activeSchoolYear;
 
-  List<Filter> get activeFilters =>
+  List<Filter> get _activeFilters =>
       AccountManager().getActive().activeProfile!.activeFilters;
+  List<Filter> activeFilters({bool isGlobal = false}) => isGlobal
+      ? _activeFilters
+      : _activeFilters.where((f) => !f.isGlobal).toList();
 
   void changeAccount(int? newid) {
     config.activeProfileId = newid ?? config.activeProfileId;
@@ -68,13 +71,13 @@ class AccountProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addToFilter(Filter filter) {
-    activeFilters.add(filter);
+  void addToFilter(Filter filter, {bool isGlobal = false}) {
+    _activeFilters.add(filter..isGlobal = isGlobal);
     notifyListeners();
   }
 
   void removeFromFilterWhere(bool Function(Filter) test) {
-    activeFilters.removeWhere(test);
+    _activeFilters.removeWhere(test);
     notifyListeners();
   }
 }

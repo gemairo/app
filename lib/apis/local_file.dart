@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cr_file_saver/file_saver.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:silvio/apis/abstact_api.dart';
@@ -60,6 +61,9 @@ class LocalFile implements Api {
   }
 
   @override
+  Future<void> refreshAll(Person person) async {}
+
+  @override
   Future<void> refreshCalendarEvents(Person person) async {}
 
   @override
@@ -111,19 +115,24 @@ class LocalFile implements Api {
 
 Future<void> backupHiveBox<T>(
     {required String boxName, BuildContext? context}) async {
-  String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
+  String? selectedDirectory =
+      Platform.isIOS ? await FilePicker.platform.getDirectoryPath() : '';
 
-  if (selectedDirectory != null &&
-      ((Platform.isAndroid &&
-              !await Permission.manageExternalStorage.request().isGranted) ||
-          Platform.isIOS)) {
+  if (selectedDirectory != null) {
     final box = Hive.box<T>(boxName);
     final boxPath = box.path;
     await box.close();
 
     try {
-      File(boxPath!).copy(
-          "$selectedDirectory/Accounts-${DateTime.now().millisecondsSinceEpoch}.Silvio");
+      if (Platform.isAndroid) {
+        CRFileSaver.saveFileWithDialog(SaveFileDialogParams(
+            sourceFilePath: boxPath!,
+            destinationFileName:
+                "Accounts-${DateTime.now().millisecondsSinceEpoch}.Silvio"));
+      } else {
+        File(boxPath!).copy(
+            "$selectedDirectory/Accounts-${DateTime.now().millisecondsSinceEpoch}.Silvio");
+      }
     } catch (e) {
       if (context != null) {
         WidgetsBinding.instance.addPostFrameCallback((_) =>
@@ -135,13 +144,6 @@ Future<void> backupHiveBox<T>(
       }
     } finally {
       await Hive.openBox<T>(boxName);
-      if (context != null) {
-        WidgetsBinding.instance.addPostFrameCallback(
-            (_) => ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: Text("Succes"),
-                  showCloseIcon: true,
-                )));
-      }
     }
   }
 }

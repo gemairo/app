@@ -99,7 +99,8 @@ class _GradeCalculate extends State<GradeCalculate> {
                           }
                         },
                         icon: const Icon(Icons.calculate),
-                        label: Text(AppLocalizations.of(context)!.calculate))
+                        label: Text(AppLocalizations.of(context)!.calculate,
+                            maxLines: 1, overflow: TextOverflow.ellipsis))
                   ],
                 ))),
         Expanded(

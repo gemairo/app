@@ -162,25 +162,30 @@ class MagisterApi extends Magister {
     List apiSchoolYears = (await dio
             .get("api/leerlingen/${person.id}/aanmeldingen?begin=1970-01-01"))
         .data["items"];
+
+    //Remove already existing schoolyears
+    List<SchoolYear> newFoundSchoolYears = apiSchoolYears
+        .map((e) => magisterSchoolYear(e)!)
+        .toList()
+      ..removeWhere(
+          (sY) => person.rawSchoolYears.map((e) => e.id).contains(sY.id));
+
+    //Add the new found schoolyears
     person.rawSchoolYears = List.from(person.rawSchoolYears)
-      ..addAll(apiSchoolYears.map((e) => magisterSchoolYear(e)!).toList()
-        ..removeWhere(
-            (sY) => person.schoolYears.map((e) => e.id).contains(sY.id)));
+      ..addAll(newFoundSchoolYears);
     if (account.isInBox) account.save();
   }
 
-  Future<void> setSchoolSchoolQuarters(Person person) async {
-    for (SchoolYear schoolYear in person.schoolYears) {
-      List perioden =
-          (await dio.get("/api/aanmeldingen/${schoolYear.id}/cijfers/perioden"))
-              .data["items"];
-      schoolYear.schoolQuarters = List.from(schoolYear.schoolQuarters)
-        ..addAll(perioden.map((sQua) => magisterSchoolQuarter(sQua)!).toList()
-          ..removeWhere((sQua) =>
-              schoolYear.schoolQuarters.map((e) => e.id).contains(sQua.id)));
-      schoolYear.schoolQuarters
-          .sort((SchoolQuarter a, SchoolQuarter b) => a.id.compareTo(b.id));
-    }
+  Future<void> setSchoolQuarters(Person person, SchoolYear schoolYear) async {
+    List perioden =
+        (await dio.get("/api/aanmeldingen/${schoolYear.id}/cijfers/perioden"))
+            .data["items"];
+    schoolYear.schoolQuarters = List.from(schoolYear.schoolQuarters)
+      ..addAll(perioden.map((sQua) => magisterSchoolQuarter(sQua)!).toList()
+        ..removeWhere((sQua) =>
+            schoolYear.schoolQuarters.map((e) => e.id).contains(sQua.id)));
+    schoolYear.schoolQuarters
+        .sort((SchoolQuarter a, SchoolQuarter b) => a.id.compareTo(b.id));
     if (account.isInBox) account.save();
   }
 
@@ -199,7 +204,6 @@ class MagisterApi extends Magister {
       await refreshProfilePicture(person);
       await refreshCalendarEvents(person);
       await setSchoolYears(person);
-      await setSchoolSchoolQuarters(person);
 
       person.config.activeSchoolYearId = person.schoolYears.first.id;
       account.profiles.add(person);

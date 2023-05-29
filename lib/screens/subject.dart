@@ -45,7 +45,7 @@ class _SubjectStatisticsView extends State<SubjectStatisticsView> {
   @override
   Widget build(BuildContext context) {
     final AccountProvider acP = Provider.of<AccountProvider>(context);
-    List<Grade> grades = widget.subject.grades.onlyFilterd(acP.activeFilters);
+    List<Grade> grades = widget.subject.grades.onlyFilterd(acP.activeFilters());
     List<CalendarEvent> tests = acP.person.calendarEvents.tests
         .where((test) => test.subjectsNames.contains(widget.subject.name))
         .toList();
@@ -112,11 +112,10 @@ class _SubjectStatisticsView extends State<SubjectStatisticsView> {
       StaggeredGridTile.fit(
           crossAxisCellCount: 4,
           child: SilvioCard(
-                             title: 
-                      Text(AppLocalizations.of(context)!.grades),
-                trailing:                       GradeListOptions(
-                        addOrRemoveBadge: addOrRemoveBadge,
-                      ),
+              title: Text(AppLocalizations.of(context)!.grades),
+              trailing: GradeListOptions(
+                addOrRemoveBadge: addOrRemoveBadge,
+              ),
               child: GradeList(
                 context: context,
                 grades: grades,

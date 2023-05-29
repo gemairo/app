@@ -23,6 +23,9 @@ class RandomAccount implements Api {
   late bool isOnline = false;
 
   @override
+  Future<void> refreshAll(Person person) async {}
+
+  @override
   Future refreshGrade(Person person, Grade grade) async {
     grade = randomGrade(grade.subject);
   }

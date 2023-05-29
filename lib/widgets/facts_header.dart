@@ -129,6 +129,8 @@ class FactCard extends StatelessWidget {
       title: Text(
         title,
         style: Theme.of(context).textTheme.titleSmall,
+        softWrap: false,
+        overflow: TextOverflow.fade,
       ),
       child: Expanded(
         child: Padding(
@@ -141,14 +143,15 @@ class FactCard extends StatelessWidget {
                 Container(
                   width: 16,
                 ),
-                ElasticAnimation(child: Text(
-                      value,
-                      key: ValueKey(value),
-                      textAlign: TextAlign.end,
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.primary),
-                    ))
+                ElasticAnimation(
+                    child: Text(
+                  value,
+                  key: ValueKey(value),
+                  textAlign: TextAlign.end,
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.primary),
+                ))
               ])),
         ),
       ),

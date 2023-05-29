@@ -142,7 +142,7 @@ class UpcomingTestsCard extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: InkWell(
                         borderRadius:
-                            const BorderRadius.all(Radius.circular(16)),
+                            const BorderRadius.all(Radius.circular(32)),
                         onTap: () => showSilvioModalBottomSheet(children: [
                               EventInformation(
                                 context: context,
