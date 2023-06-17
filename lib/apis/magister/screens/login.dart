@@ -286,7 +286,7 @@ class GetGrades extends StatelessWidget {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               Navigator.of(context).popUntil((r) => r.isFirst);
               Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (context) => const Start(),
+                builder: (context) => SettingsReminder(account: account),
               ));
             });
             return const Center(child: CircularProgressIndicator());

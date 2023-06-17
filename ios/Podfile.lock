@@ -3,6 +3,8 @@ PODS:
     - Flutter
   - background_fetch (1.1.6):
     - Flutter
+  - cr_file_saver (0.0.1):
+    - Flutter
   - DKImagePickerController/Core (4.3.4):
     - DKImagePickerController/ImageDataManager
     - DKImagePickerController/Resource
@@ -144,7 +146,7 @@ PODS:
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
-  - permission_handler_apple (9.0.4):
+  - permission_handler_apple (9.1.0):
     - Flutter
   - PromisesObjC (2.2.0)
   - SDWebImage (5.15.7):
@@ -161,6 +163,7 @@ PODS:
 DEPENDENCIES:
   - app_tracking_transparency (from `.symlinks/plugins/app_tracking_transparency/ios`)
   - background_fetch (from `.symlinks/plugins/background_fetch/ios`)
+  - cr_file_saver (from `.symlinks/plugins/cr_file_saver/ios`)
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
   - Flutter (from `Flutter`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
@@ -201,6 +204,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/app_tracking_transparency/ios"
   background_fetch:
     :path: ".symlinks/plugins/background_fetch/ios"
+  cr_file_saver:
+    :path: ".symlinks/plugins/cr_file_saver/ios"
   file_picker:
     :path: ".symlinks/plugins/file_picker/ios"
   Flutter:
@@ -229,6 +234,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   app_tracking_transparency: 5b1745ef9ade815f7455cb6a0848349589afb7c5
   background_fetch: bc9b44b0bf8b434e282a2ac9be8662800a0296ed
+  cr_file_saver: b2b8ba1ddb30b4040b51a3d6670c7896b45c1f3e
   DKImagePickerController: b512c28220a2b8ac7419f21c491fc8534b7601ac
   DKPhotoGallery: fdfad5125a9fdda9cc57df834d49df790dbb4179
   file_picker: ce3938a0df3cc1ef404671531facef740d03f920
@@ -253,7 +259,7 @@ SPEC CHECKSUMS:
   nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
   package_info_plus: fd030dabf36271f146f1f3beacd48f564b0f17f7
   path_provider_foundation: eaf5b3e458fc0e5fbb9940fb09980e853fe058b8
-  permission_handler_apple: 44366e37eaf29454a1e7b1b7d736c2cceaeb17ce
+  permission_handler_apple: 8f116445eff3c0e7c65ad60f5fef5490aa94b4e4
   PromisesObjC: 09985d6d70fbe7878040aa746d78236e6946d2ef
   SDWebImage: 25bac438318faf37e35650619ebc288a9061d292
   SwiftyGif: 93a1cc87bf3a51916001cf8f3d63835fb64c819f

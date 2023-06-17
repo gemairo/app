@@ -56,8 +56,8 @@ class _GradeCalculate extends State<GradeCalculate> {
             child: Form(
                 key: _formKey,
                 child: Column(
-                  mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Padding(
                         padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),

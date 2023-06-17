@@ -80,26 +80,28 @@ class _SubjectStatisticsView extends State<SubjectStatisticsView> {
                 height: 250,
                 child: SilvioCard(
                     title: Text(AppLocalizations.of(context)!.whatShouldIGet),
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(15, 0, 15, 15),
+                    child: Expanded(
+                        child: Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
                       child: GradeCalculate(
                           context: context,
                           grades: grades,
                           calcNewAverage: false),
-                    )))),
+                    ))))),
         StaggeredGridTile.fit(
             crossAxisCellCount: 2,
             child: SizedBox(
-              height: 250,
-              child: SilvioCard(
+                height: 250,
+                child: SilvioCard(
                   title: Text(AppLocalizations.of(context)!
                       .whatIsGoingToBeMyNewAverage),
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(15, 0, 15, 15),
+                  child: Expanded(
+                      child: Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
                     child: GradeCalculate(
                         context: context, grades: grades, calcNewAverage: true),
                   )),
-            )),
+                ))),
         StaggeredGridTile.fit(
             crossAxisCellCount: 2,
             child: SilvioCard(

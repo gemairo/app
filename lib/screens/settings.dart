@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:dynamic_color/dynamic_color.dart';
+import 'package:expandable_page_view/expandable_page_view.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:silvio/hive/extentions.dart';
@@ -252,55 +253,10 @@ class _SettingsView extends State<SettingsView> {
                     Text(AppLocalizations.of(context)!.exportAccountsExpl),
                 leading: const Icon(Icons.save),
                 trailing: const CircleAvatar(child: Icon(Icons.save_alt))),
-            Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                child: Wrap(
-                  runSpacing: 10,
-                  spacing: 8,
-                  children: [
-                    ...AccountManager().personList.map((person) => SilvioCard(
-                        title: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text("${person.firstName} ${person.lastName}"),
-                            Badge(
-                              alignment: AlignmentDirectional.centerEnd,
-                              backgroundColor:
-                                  Theme.of(context).colorScheme.primary,
-                              label: Text(
-                                  person.parentAccount!.apiType.name
-                                      .capitalize(),
-                                  style: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onPrimary)),
-                            )
-                          ],
-                        ),
-                        leading: CircleAvatar(
-                            radius: 20,
-                            child: ClipOval(
-                                child: AspectRatio(
-                                    aspectRatio: 1,
-                                    child: person.profilePicture != null
-                                        ? Image.memory(
-                                            base64Decode(
-                                                person.profilePicture!),
-                                            gaplessPlayback: true,
-                                            fit: BoxFit.cover,
-                                          )
-                                        : const Icon(Icons.person)))),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: PersonConfig(
-                            person: person,
-                            callback: () => setState(() {}),
-                          ),
-                        ))),
-                  ],
-                )),
+            PersonConfigCarousel(
+              profiles: AccountManager().personList,
+              callback: () => setState(() {}),
+            ),
             ListTile(
               title: Text(AppLocalizations.of(context)!.feedbackAndContact,
                   style: Theme.of(context).textTheme.titleMedium),
@@ -366,14 +322,15 @@ class _SettingsView extends State<SettingsView> {
 }
 
 class PersonConfig extends StatefulWidget {
-  const PersonConfig({
-    super.key,
-    required this.person,
-    required this.callback,
-  });
+  const PersonConfig(
+      {super.key,
+      required this.person,
+      required this.callback,
+      this.simpleView = false});
 
   final Person person;
   final void Function() callback;
+  final bool simpleView;
 
   @override
   State<StatefulWidget> createState() => _PersonConfig();
@@ -445,59 +402,60 @@ class _PersonConfig extends State<PersonConfig> {
                     },
                     icon: const CircleAvatar(child: Icon(Icons.refresh))),
             ])),
-        ListTile(
-          title: Text(AppLocalizations.of(context)!.resetTurnedOffGrades),
-          subtitle: Text(AppLocalizations.of(context)!.resetTurnedOffGradesExpl(
-              widget.person.schoolYears
-                  .expand((element) => element.grades)
-                  .where((element) => !element.isEnabled)
-                  .toList()
-                  .length)),
-          trailing: Wrap(
-            children: [
-              IconButton(
-                  onPressed: () {
-                    Navigator.push(context, MaterialPageRoute<void>(
-                        builder: (BuildContext context) {
-                      List<Grade> grades = widget.person.schoolYears
+        if (!widget.simpleView)
+          ListTile(
+            title: Text(AppLocalizations.of(context)!.resetTurnedOffGrades),
+            subtitle: Text(AppLocalizations.of(context)!
+                .resetTurnedOffGradesExpl(widget.person.schoolYears
+                    .expand((element) => element.grades)
+                    .where((element) => !element.isEnabled)
+                    .toList()
+                    .length)),
+            trailing: Wrap(
+              children: [
+                IconButton(
+                    onPressed: () {
+                      Navigator.push(context, MaterialPageRoute<void>(
+                          builder: (BuildContext context) {
+                        List<Grade> grades = widget.person.schoolYears
+                            .expand((element) => element.grades)
+                            .where((element) => !element.isEnabled)
+                            .toList();
+                        return Scaffold(
+                          appBar: AppBar(
+                            title: Text(AppLocalizations.of(context)!
+                                .resetTurnedOffGrades),
+                          ),
+                          body: grades.isNotEmpty
+                              ? GradeList(
+                                  context: context,
+                                  grades: grades,
+                                )
+                              : const Center(
+                                  child: Icon(
+                                    Icons.block,
+                                    size: 64,
+                                  ),
+                                ),
+                        );
+                      })).then((value) => setState(() {}));
+                    },
+                    icon: const CircleAvatar(child: Icon(Icons.list))),
+                IconButton(
+                    onPressed: () {
+                      for (Grade grade in widget.person.schoolYears
                           .expand((element) => element.grades)
                           .where((element) => !element.isEnabled)
-                          .toList();
-                      return Scaffold(
-                        appBar: AppBar(
-                          title: Text(AppLocalizations.of(context)!
-                              .resetTurnedOffGrades),
-                        ),
-                        body: grades.isNotEmpty
-                            ? GradeList(
-                                context: context,
-                                grades: grades,
-                              )
-                            : const Center(
-                                child: Icon(
-                                  Icons.block,
-                                  size: 64,
-                                ),
-                              ),
-                      );
-                    })).then((value) => setState(() {}));
-                  },
-                  icon: const CircleAvatar(child: Icon(Icons.list))),
-              IconButton(
-                  onPressed: () {
-                    for (Grade grade in widget.person.schoolYears
-                        .expand((element) => element.grades)
-                        .where((element) => !element.isEnabled)
-                        .toList()) {
-                      grade.isEnabled = true;
-                    }
-                    setState(() {});
-                    widget.callback();
-                  },
-                  icon: const CircleAvatar(child: Icon(Icons.undo)))
-            ],
+                          .toList()) {
+                        grade.isEnabled = true;
+                      }
+                      setState(() {});
+                      widget.callback();
+                    },
+                    icon: const CircleAvatar(child: Icon(Icons.undo)))
+              ],
+            ),
           ),
-        ),
         Theme(
             data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
             child: ExpansionTile(
@@ -520,8 +478,9 @@ class _PersonConfig extends State<PersonConfig> {
               ],
             )),
         if (widget.person.parentAccount!.api
-                .buildConfig(context, person: widget.person) !=
-            null)
+                    .buildConfig(context, person: widget.person) !=
+                null &&
+            !widget.simpleView)
           ListTile(
               title: Text(AppLocalizations.of(context)!.apiSettings),
               subtitle: Text(AppLocalizations.of(context)!.apiSettingsExpl),
@@ -538,40 +497,167 @@ class _PersonConfig extends State<PersonConfig> {
                     },
                     icon: const CircleAvatar(child: Icon(Icons.api))),
               ])),
-        ListTile(
-            title: Text(AppLocalizations.of(context)!.logout),
-            subtitle: Text(AppLocalizations.of(context)!.logoutExpl),
-            trailing: Wrap(children: [
-              IconButton(
-                  onPressed: () async {
-                    Account parentAccount = widget.person.parentAccount!;
-                    if (config.activeProfileId == widget.person.uuid) {
-                      config.activeProfileId = AccountManager()
-                          .personList
-                          .firstWhereOrNull(
-                              (person) => person.uuid != widget.person.uuid)
-                          ?.uuid;
-                    }
-                    if (parentAccount.profiles.length <= 1) {
-                      //Remove whole account
-                      widget.person.parentAccount!.api.logout();
-                      parentAccount.delete();
-                    } else if (parentAccount.profiles.length >= 2) {
-                      //Only remove profile from account
-                      parentAccount.profiles.removeWhere(
-                          (profile) => profile.uuid == widget.person.uuid);
-                      if (parentAccount.activeProfile == null) {
-                        Provider.of<AccountProvider>(context, listen: false)
-                            .changeAccount(
-                                AccountManager().personList.first.uuid);
+        if (!widget.simpleView)
+          ListTile(
+              title: Text(AppLocalizations.of(context)!.logout),
+              subtitle: Text(AppLocalizations.of(context)!.logoutExpl),
+              trailing: Wrap(children: [
+                IconButton(
+                    onPressed: () async {
+                      Account parentAccount = widget.person.parentAccount!;
+                      if (config.activeProfileId == widget.person.uuid) {
+                        config.activeProfileId = AccountManager()
+                            .personList
+                            .firstWhereOrNull(
+                                (person) => person.uuid != widget.person.uuid)
+                            ?.uuid;
                       }
-                      parentAccount.save();
-                    }
-                    widget.callback();
-                  },
-                  icon: const CircleAvatar(child: Icon(Icons.logout))),
-            ])),
+                      if (parentAccount.profiles.length <= 1) {
+                        //Remove whole account
+                        widget.person.parentAccount!.api.logout();
+                        await parentAccount.delete();
+                      } else if (parentAccount.profiles.length >= 2) {
+                        //Only remove profile from account
+                        parentAccount.profiles.removeWhere(
+                            (profile) => profile.uuid == widget.person.uuid);
+                        if (parentAccount.activeProfile == null) {
+                          Provider.of<AccountProvider>(context, listen: false)
+                              .changeAccount(
+                                  AccountManager().personList.first.uuid);
+                        }
+                        parentAccount.save();
+                      }
+                      widget.callback();
+                    },
+                    icon: const CircleAvatar(child: Icon(Icons.logout))),
+              ])),
       ],
     );
+  }
+}
+
+class PersonConfigCarousel extends StatefulWidget {
+  const PersonConfigCarousel(
+      {super.key,
+      required this.profiles,
+      this.simpleView = false,
+      this.callback,
+      this.widgetsNextToIndicator = const []});
+
+  final List<Person> profiles;
+  final bool simpleView;
+  final void Function()? callback;
+  final List<Widget> widgetsNextToIndicator;
+
+  @override
+  State<PersonConfigCarousel> createState() => _PersonConfigCarouselState();
+}
+
+class _PersonConfigCarouselState extends State<PersonConfigCarousel> {
+  int current = 0;
+  final PageController controller = PageController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          ExpandablePageView(
+            controller: controller,
+            onPageChanged: (value) => setState(() {
+              current = value;
+            }),
+            physics: const BouncingScrollPhysics(),
+            children: [
+              if (widget.profiles.isEmpty) Container(),
+              ...widget.profiles.map((person) => Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  child: SilvioCard(
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text("${person.firstName} ${person.lastName}"),
+                          Badge(
+                            alignment: AlignmentDirectional.centerEnd,
+                            backgroundColor:
+                                Theme.of(context).colorScheme.primary,
+                            label: Text(
+                                person.parentAccount!.apiType.name.capitalize(),
+                                style: TextStyle(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onPrimary)),
+                          )
+                        ],
+                      ),
+                      leading: CircleAvatar(
+                          radius: 20,
+                          child: ClipOval(
+                              child: AspectRatio(
+                                  aspectRatio: 1,
+                                  child: person.profilePicture != null
+                                      ? Image.memory(
+                                          base64Decode(
+                                              person.profilePicture ?? ""),
+                                          gaplessPlayback: true,
+                                          fit: BoxFit.cover,
+                                        )
+                                      : const Icon(Icons.person)))),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: PersonConfig(
+                          person: person,
+                          simpleView: widget.simpleView,
+                          callback: widget.callback ?? () => setState(() {}),
+                        ),
+                      )))),
+            ],
+          ),
+          (widget.profiles.length > 1)
+              ? Center(
+                  child: SizedBox(
+                  height: 50,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: widget.profiles.map((entry) {
+                          return InkWell(
+                            onTap: () => controller.animateToPage(
+                                duration: const Duration(milliseconds: 500),
+                                curve: Curves.bounceInOut,
+                                widget.profiles.indexWhere((widget) =>
+                                    widget.hashCode == entry.hashCode)),
+                            child: Container(
+                              width: 8,
+                              height: 8,
+                              margin: const EdgeInsets.symmetric(
+                                  vertical: 6.0, horizontal: 4.0),
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .primary
+                                      .withOpacity(current ==
+                                              widget.profiles.indexWhere(
+                                                  (widget) =>
+                                                      widget.hashCode ==
+                                                      entry.hashCode)
+                                          ? 0.9
+                                          : 0.4)),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                      ...widget.widgetsNextToIndicator
+                    ],
+                  ),
+                ))
+              : Container(),
+        ]);
   }
 }

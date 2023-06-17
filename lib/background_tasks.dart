@@ -100,8 +100,8 @@ Future<void> backgroundCheck() async {
       List<CalendarEvent> afterFetchTests =
           List.of(person.calendarEvents.tests).toList();
       List<CalendarEvent> difference = afterFetchTests
-        ..removeWhere((event) =>
-            beforeFetchTests.map((e) => e.id).contains(event.id));
+        ..removeWhere(
+            (event) => beforeFetchTests.map((e) => e.id).contains(event.id));
       if (difference.isNotEmpty) {
         FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
             FlutterLocalNotificationsPlugin();
@@ -118,7 +118,7 @@ Future<void> backgroundCheck() async {
                     difference.map((e) => e.subjectsNames).every(
                         (subject) => subject == difference.first.subjectsNames)
                 ? 'Er is een nieuw toets van ${difference.first.subjectsNames.join(" ")} beschikbaar${showPersonName ? " voor ${person.firstName}" : ""} '
-                : 'Er zijn ${difference.length} nieuwe cijfers beschikbaar${showPersonName ? " voor ${person.firstName}" : ""}',
+                : 'Er zijn ${difference.length} nieuwe toetsen beschikbaar${showPersonName ? " voor ${person.firstName}" : ""}',
             const NotificationDetails(
               android: AndroidNotificationDetails(
                   "SilvioTests", "Nieuwe toetsen",
