@@ -47,7 +47,10 @@ class _SettingsView extends State<SettingsView> {
   };
 
   checkMaterialYou() async {
-    hasMaterialYou = (await DynamicColorPlugin.getCorePalette() != null);
+    var color = await DynamicColorPlugin.getCorePalette();
+    setState(() {
+      hasMaterialYou = (color != null);
+    });
   }
 
   @override

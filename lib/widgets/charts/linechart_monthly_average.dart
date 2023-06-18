@@ -58,7 +58,7 @@ class MonthlyLineChartGrades extends StatelessWidget {
           })
         : [];
     return SizedBox(
-        height: 250 - 64,
+        height: 250 - 56,
         child: LineChart(
           swapAnimationDuration: const Duration(milliseconds: 150),
           swapAnimationCurve: Curves.linear,

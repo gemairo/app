@@ -106,7 +106,7 @@ class _SchoolYearStatisticsView extends State<SchoolYearStatisticsView> {
               child: SilvioCard(
                   title: Text(AppLocalizations.of(context)!.monthlyAverage),
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                    padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
                     child: MonthlyLineChartGrades(
                       grades: grades,
                       showAverage: true,
