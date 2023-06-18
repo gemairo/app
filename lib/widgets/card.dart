@@ -85,6 +85,7 @@ class CarouselCard extends StatefulWidget {
 class _CarouselCard extends State<CarouselCard> {
   int current = 0;
   final CarouselController controller = CarouselController();
+  final ScrollController scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -108,50 +109,67 @@ class _CarouselCard extends State<CarouselCard> {
                         seconds: (math.Random().nextInt(4) + 6),
                       ),
                       onPageChanged: (index, reason) {
+                        // scrollController.animateTo()
                         setState(() {
                           current = index;
                         });
                       })),
             ),
-            Center(
-                child: SizedBox(
-              height: 50,
-              child: (widget.children.length > 1)
-                  ? LayoutBuilder(
-                      builder: (context, constraints) => Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: widget.children
-                                .take((constraints.maxWidth / 16).floor())
-                                .map((entry) {
-                              return GestureDetector(
-                                onTap: () => controller.animateToPage(
-                                    widget.children.indexWhere((widget) =>
-                                        widget.hashCode == entry.hashCode)),
-                                child: Container(
-                                  width: 8,
-                                  height: 8,
-                                  margin: const EdgeInsets.symmetric(
-                                      vertical: 6.0, horizontal: 4.0),
-                                  decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .primary
-                                          .withOpacity(current ==
-                                                  widget.children.indexWhere(
-                                                      (widget) =>
-                                                          widget.hashCode ==
-                                                          entry.hashCode)
-                                              ? 0.9
-                                              : 0.4)),
-                                ),
-                              );
-                            }).toList(),
-                          )))
-                  : null,
-            )),
+            ShaderMask(
+              shaderCallback: (Rect rect) {
+                return const LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: [
+                    Colors.white,
+                    Colors.transparent,
+                    Colors.transparent,
+                    Colors.white
+                  ],
+                  stops: [0.0, 0.25, 0.75, 1.0],
+                ).createShader(rect);
+              },
+              blendMode: BlendMode.dstOut,
+              child: Center(
+                  child: SizedBox(
+                height: 50,
+                child: (widget.children.length > 1)
+                    ? SingleChildScrollView(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        controller: scrollController,
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: widget.children.map((entry) {
+                            return InkWell(
+                              onTap: () => controller.animateToPage(
+                                  widget.children.indexWhere((widget) =>
+                                      widget.hashCode == entry.hashCode)),
+                              child: Container(
+                                width: 8,
+                                height: 8,
+                                margin: const EdgeInsets.symmetric(
+                                    vertical: 6.0, horizontal: 4.0),
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .primary
+                                        .withOpacity(current ==
+                                                widget.children.indexWhere(
+                                                    (widget) =>
+                                                        widget.hashCode ==
+                                                        entry.hashCode)
+                                            ? 0.9
+                                            : 0.4)),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      )
+                    : null,
+              )),
+            ),
           ],
         ),
       ),

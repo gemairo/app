@@ -10,7 +10,7 @@ import 'package:silvio/apis/abstact_api.dart';
 import 'package:silvio/apis/account_manager.dart';
 import 'package:silvio/hive/adapters.dart';
 import 'package:silvio/hive/extentions.dart';
-import 'package:silvio/main.dart';
+import 'package:silvio/screens/post_login.dart';
 import 'package:silvio/widgets/card.dart';
 import 'package:silvio/widgets/facts_header.dart';
 import 'package:mobile_scanner/mobile_scanner.dart' hide CalendarEvent;

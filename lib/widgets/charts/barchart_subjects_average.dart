@@ -76,7 +76,8 @@ class BarChartSubjectsAverage extends StatelessWidget {
                         children: <TextSpan>[
                           TextSpan(
                               text: (rounded ? rod.toY.round() : rod.toY)
-                                  .toString()),
+                                  .toDouble()
+                                  .displayNumber()),
                         ],
                       );
                     },

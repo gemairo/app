@@ -27,7 +27,7 @@ Silvio is een manier om je cijfers uit het [leerlingvolgsysteem Magister](https:
 
 **Nee**, Silvio is een **privé-initiatief** en heeft geen elke connectie met Magister of haar moeder bedrijf. Alle code voor Silvio is openbaar beschikbaar, dus het is mogelijk om zelf te controleren welke en hoe Silvio je gegevens gebruikt. 
 
-![screenshots](https://github.com/HarryDeKat/Silvio/assets/96647011/b8a7b276-47f6-4a9d-a9ae-3b0d7920244f)
+![screenshots](https://www.harrydekat.dev/Silvio/screenshot.png)
 
 ## Contributie
 

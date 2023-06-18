@@ -180,5 +180,6 @@
   "showChangeInAverage": "Show change in average",
   "showChangeInSubjectAverage": "Show change in subject average",
   "bugReport": "Suggestions and bugs",
-  "bugReportExpl": "Make a suggestion or report a bug"
+  "bugReportExpl": "Make a suggestion or report a bug",
+  "monthlyAverage": "Monthly average"
 }

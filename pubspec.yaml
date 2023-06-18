@@ -53,6 +53,7 @@ dependencies:
   google_mobile_ads: ^3.0.0
   app_tracking_transparency: ^2.0.4
   cr_file_saver: ^0.0.2+1
+  expandable_page_view: ^1.0.17
 
 dev_dependencies:
   flutter_test:

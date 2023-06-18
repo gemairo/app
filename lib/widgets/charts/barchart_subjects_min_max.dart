@@ -76,13 +76,15 @@ class BarChartSubjectsMinMax extends StatelessWidget {
                             fontWeight: FontWeight.bold),
                         children: <TextSpan>[
                           TextSpan(
-                              text: "max: ${rod.toY}\n", style: itemTextStyle),
-                          TextSpan(
-                              text:
-                                  "med: ${useableSubjects[group.x].grades.median}\n",
+                              text: "max: ${rod.toY.displayNumber()}\n",
                               style: itemTextStyle),
                           TextSpan(
-                              text: "min: ${rod.fromY}", style: itemTextStyle),
+                              text:
+                                  "med: ${useableSubjects[group.x].grades.median.displayNumber()}\n",
+                              style: itemTextStyle),
+                          TextSpan(
+                              text: "min: ${rod.fromY.displayNumber()}",
+                              style: itemTextStyle),
                         ],
                       );
                     },

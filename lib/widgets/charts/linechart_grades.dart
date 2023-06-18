@@ -104,7 +104,7 @@ class LineChartGrades extends StatelessWidget {
                                 children: value
                                     .map((e) => TextSpan(
                                         text:
-                                            "${!e.bar.dotData.show ? '\n${AppLocalizations.of(context)!.average}:' : '\n${AppLocalizations.of(context)!.grade}:'} ${e.y.toStringAsFixed(2)}",
+                                            "${!e.bar.dotData.show ? '\n${AppLocalizations.of(context)!.average}:' : '\n${AppLocalizations.of(context)!.grade}:'} ${e.y.displayNumber(decimalDigits: 2)}",
                                         style: const TextStyle(
                                             fontWeight: FontWeight.normal,
                                             height: 1.25)))

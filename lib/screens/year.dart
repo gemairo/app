@@ -10,6 +10,7 @@ import 'package:silvio/hive/adapters.dart';
 import 'package:silvio/hive/extentions.dart';
 
 import 'package:silvio/widgets/card.dart';
+import 'package:silvio/widgets/charts/linechart_monthly_average.dart';
 import 'package:silvio/widgets/facts_header.dart';
 import 'package:silvio/widgets/filter.dart';
 import 'package:silvio/widgets/charts/barchart_frequency.dart';
@@ -96,8 +97,19 @@ class _SchoolYearStatisticsView extends State<SchoolYearStatisticsView> {
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                     child: BarChartFrequency(
-                      context: context,
                       grades: grades,
+                    ),
+                  ))),
+        if (grades.numericalGrades.isNotEmpty)
+          StaggeredGridTile.fit(
+              crossAxisCellCount: 2,
+              child: SilvioCard(
+                  title: Text(AppLocalizations.of(context)!.monthlyAverage),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+                    child: MonthlyLineChartGrades(
+                      grades: grades,
+                      showAverage: true,
                     ),
                   ))),
         StaggeredGridTile.fit(

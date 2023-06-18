@@ -187,7 +187,7 @@ class AccountSwitcher extends StatelessWidget {
                     radius: 25, child: ClipOval(child: Icon(Icons.settings))),
               ),
               const Divider(),
-              const Center(child: Text("Harry de Kat")),
+              const Center(child: Text("HarryDeKat")),
             ],
           ),
         ),
