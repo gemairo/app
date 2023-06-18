@@ -13,7 +13,7 @@ class SomToDayApi extends SomToDay {
         onError: (e, handler) async {
           if (e.response?.data != null &&
               e.response?.data["error"] == "invalid_grant") {
-            return handler.reject(DioError(
+            return handler.reject(DioException(
               requestOptions: e.requestOptions,
               error:
                   "Dit account is uitgelogd, verwijder je account en log opnieuw in. (Spijt me zeer hier is nog geen automatische support voor)",
@@ -29,7 +29,7 @@ class SomToDayApi extends SomToDay {
                 account.apiStorage!.expiry!) {
           debugPrint("Accestoken expired");
           await refreshToken().onError((e, stack) {
-            handler.reject(e as DioError);
+            handler.reject(e as DioException);
             return;
           });
         }
@@ -60,7 +60,7 @@ class SomToDayApi extends SomToDay {
           }
 
           return await refreshToken().then((_) => retry()).onError(
-                (e, stack) => handler.reject(e as DioError),
+                (e, stack) => handler.reject(e as DioException),
               );
         }
       })

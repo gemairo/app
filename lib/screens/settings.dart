@@ -32,6 +32,7 @@ class SettingsView extends StatefulWidget {
 }
 
 class _SettingsView extends State<SettingsView> {
+  bool hasMaterialYou = false;
   final Map<String, Color> material3Colors = {
     'M3 Baseline': const Color(0xff6750a4),
     'Silvio Violet': const Color(0xff713DCD),
@@ -44,6 +45,16 @@ class _SettingsView extends State<SettingsView> {
     'Deep Orange': Colors.deepOrange,
     'Pink': Colors.pink
   };
+
+  checkMaterialYou() async {
+    hasMaterialYou = (await DynamicColorPlugin.getCorePalette() != null);
+  }
+
+  @override
+  void initState() {
+    checkMaterialYou();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,57 +106,47 @@ class _SettingsView extends State<SettingsView> {
                 Silvio.of(context).update();
               },
             ),
-            FutureBuilder(
-              future: DynamicColorPlugin.getCorePalette(),
-              builder: (context, snapshot) {
-                return Column(
-                  children: [
-                    SwitchListTile(
-                      title: Text(AppLocalizations.of(context)!.useMaterialYou),
-                      secondary: const Icon(Icons.color_lens),
-                      subtitle: Text(
-                          AppLocalizations.of(context)!.useMaterialYouExpl),
-                      value: config.useMaterialYou,
-                      onChanged:
-                          snapshot.connectionState == ConnectionState.done &&
-                                  snapshot.data != null
-                              ? (bool value) {
-                                  config.useMaterialYou = value;
-                                  config.save;
-                                  setState(() {});
-                                  Silvio.of(context).update();
-                                }
-                              : null,
+            Column(
+              children: [
+                SwitchListTile(
+                  title: Text(AppLocalizations.of(context)!.useMaterialYou),
+                  secondary: const Icon(Icons.color_lens),
+                  subtitle:
+                      Text(AppLocalizations.of(context)!.useMaterialYouExpl),
+                  value: config.useMaterialYou,
+                  onChanged: hasMaterialYou
+                      ? (bool value) {
+                          config.useMaterialYou = value;
+                          config.save;
+                          setState(() {});
+                          Silvio.of(context).update();
+                        }
+                      : null,
+                ),
+                if (!config.useMaterialYou || !hasMaterialYou)
+                  ListTile(
+                    leading: const Icon(Icons.format_color_fill),
+                    enabled: !config.useMaterialYou,
+                    subtitle: Wrap(
+                      alignment: WrapAlignment.spaceEvenly,
+                      children: [
+                        ...material3Colors.values.map((value) => IconButton(
+                              icon: const Icon(Icons.radio_button_unchecked),
+                              color: value,
+                              isSelected: config.activeMaterialYouColorInt ==
+                                  value.value,
+                              selectedIcon: const Icon(Icons.circle),
+                              onPressed: () {
+                                config.activeMaterialYouColorInt = value.value;
+                                config.save();
+                                setState(() {});
+                                Silvio.of(context).update();
+                              },
+                            ))
+                      ],
                     ),
-                    if (!config.useMaterialYou || snapshot.data == null)
-                      ListTile(
-                        leading: const Icon(Icons.format_color_fill),
-                        enabled: !config.useMaterialYou,
-                        subtitle: Wrap(
-                          alignment: WrapAlignment.spaceEvenly,
-                          children: [
-                            ...material3Colors.values.map((value) => IconButton(
-                                  icon:
-                                      const Icon(Icons.radio_button_unchecked),
-                                  color: value,
-                                  isSelected:
-                                      config.activeMaterialYouColorInt ==
-                                          value.value,
-                                  selectedIcon: const Icon(Icons.circle),
-                                  onPressed: () {
-                                    config.activeMaterialYouColorInt =
-                                        value.value;
-                                    config.save();
-                                    setState(() {});
-                                    Silvio.of(context).update();
-                                  },
-                                ))
-                          ],
-                        ),
-                      ),
-                  ],
-                );
-              },
+                  ),
+              ],
             ),
             ListTile(
               title: Text(AppLocalizations.of(context)!.sufficientBorder),

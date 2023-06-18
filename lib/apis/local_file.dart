@@ -7,7 +7,6 @@ import 'package:silvio/apis/abstact_api.dart';
 import 'package:silvio/hive/adapters.dart';
 import 'package:silvio/main.dart';
 import 'package:hive/hive.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LocalFile implements Api {

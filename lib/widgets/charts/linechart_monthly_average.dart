@@ -4,7 +4,6 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:silvio/hive/extentions.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:silvio/widgets/avatars.dart';
 
 class MonthlyLineChartGrades extends StatelessWidget {
   const MonthlyLineChartGrades(

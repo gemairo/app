@@ -97,7 +97,6 @@ class _SchoolYearStatisticsView extends State<SchoolYearStatisticsView> {
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                     child: BarChartFrequency(
-                      context: context,
                       grades: grades,
                     ),
                   ))),

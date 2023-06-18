@@ -8,7 +8,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:silvio/apis/account_manager.dart';
 import 'package:silvio/hive/adapters.dart';
 import 'package:silvio/hive/extentions.dart';
-import 'package:silvio/apis/abstact_api.dart';
 
 import 'package:silvio/widgets/card.dart';
 import 'package:silvio/widgets/facts_header.dart';
@@ -63,7 +62,6 @@ class _CareerOverview extends State<CareerOverview> {
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                     child: BarChartFrequency(
-                      context: context,
                       grades: grades,
                     ),
                   ))),

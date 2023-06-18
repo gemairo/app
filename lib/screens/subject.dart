@@ -108,7 +108,7 @@ class _SubjectStatisticsView extends State<SubjectStatisticsView> {
                 title: Text(AppLocalizations.of(context)!.histogram),
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                  child: BarChartFrequency(context: context, grades: grades),
+                  child: BarChartFrequency(grades: grades),
                 ))),
       ],
       StaggeredGridTile.fit(

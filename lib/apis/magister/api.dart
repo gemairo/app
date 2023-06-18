@@ -33,7 +33,7 @@ class MagisterApi extends Magister {
         onError: (e, handler) async {
           if (e.response?.data != null &&
               e.response?.data["error"] == "invalid_grant") {
-            return handler.reject(DioError(
+            return handler.reject(DioException(
               requestOptions: e.requestOptions,
               error:
                   "Dit account is uitgelogd, verwijder je account en log opnieuw in. (Spijt me zeer hier is nog geen automatische support voor)",
@@ -56,7 +56,7 @@ class MagisterApi extends Magister {
                   account.apiStorage!.expiry!) {
             debugPrint("Accestoken expired");
             await refreshToken().onError((e, stack) {
-              handler.reject(e as DioError);
+              handler.reject(e as DioException);
               return;
             });
           }
@@ -88,7 +88,7 @@ class MagisterApi extends Magister {
             }
 
             return await refreshToken().then((_) => retry()).onError(
-                  (e, stack) => handler.reject(e as DioError),
+                  (e, stack) => handler.reject(e as DioException),
                 );
           }
 
@@ -98,8 +98,8 @@ class MagisterApi extends Magister {
       QueuedInterceptorsWrapper(
         onError: (e, handler) async {
           int tries = 0;
-          if (e.type == DioErrorType.unknown ||
-              e.type == DioErrorType.connectionTimeout) {
+          if (e.type == DioExceptionType.unknown ||
+              e.type == DioExceptionType.connectionTimeout) {
             Future<void> retry() async {
               await dio.fetch(e.requestOptions).then(
                 (r) => handler.resolve(r),

@@ -4,7 +4,7 @@ import 'package:silvio/hive/adapters.dart';
 import 'package:silvio/hive/extentions.dart';
 
 class BarChartFrequency extends StatefulWidget {
-  const BarChartFrequency({super.key, required context, required this.grades});
+  const BarChartFrequency({super.key, required this.grades});
 
   final List<Grade> grades;
 
