@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -44,7 +45,69 @@ class _SubjectsListView extends State<SubjectsListView> {
               gradeString:
                   e.grades.average.isNaN ? "-" : e.grades.average.toString(),
             ),
-            trailing: const Icon(Icons.navigate_next),
+            trailing: Wrap(
+              spacing: 8,
+              children: [
+                if (e.grades.sufficientSafety > 1 &&
+                    e.grades.numericalGrades.isNotEmpty)
+                  Tooltip(
+                      triggerMode: TooltipTriggerMode.tap,
+                      showDuration: const Duration(minutes: 60),
+                      decoration: BoxDecoration(
+                        border: Border.fromBorderSide(BorderSide(
+                            color: Theme.of(context).colorScheme.outline,
+                            width: 1)),
+                        color: Theme.of(context).colorScheme.background,
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(4)),
+                      ),
+                      richMessage: TextSpan(
+                          style: TextStyle(
+                              color:
+                                  Theme.of(context).colorScheme.onBackground),
+                          children: [
+                            TextSpan(
+                                text: AppLocalizations.of(context)!
+                                    .sufficientSafety1),
+                            TextSpan(
+                              text: e.grades
+                                  .map((g) => g.weight)
+                                  .average
+                                  .displayNumber(decimalDigits: 2),
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            TextSpan(
+                                text: AppLocalizations.of(context)!
+                                    .sufficientSafety2),
+                            TextSpan(
+                                text: e.grades.sufficientSafety
+                                    .displayNumber(decimalDigits: 2),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold)),
+                            TextSpan(
+                                text: AppLocalizations.of(context)!
+                                    .sufficientSafety3)
+                          ]),
+                      child: CircleAvatar(
+                        backgroundColor: Colors.transparent,
+                        foregroundColor:
+                            Theme.of(context).colorScheme.onBackground,
+                        child: Icon(
+                          e.grades.sufficientSafety < config.sufficientFrom
+                              ? Icons.info_outline
+                              : Icons.warning_amber_outlined,
+                          color: e.grades.sufficientSafety > e.grades.average
+                              ? Theme.of(context).colorScheme.error
+                              : null,
+                        ),
+                      )),
+                CircleAvatar(
+                    backgroundColor: Colors.transparent,
+                    foregroundColor: Theme.of(context).colorScheme.onBackground,
+                    child: const Icon(Icons.navigate_next)),
+              ],
+            ),
             onTap: () {
               if (acP.schoolYear.grades.subjects
                   .where((sub) => sub.id == e.id)

@@ -181,5 +181,8 @@
   "showChangeInSubjectAverage": "Toon verandering in het vak gemiddelde",
   "bugReport": "Suggesties en fouten",
   "bugReportExpl": "Maak een suggestie of rapporteer een fout",
-  "monthlyAverage": "Maandelijks gemiddelde"
+  "monthlyAverage": "Maandelijks gemiddelde",
+  "sufficientSafety1": "Bij een gemiddeld gewicht van ",
+  "sufficientSafety2": " moet je een ",
+  "sufficientSafety3": " halen om gemiddeld een voldoende te staan"
 }
