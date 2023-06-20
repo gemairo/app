@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:intl/intl.dart';
 import 'package:silvio/widgets/announcements.dart';
 import 'package:silvio/widgets/cards/list_test.dart';
 import 'package:provider/provider.dart';
@@ -100,7 +101,14 @@ class _SchoolYearStatisticsView extends State<SchoolYearStatisticsView> {
                       grades: grades,
                     ),
                   ))),
-        if (grades.numericalGrades.isNotEmpty)
+        if (grades.numericalGrades.isNotEmpty &&
+            grades
+                    .map((g) => DateTime.parse(
+                        DateFormat('yyyy-MM-01').format(g.addedDate)))
+                    .toList()
+                    .unique()
+                    .length >
+                1)
           StaggeredGridTile.fit(
               crossAxisCellCount: 2,
               child: SilvioCard(

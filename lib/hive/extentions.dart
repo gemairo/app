@@ -121,6 +121,13 @@ extension GradeCalculations on List<Grade> {
         100;
   }
 
+  ///This value give a rough estimate on how well you will be able to retain a sufficient mark.
+  ///
+  ///It calculates the minimun grade you will need to get in order to retain a sufficient average with the average weight.
+  double get sufficientSafety {
+    return getNewGrade(config.sufficientFrom, map((e) => e.weight).average);
+  }
+
   Map<int, double> getGradeFrequency() {
     Map<int, double> gradefrequency = {};
     for (var i in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) {
