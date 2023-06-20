@@ -120,7 +120,7 @@ class _SettingsView extends State<SettingsView> {
                   onChanged: hasMaterialYou
                       ? (bool value) {
                           config.useMaterialYou = value;
-                          config.save;
+                          config.save();
                           setState(() {});
                           Silvio.of(context).update();
                         }
@@ -620,43 +620,45 @@ class _PersonConfigCarouselState extends State<PersonConfigCarousel> {
                       )))),
             ],
           ),
-          (widget.profiles.length > 1)
+          (widget.profiles.length > 1 ||
+                  widget.widgetsNextToIndicator.isNotEmpty)
               ? Center(
                   child: SizedBox(
                   height: 50,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: widget.profiles.map((entry) {
-                          return InkWell(
-                            onTap: () => controller.animateToPage(
-                                duration: const Duration(milliseconds: 500),
-                                curve: Curves.bounceInOut,
-                                widget.profiles.indexWhere((widget) =>
-                                    widget.hashCode == entry.hashCode)),
-                            child: Container(
-                              width: 8,
-                              height: 8,
-                              margin: const EdgeInsets.symmetric(
-                                  vertical: 6.0, horizontal: 4.0),
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .primary
-                                      .withOpacity(current ==
-                                              widget.profiles.indexWhere(
-                                                  (widget) =>
-                                                      widget.hashCode ==
-                                                      entry.hashCode)
-                                          ? 0.9
-                                          : 0.4)),
-                            ),
-                          );
-                        }).toList(),
-                      ),
+                      if (widget.profiles.length > 1)
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: widget.profiles.map((entry) {
+                            return InkWell(
+                              onTap: () => controller.animateToPage(
+                                  duration: const Duration(milliseconds: 500),
+                                  curve: Curves.bounceInOut,
+                                  widget.profiles.indexWhere((widget) =>
+                                      widget.hashCode == entry.hashCode)),
+                              child: Container(
+                                width: 8,
+                                height: 8,
+                                margin: const EdgeInsets.symmetric(
+                                    vertical: 6.0, horizontal: 4.0),
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .primary
+                                        .withOpacity(current ==
+                                                widget.profiles.indexWhere(
+                                                    (widget) =>
+                                                        widget.hashCode ==
+                                                        entry.hashCode)
+                                            ? 0.9
+                                            : 0.4)),
+                              ),
+                            );
+                          }).toList(),
+                        ),
                       ...widget.widgetsNextToIndicator
                     ],
                   ),
