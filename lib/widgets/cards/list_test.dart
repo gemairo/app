@@ -100,25 +100,37 @@ class EventInformation extends StatelessWidget {
               event.infoTypeString(context, short: true),
             )),
       ),
-      ListTile(
-        title: Text(
-            DateFormat.yMMMMd('nl').add_jm().format(event.start.toLocal())),
-        leading: const Icon(Icons.calendar_today),
-      ),
-      ListTile(
-        title: Text(event.infoTypeString(context)),
-        leading: const Icon(Icons.type_specimen),
-      ),
-      if (event.teacherNames.isNotEmpty)
-        ListTile(
-          title: Text(event.teacherNames.join(", ")),
-          leading: const Icon(Icons.supervisor_account),
-        ),
-      if (event.description != null && event.description != "")
-        ListTile(
-          title: Text(event.description!),
-          leading: const Icon(Icons.text_fields),
-        ),
+      Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          child: SilvioCard(
+              isFilled: true,
+              title: Text(AppLocalizations.of(context)!.information),
+              child: Column(children: [
+                ListTile(
+                  title: Text(AppLocalizations.of(context)!.dateOfTest),
+                  subtitle: Text(DateFormat.yMMMMd('nl')
+                      .add_jm()
+                      .format(event.start.toLocal())),
+                  leading: const Icon(Icons.access_time),
+                ),
+                ListTile(
+                  title: Text(AppLocalizations.of(context)!.typeTest),
+                  subtitle: Text(event.infoTypeString(context)),
+                  leading: const Icon(Icons.type_specimen),
+                ),
+                if (event.teacherNames.isNotEmpty)
+                  ListTile(
+                    title: Text(AppLocalizations.of(context)!.teacher),
+                    subtitle: Text(event.teacherNames.join(", ")),
+                    leading: const Icon(Icons.supervisor_account),
+                  ),
+                if (event.description != null && event.description != "")
+                  ListTile(
+                    title: Text(AppLocalizations.of(context)!.description),
+                    subtitle: Text(event.description!),
+                    leading: const Icon(Icons.text_fields),
+                  ),
+              ]))),
     ]);
   }
 }

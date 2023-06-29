@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:silvio/hive/adapters.dart';
@@ -16,7 +18,11 @@ class BarChartSubjectsAverage extends StatelessWidget {
     subjects.asMap().forEach((index, Subject subject) {
       double average = rounded
           ? subject.grades.average.round().toDouble()
-          : subject.grades.average;
+          : subject.roundOnDecimals != null
+              ? ((subject.grades.average * pow(10, subject.roundOnDecimals!))
+                      .truncate() /
+                  pow(10, subject.roundOnDecimals!))
+              : subject.grades.average;
       barData.add(BarChartGroupData(
         x: index,
         barRods: [
@@ -74,10 +80,7 @@ class BarChartSubjectsAverage extends StatelessWidget {
                           color: Theme.of(context).colorScheme.onBackground,
                         ),
                         children: <TextSpan>[
-                          TextSpan(
-                              text: (rounded ? rod.toY.round() : rod.toY)
-                                  .toDouble()
-                                  .displayNumber()),
+                          TextSpan(text: rod.toY.displayNumber()),
                         ],
                       );
                     },

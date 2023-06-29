@@ -119,7 +119,6 @@ class _SubjectStatisticsView extends State<SubjectStatisticsView> {
                 addOrRemoveBadge: addOrRemoveBadge,
               ),
               child: GradeList(
-                context: context,
                 grades: grades,
                 showGradeCalculate: true,
               )))

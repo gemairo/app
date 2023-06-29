@@ -107,8 +107,8 @@ class RandomAccount implements Api {
 
 Subject randomSubject() {
   return Subject(
-      code: _generateRandomString(3),
-      name: _generateRandomString(6),
+      rawCode: _generateRandomString(3),
+      rawName: _generateRandomString(6),
       id: random.nextInt(99999));
 }
 

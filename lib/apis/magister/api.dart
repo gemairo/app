@@ -33,6 +33,10 @@ class MagisterApi extends Magister {
         onError: (e, handler) async {
           if (e.response?.data != null &&
               e.response?.data["error"] == "invalid_grant") {
+            rootScaffoldMessengerKey.currentState?.removeCurrentSnackBar();
+            rootScaffoldMessengerKey.currentState?.showSnackBar(const SnackBar(
+              content: Text("No connection to Magister could be made"),
+            ));
             return handler.reject(DioException(
               requestOptions: e.requestOptions,
               error:

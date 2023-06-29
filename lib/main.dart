@@ -77,6 +77,9 @@ void main() async {
   BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
 }
 
+final GlobalKey<ScaffoldMessengerState> rootScaffoldMessengerKey =
+    GlobalKey<ScaffoldMessengerState>();
+
 class Silvio extends StatefulWidget {
   const Silvio({Key? key}) : super(key: key);
 
@@ -129,6 +132,15 @@ class SilvioState extends State<Silvio> {
             brightness: useDarkMode ? Brightness.dark : Brightness.light,
             colorScheme: colorScheme,
             useMaterial3: true,
+            tooltipTheme: TooltipThemeData(
+              textStyle: TextStyle(color: colorScheme.onBackground),
+              decoration: BoxDecoration(
+                border: Border.fromBorderSide(
+                    BorderSide(color: colorScheme.outline, width: 1)),
+                color: colorScheme.background,
+                borderRadius: const BorderRadius.all(Radius.circular(4)),
+              ),
+            ),
             badgeTheme: BadgeThemeData(
                 textColor: colorScheme.onPrimaryContainer,
                 backgroundColor: colorScheme.primaryContainer));
@@ -137,6 +149,7 @@ class SilvioState extends State<Silvio> {
       return ChangeNotifierProvider(
           create: (context) => AccountProvider(),
           child: MaterialApp(
+              scaffoldMessengerKey: rootScaffoldMessengerKey,
               title: 'Silvio',
               debugShowCheckedModeBanner: false,
               localizationsDelegates: AppLocalizations.localizationsDelegates,

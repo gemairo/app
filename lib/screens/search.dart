@@ -114,7 +114,6 @@ class _SearchView extends State<SearchView> {
         ),
         const SizedBox(height: 10),
         GradeList(
-          context: context,
           grades: acP.person.allGrades.onlyFilterd([
             if (controller.text != "" || acP.person.activeFilters.isEmpty)
               Filter(

@@ -3,7 +3,6 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:silvio/widgets/avatars.dart';
 import 'package:silvio/widgets/card.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'dart:math' as math;
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
@@ -16,7 +15,6 @@ import 'package:silvio/widgets/cards/grade_calculations.dart';
 class GradeList extends StatefulWidget {
   const GradeList(
       {super.key,
-      required context,
       this.grades = const [],
       this.warnings = const [],
       this.showGradeCalculate = false});
@@ -118,14 +116,12 @@ class _GradeList extends State<GradeList> {
                                         GradeListBadges.changeInAverage) &&
                                     grades.isNotEmpty &&
                                     !grade.changeInAverage(grades).isNaN)
-                                  changeInAverageBadge(context,
-                                      grade.changeInAverage(grades), grades),
+                                  changeInAverageBadge(
+                                      context, grade.changeInAverage(grades)),
                                 if (subjectGrades.isNotEmpty &&
                                     !grade.changeInAverage(subjectGrades).isNaN)
-                                  changeInAverageBadge(
-                                      context,
-                                      grade.changeInAverage(subjectGrades),
-                                      subjectGrades)
+                                  changeInAverageBadge(context,
+                                      grade.changeInAverage(subjectGrades))
                               ])
                         : null));
           },
@@ -250,165 +246,203 @@ class _GradeInformation extends State<GradeInformation> {
               ),
             ),
           if (grades.isNotEmpty && !widget.grade.changeInAverage(grades).isNaN)
-            changeInAverageBadge(
-                context, widget.grade.changeInAverage(grades), grades),
+            changeInAverageBadge(context, widget.grade.changeInAverage(grades)),
         ]),
         leading: GradeAvatar(
           gradeString: widget.grade.gradeString,
           isSufficient: widget.grade.isSufficient,
         ),
       ),
-      ListTile(
-        title: Text(DateFormat.yMMMMd('nl')
-            .add_jm()
-            .format(widget.grade.addedDate.toLocal())),
-        leading: const Icon(Icons.calendar_today),
-      ),
-      ListTile(
-        title: Text(widget.grade.weight.displayNumber()),
-        leading: const Icon(Icons.balance),
-      ),
-      ListTile(
-        title: Text(
-            "${widget.grade.schoolQuarter?.name} (${widget.grade.schoolQuarter?.shortname})"),
-        leading: const Icon(Icons.calendar_month),
-      ),
-      ListTile(
-        title: Text(widget.grade.teacherCode ?? ""),
-        leading: const Icon(Icons.supervisor_account),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        child: SilvioCard(
+            isFilled: true,
+            title: Text(AppLocalizations.of(context)!.information),
+            child: Column(
+              children: [
+                ListTile(
+                  title: Text(AppLocalizations.of(context)!.gradeAddedDate),
+                  subtitle: Text(DateFormat.yMMMMd('nl')
+                      .add_jm()
+                      .format(widget.grade.addedDate.toLocal())),
+                  leading: const Icon(Icons.access_time),
+                ),
+                ListTile(
+                  title: Text(AppLocalizations.of(context)!.weight),
+                  subtitle: Text(widget.grade.weight.displayNumber()),
+                  leading: const Icon(Icons.balance),
+                ),
+                ListTile(
+                  title: Text(AppLocalizations.of(context)!.period),
+                  subtitle: Text(
+                      "${widget.grade.schoolQuarter?.name} (${widget.grade.schoolQuarter?.shortname})"),
+                  leading: const Icon(Icons.calendar_month),
+                ),
+                ListTile(
+                  title: Text(AppLocalizations.of(context)!.teacher),
+                  subtitle: Text(widget.grade.teacherCode ?? ""),
+                  leading: const Icon(Icons.supervisor_account),
+                ),
+              ],
+            )),
       ),
       if (grades.isNotEmpty &&
           grades.numericalGrades.isNotEmpty &&
           widget.showGradeCalculate) ...[
-        const Divider(),
-        ...warnings.map(
-          (warning) => ListTile(
-              title: Text(AppLocalizations.of(context)!.warning(warning)),
-              leading: Icon(
-                Icons.warning_amber_outlined,
-                color: Theme.of(context).colorScheme.error,
-              )),
-        ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: StaggeredGrid.extent(
-              maxCrossAxisExtent: 640,
-              crossAxisSpacing: 8,
-              mainAxisSpacing: 10,
-              children: [
-                SilvioCard(
-                    title:
-                        Text(AppLocalizations.of(context)!.whatShouldIGetRedo),
-                    elevation: 2,
-                    child: Padding(
-                      padding:
-                          const EdgeInsets.only(left: 16, right: 16, bottom: 8),
-                      child: GradeCalculate(
-                          context: context,
-                          grades: grades
-                              .where((lGrade) =>
-                                  lGrade != widget.grade &&
-                                  !(!alsoGradesAfter &&
-                                      !lGrade.addedDate
-                                          .isBefore(widget.grade.addedDate)))
-                              .toList(),
-                          preFillWeight: widget.grade.weight,
-                          calcNewAverage: false),
-                    )),
-                SilvioCard(
-                    title: Text(AppLocalizations.of(context)!
-                        .whatIsGoingToBeMyNewAverageRedo),
-                    elevation: 2,
-                    child: Padding(
-                      padding:
-                          const EdgeInsets.only(left: 16, right: 16, bottom: 8),
-                      child: GradeCalculate(
-                          context: context,
-                          grades: grades
-                              .where((lGrade) =>
-                                  lGrade != widget.grade &&
-                                  !(!alsoGradesAfter &&
-                                      !lGrade.addedDate
-                                          .isBefore(widget.grade.addedDate)))
-                              .toList(),
-                          preFillWeight: widget.grade.weight,
-                          calcNewAverage: true),
-                    )),
-              ]),
-        )
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            child: SilvioCard(
+                isFilled: true,
+                trailing: warnings.isNotEmpty
+                    ? Padding(
+                        padding: const EdgeInsets.only(right: 16.0),
+                        child: Tooltip(
+                          triggerMode: TooltipTriggerMode.tap,
+                          showDuration: const Duration(minutes: 60),
+                          message: warnings
+                              .map((e) =>
+                                  AppLocalizations.of(context)!.warning(e))
+                              .join("\n"),
+                          child: Icon(
+                            Icons.warning_amber_outlined,
+                            color: Theme.of(context).colorScheme.error,
+                          ),
+                        ))
+                    : null,
+                title: Text(AppLocalizations.of(context)!.whatShouldIGetRedo),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.only(left: 16, right: 16, bottom: 8),
+                  child: GradeCalculate(
+                      context: context,
+                      grades: grades
+                          .where((lGrade) =>
+                              lGrade != widget.grade &&
+                              !(!alsoGradesAfter &&
+                                  !lGrade.addedDate
+                                      .isBefore(widget.grade.addedDate)))
+                          .toList(),
+                      preFillWeight: widget.grade.weight,
+                      calcNewAverage: false),
+                ))),
+        Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            child: SilvioCard(
+                isFilled: true,
+                trailing: warnings.isNotEmpty
+                    ? Padding(
+                        padding: const EdgeInsets.only(right: 16.0),
+                        child: Tooltip(
+                          triggerMode: TooltipTriggerMode.tap,
+                          showDuration: const Duration(minutes: 60),
+                          message: warnings
+                              .map((e) =>
+                                  AppLocalizations.of(context)!.warning(e))
+                              .join("\n"),
+                          child: Icon(
+                            Icons.warning_amber_outlined,
+                            color: Theme.of(context).colorScheme.error,
+                          ),
+                        ))
+                    : null,
+                title: Text(AppLocalizations.of(context)!
+                    .whatIsGoingToBeMyNewAverageRedo),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.only(left: 16, right: 16, bottom: 8),
+                  child: GradeCalculate(
+                      context: context,
+                      grades: grades
+                          .where((lGrade) =>
+                              lGrade != widget.grade &&
+                              !(!alsoGradesAfter &&
+                                  !lGrade.addedDate
+                                      .isBefore(widget.grade.addedDate)))
+                          .toList(),
+                      preFillWeight: widget.grade.weight,
+                      calcNewAverage: true),
+                ))),
       ],
-      const Divider(),
-      ListTile(
-        title: Text(AppLocalizations.of(context)!.gradeSettings),
-      ),
-      if (differentSubjects)
-        SwitchListTile(
-          secondary: const Icon(Icons.book_outlined),
-          value: subjectCalculate,
-          onChanged: (value) => setState(() {
-            subjectCalculate = value;
-          }),
-          title: Text(AppLocalizations.of(context)!.caluclateWithFoundSubject),
-          subtitle:
-              Text(AppLocalizations.of(context)!.caluclateWithFoundSubjectExpl),
-        ),
-      if (grades.isNotEmpty &&
-          grades.numericalGrades.isNotEmpty &&
-          widget.showGradeCalculate)
-        SwitchListTile(
-          secondary: const Icon(Icons.history),
-          value: alsoGradesAfter,
-          onChanged: (value) => setState(() {
-            alsoGradesAfter = value;
-          }),
-          title: Text(AppLocalizations.of(context)!.useLaterReciviedGrades),
-          subtitle:
-              Text(AppLocalizations.of(context)!.useLaterReciviedGradesExpl),
-        ),
-      SwitchListTile(
-        secondary: const Icon(Icons.calculate_outlined),
-        value: widget.grade.isEnabled,
-        onChanged: (value) {
-          widget.grade.isEnabled = value;
-          setState(() {});
-          Provider.of<AccountProvider>(context, listen: false)
-              .changeAccount(null);
-        },
-        title: Text(AppLocalizations.of(context)!.useThisGradeForCalculations),
-      ),
-      ListTile(
-        leading: const Icon(Icons.download),
-        title: Text(AppLocalizations.of(context)!.reloadGrade),
-        trailing: Wrap(children: [
-          IconButton(
-            onPressed: () async {
-              setState(() {
-                isRefreshing = true;
-              });
-              final AccountProvider acP =
-                  Provider.of<AccountProvider>(context, listen: false);
-              await acP.account.api.refreshGrade(acP.person, widget.grade);
-              acP.account.save();
-              setState(() {
-                isRefreshing = false;
-              });
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                Provider.of<AccountProvider>(context, listen: false)
-                    .changeAccount(null);
-              });
-            },
-            icon: CircleAvatar(
-                child: isRefreshing
-                    ? const CircularProgressIndicator()
-                    : const Icon(Icons.refresh)),
-          )
-        ]),
-      )
+      Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          child: SilvioCard(
+              isFilled: true,
+              title: Text(AppLocalizations.of(context)!.gradeSettings),
+              child: Column(children: [
+                if (differentSubjects)
+                  SwitchListTile(
+                    secondary: const Icon(Icons.book_outlined),
+                    value: subjectCalculate,
+                    onChanged: (value) => setState(() {
+                      subjectCalculate = value;
+                    }),
+                    title: Text(AppLocalizations.of(context)!
+                        .caluclateWithFoundSubject),
+                    subtitle: Text(AppLocalizations.of(context)!
+                        .caluclateWithFoundSubjectExpl),
+                  ),
+                if (grades.isNotEmpty &&
+                    grades.numericalGrades.isNotEmpty &&
+                    widget.showGradeCalculate)
+                  SwitchListTile(
+                    secondary: const Icon(Icons.history),
+                    value: alsoGradesAfter,
+                    onChanged: (value) => setState(() {
+                      alsoGradesAfter = value;
+                    }),
+                    title: Text(
+                        AppLocalizations.of(context)!.useLaterReciviedGrades),
+                    subtitle: Text(AppLocalizations.of(context)!
+                        .useLaterReciviedGradesExpl),
+                  ),
+                SwitchListTile(
+                  secondary: const Icon(Icons.calculate_outlined),
+                  value: widget.grade.isEnabled,
+                  onChanged: (value) {
+                    widget.grade.isEnabled = value;
+                    setState(() {});
+                    Provider.of<AccountProvider>(context, listen: false)
+                        .changeAccount(null);
+                  },
+                  title: Text(AppLocalizations.of(context)!
+                      .useThisGradeForCalculations),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.download),
+                  title: Text(AppLocalizations.of(context)!.reloadGrade),
+                  trailing: Wrap(children: [
+                    IconButton(
+                      onPressed: () async {
+                        setState(() {
+                          isRefreshing = true;
+                        });
+                        final AccountProvider acP =
+                            Provider.of<AccountProvider>(context,
+                                listen: false);
+                        await acP.account.api
+                            .refreshGrade(acP.person, widget.grade);
+                        acP.account.save();
+                        setState(() {
+                          isRefreshing = false;
+                        });
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          Provider.of<AccountProvider>(context, listen: false)
+                              .changeAccount(null);
+                        });
+                      },
+                      icon: CircleAvatar(
+                          child: isRefreshing
+                              ? const CircularProgressIndicator()
+                              : const Icon(Icons.refresh)),
+                    )
+                  ]),
+                )
+              ]))),
     ]);
   }
 }
 
-Badge changeInAverageBadge(context, double value, List<Grade> grades) {
+Badge changeInAverageBadge(context, double value) {
   return Badge(
     backgroundColor: value.isNegative
         ? Theme.of(context).colorScheme.errorContainer
@@ -417,21 +451,9 @@ Badge changeInAverageBadge(context, double value, List<Grade> grades) {
       text: TextSpan(
         style: Theme.of(context).textTheme.labelSmall,
         children: [
-          WidgetSpan(
-            child: value.isNegative
-                ? Transform.rotate(
-                    angle: 90 * math.pi / 180,
-                    child: Icon(
-                      Icons.arrow_outward,
-                      size: 14,
-                      color: Theme.of(context).textTheme.labelSmall?.color,
-                    ))
-                : Icon(Icons.arrow_outward,
-                    size: 14,
-                    color: Theme.of(context).textTheme.labelSmall?.color),
-          ),
           TextSpan(
-            text: value.displayNumber(decimalDigits: 2),
+            text:
+                "${value.isNegative ? "↘" : "↗"} ${value.displayNumber(decimalDigits: 2)}",
           ),
         ],
       ),

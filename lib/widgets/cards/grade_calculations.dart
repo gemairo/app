@@ -23,6 +23,7 @@ class _GradeCalculate extends State<GradeCalculate> {
   final gradeController = TextEditingController();
   final weightController = TextEditingController();
   final _formKey = UniqueKey();
+  bool showChange = false;
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +63,8 @@ class _GradeCalculate extends State<GradeCalculate> {
                     Padding(
                         padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
                         child: TextField(
-                          keyboardType: TextInputType.number,
+                          keyboardType: const TextInputType.numberWithOptions(
+                              decimal: true),
                           controller: gradeController,
                           textInputAction: TextInputAction.next,
                           decoration: InputDecoration(
@@ -77,7 +79,8 @@ class _GradeCalculate extends State<GradeCalculate> {
                     Padding(
                         padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
                         child: TextField(
-                          keyboardType: TextInputType.number,
+                          keyboardType: const TextInputType.numberWithOptions(
+                              decimal: true),
                           controller: weightController,
                           onSubmitted: (val) {
                             if (val != "" && gradeController.text != "") {
@@ -109,17 +112,38 @@ class _GradeCalculate extends State<GradeCalculate> {
               key: ValueKey(widget.grades),
               child: result().isNaN
                   ? Icon(
-                      Icons.query_stats,
+                      Icons.query_stats_rounded,
                       size: 32,
                       color: Theme.of(context).colorScheme.surfaceTint,
                     )
-                  : Text(result().displayNumber(decimalDigits: 2),
-                      style: TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
-                          color: (result() < 0 || result() > 10)
-                              ? Theme.of(context).colorScheme.error
-                              : Theme.of(context).colorScheme.primary)),
+                  : InkWell(
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(4.0)),
+                      onTap: () => setState(() {
+                        showChange = !showChange;
+                      }),
+                      child: RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              style: TextStyle(
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.bold,
+                                  color: (!showChange &&
+                                              (result() < 0 || result() > 10) ||
+                                          showChange &&
+                                              (result() - widget.grades.average)
+                                                  .isNegative)
+                                      ? Theme.of(context).colorScheme.error
+                                      : Theme.of(context).colorScheme.primary),
+                              text: showChange
+                                  ? "${(result() - widget.grades.average).isNegative ? "↘" : "↗"} ${(result() - widget.grades.average).displayNumber(decimalDigits: 2)}"
+                                  : result().displayNumber(decimalDigits: 2),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
             ))
       ],
     );

@@ -11,6 +11,7 @@ class SilvioCard extends StatelessWidget {
       this.title,
       this.leading,
       this.trailing,
+      this.isFilled = false,
       this.elevation = 1});
 
   final Widget child;
@@ -18,12 +19,14 @@ class SilvioCard extends StatelessWidget {
   final Widget? leading;
   final Widget? trailing;
   final double elevation;
+  final bool isFilled;
 
   @override
   Widget build(BuildContext context) {
     return Card(
-        elevation: elevation,
+        elevation: isFilled ? 0 : elevation,
         shadowColor: elevation == 1 ? Colors.transparent : null,
+        color: isFilled ? Theme.of(context).colorScheme.surfaceVariant : null,
         margin: EdgeInsets.zero,
         child: Column(
             mainAxisSize: MainAxisSize.min,

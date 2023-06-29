@@ -128,7 +128,6 @@ class _SchoolYearStatisticsView extends State<SchoolYearStatisticsView> {
                   addOrRemoveBadge: addOrRemoveBadge,
                 ),
                 child: GradeList(
-                    context: context,
                     showGradeCalculate: true,
                     grades: allGrades
                         .where((grade) => grade.type == GradeType.grade)

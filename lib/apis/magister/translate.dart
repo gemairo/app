@@ -39,9 +39,9 @@ Grade? magisterGrade(SchoolQuarter? schoolQuarter, [Map? gotGrade]) {
 Subject? magisterSubject([Map? subject]) {
   if (subject != null) {
     return Subject(
-        code: subject["Afkorting"] ?? subject["code"],
+        rawCode: subject["Afkorting"] ?? subject["code"],
         id: subject["Id"],
-        name: (subject["Omschrijving"] ??
+        rawName: (subject["Omschrijving"] ??
                 subject["omschrijving"] ??
                 subject["Naam"] ??
                 "leeg")
@@ -69,17 +69,19 @@ SchoolQuarter? magisterSchoolQuarter([Map? per]) {
 SchoolYear? magisterSchoolYear([Map? year]) {
   if (year != null) {
     return SchoolYear(
-      start: DateTime.parse(
-        year["begin"] ?? "1970-01-01T00:00:00.0000000Z",
-      ).toUtc(),
-      end: DateTime.parse(year["einde"] ?? "1970-01-01T00:00:00.0000000Z")
-          .toUtc(),
-      id: year["id"],
-      groupCode: year["groep"]["code"],
-      groupName: year["groep"]["omschrijving"],
-      studyCode: year["studie"]["code"],
-      isEnabled: year["isHoofdAanmelding"],
-    );
+        start: DateTime.parse(
+          year["begin"] ?? "1970-01-01T00:00:00.0000000Z",
+        ).toUtc(),
+        end: DateTime.parse(year["einde"] ?? "1970-01-01T00:00:00.0000000Z")
+            .toUtc(),
+        id: year["id"],
+        groupCode: year["groep"]["code"],
+        groupName: year["groep"]["omschrijving"],
+        studyCode: year["studie"]["code"],
+        isEnabled: year["isHoofdAanmelding"],
+        warningEnabled: DateTime.now().isBefore(
+            DateTime.parse(year["einde"] ?? "1970-01-01T00:00:00.0000000Z")
+                .toUtc()));
   }
   return null;
 }

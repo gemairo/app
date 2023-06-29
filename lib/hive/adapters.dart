@@ -159,7 +159,11 @@ class Filter {
   dynamic filter;
   bool isGlobal;
 
-  Filter({required this.name, required this.type, required this.filter, this.isGlobal = false});
+  Filter(
+      {required this.name,
+      required this.type,
+      required this.filter,
+      this.isGlobal = false});
 }
 
 @HiveType(typeId: 7)
@@ -225,17 +229,42 @@ enum GradeType {
 @HiveType(typeId: 9)
 class Subject {
   @HiveField(0)
-  String code;
+  String rawCode;
   @HiveField(1)
-  String name;
+  String rawName;
+  String get code => customCode != null ? customCode! : rawCode;
+  String get name => customName != null ? customName! : rawName;
+  @HiveField(3)
+  String? customCode;
+  @HiveField(4)
+  String? customName;
   @HiveField(2)
   int? id;
+  @HiveField(5)
+  int? roundOnDecimals;
+  @HiveField(6, defaultValue: true)
+  bool warningEnabled;
   List<Grade> grades = [];
 
-  Subject({required this.code, this.id, required this.name});
+  Subject(
+      {required this.rawCode,
+      this.id,
+      required this.rawName,
+      this.customCode,
+      this.customName,
+      this.warningEnabled = true,
+      this.roundOnDecimals});
 
   Subject get copy {
-    return Subject(code: code, name: name, id: id)..grades = grades;
+    return Subject(
+        customCode: customCode,
+        customName: customName,
+        rawCode: rawCode,
+        rawName: rawName,
+        id: id,
+        warningEnabled: warningEnabled,
+        roundOnDecimals: roundOnDecimals)
+      ..grades = grades;
   }
 }
 
@@ -281,6 +310,8 @@ class SchoolYear {
   List<SchoolQuarter> schoolQuarters = [];
   @HiveField(8)
   bool isEnabled;
+  @HiveField(9, defaultValue: true)
+  bool warningEnabled;
 
   SchoolYear(
       {required this.start,
@@ -289,7 +320,8 @@ class SchoolYear {
       required this.groupName,
       required this.id,
       this.isEnabled = true,
-      required this.studyCode});
+      required this.studyCode,
+      this.warningEnabled = true});
 }
 
 @HiveType(typeId: 12)
