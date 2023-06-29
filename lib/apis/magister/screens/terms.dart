@@ -24,15 +24,16 @@ class _Terms extends State<Terms> {
                 children: [
                   Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: 
-                      Text.rich(TextSpan(
-                          style: Theme.of(context).textTheme.headlineSmall,
-                          children: <TextSpan>[
-                            TextSpan(
-                                text: AppLocalizations.of(context)!
-                                    .termsContent(company),
-                                style: Theme.of(context).textTheme.bodyMedium)]),)
-          ),
+                      child: Text.rich(
+                        TextSpan(
+                            style: Theme.of(context).textTheme.headlineSmall,
+                            children: <TextSpan>[
+                              TextSpan(
+                                  text: AppLocalizations.of(context)!
+                                      .termsContent(company),
+                                  style: Theme.of(context).textTheme.bodyMedium)
+                            ]),
+                      )),
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [

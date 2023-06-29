@@ -431,8 +431,15 @@ class _GradeInformation extends State<GradeInformation> {
                         });
                       },
                       icon: CircleAvatar(
+                          backgroundColor:
+                              Theme.of(context).colorScheme.primary,
+                          foregroundColor:
+                              Theme.of(context).colorScheme.onPrimary,
                           child: isRefreshing
-                              ? const CircularProgressIndicator()
+                              ? CircularProgressIndicator(
+                                  color:
+                                      Theme.of(context).colorScheme.onPrimary,
+                                )
                               : const Icon(Icons.refresh)),
                     )
                   ]),
@@ -451,9 +458,18 @@ Badge changeInAverageBadge(context, double value) {
       text: TextSpan(
         style: Theme.of(context).textTheme.labelSmall,
         children: [
+          WidgetSpan(
+            child: RotatedBox(
+                quarterTurns: value.isNegative ? 1 : 0,
+                child: Icon(
+                    size: ((Theme.of(context).textTheme.labelSmall?.fontSize ??
+                            12) *
+                        MediaQuery.of(context).textScaleFactor *
+                        1.2),
+                    Icons.arrow_outward)),
+          ),
           TextSpan(
-            text:
-                "${value.isNegative ? "↘" : "↗"} ${value.displayNumber(decimalDigits: 2)}",
+            text: value.displayNumber(decimalDigits: 2),
           ),
         ],
       ),

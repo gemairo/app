@@ -78,7 +78,10 @@ class _SettingsView extends State<SettingsView> {
     return Scaffold(
         body: CustomScrollView(
       slivers: <Widget>[
-        SliverAppBar.large(title: Text(AppLocalizations.of(context)!.settings)),
+        SliverAppBar.large(
+            title: Text(AppLocalizations.of(context)!.settings),
+            //TMP until a release containing https://github.com/flutter/flutter/pull/122542 is released
+            centerTitle: true),
         SliverList(
             delegate: SliverChildListDelegate(
           [
@@ -168,33 +171,39 @@ class _SettingsView extends State<SettingsView> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
                     Expanded(
-                      flex: 1,
-                      child: TextFormField(
-                        controller: sufficientController,
-                        keyboardType: const TextInputType.numberWithOptions(
-                            decimal: true),
-                        onTapOutside: (event) {
-                          if (double.tryParse(sufficientController.text
-                                      .replaceAll(",", '.'))
-                                  ?.isFinite ??
-                              false) {
-                            config.sufficientFrom = double.parse(
-                                sufficientController.text.replaceAll(",", '.'));
-                          }
-                          config.save();
-                          setState(() {});
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            Provider.of<AccountProvider>(context, listen: false)
-                                .changeAccount(null);
-                          });
-                          FocusScope.of(context).requestFocus(FocusNode());
-                        },
-                        textAlign: TextAlign.center,
-                        decoration: InputDecoration.collapsed(
-                          hintText: config.sufficientFrom.displayNumber(),
-                        ),
-                      ),
-                    )
+                        flex: 1,
+                        child: FocusScope(
+                          onFocusChange: (value) {
+                            if (!value) {
+                              if (double.tryParse(sufficientController.text
+                                          .replaceAll(",", '.'))
+                                      ?.isFinite ??
+                                  false) {
+                                config.sufficientFrom = double.parse(
+                                    sufficientController.text
+                                        .replaceAll(",", '.'));
+                              }
+                              config.save();
+                              setState(() {});
+                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                                Provider.of<AccountProvider>(context,
+                                        listen: false)
+                                    .changeAccount(null);
+                              });
+                              FocusScope.of(context).requestFocus(FocusNode());
+                            }
+                          },
+                          child: TextFormField(
+                            controller: sufficientController,
+                            keyboardType: const TextInputType.numberWithOptions(
+                                decimal: true),
+                            onTapOutside: (event) {},
+                            textAlign: TextAlign.center,
+                            decoration: InputDecoration.collapsed(
+                              hintText: config.sufficientFrom.displayNumber(),
+                            ),
+                          ),
+                        ))
                   ],
                 ),
               ),

@@ -122,26 +122,47 @@ class _GradeCalculate extends State<GradeCalculate> {
                       onTap: () => setState(() {
                         showChange = !showChange;
                       }),
-                      child: RichText(
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                              style: TextStyle(
-                                  fontSize: 32,
-                                  fontWeight: FontWeight.bold,
-                                  color: (!showChange &&
-                                              (result() < 0 || result() > 10) ||
-                                          showChange &&
-                                              (result() - widget.grades.average)
-                                                  .isNegative)
-                                      ? Theme.of(context).colorScheme.error
-                                      : Theme.of(context).colorScheme.primary),
-                              text: showChange
-                                  ? "${(result() - widget.grades.average).isNegative ? "↘" : "↗"} ${(result() - widget.grades.average).displayNumber(decimalDigits: 2)}"
-                                  : result().displayNumber(decimalDigits: 2),
-                            ),
-                          ],
-                        ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          if (showChange)
+                            RotatedBox(
+                                quarterTurns: (result() - widget.grades.average)
+                                        .isNegative
+                                    ? 1
+                                    : 0,
+                                child: Icon(
+                                    color: (!showChange &&
+                                                (result() < 0 ||
+                                                    result() > 10) ||
+                                            showChange &&
+                                                (result() -
+                                                        widget.grades.average)
+                                                    .isNegative)
+                                        ? Theme.of(context).colorScheme.error
+                                        : Theme.of(context).colorScheme.primary,
+                                    size: (32 *
+                                        MediaQuery.of(context).textScaleFactor *
+                                        1.2),
+                                    Icons.arrow_outward)),
+                          Text(
+                            style: TextStyle(
+                                fontSize: 32,
+                                fontWeight: FontWeight.bold,
+                                color: (!showChange &&
+                                            (result() < 0 || result() > 10) ||
+                                        showChange &&
+                                            (result() - widget.grades.average)
+                                                .isNegative)
+                                    ? Theme.of(context).colorScheme.error
+                                    : Theme.of(context).colorScheme.primary),
+                            showChange
+                                ? (result() - widget.grades.average)
+                                    .displayNumber(decimalDigits: 2)
+                                : result().displayNumber(decimalDigits: 2),
+                          ),
+                        ],
                       ),
                     ),
             ))
