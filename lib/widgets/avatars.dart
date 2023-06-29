@@ -19,9 +19,11 @@ class GradeAvatar extends StatelessWidget {
     double? _grade = double.tryParse(gradeString.replaceAll(',', '.'));
     bool _isSufficient = _grade == null
         ? (isSufficient ?? true)
-        : num.parse(_grade.toStringAsFixed(decimalDigits ?? 2)) >= config.sufficientFrom;
+        : num.parse(_grade.toStringAsFixed(decimalDigits ?? 2)) >=
+            config.sufficientFrom;
 
-    String displayedGrade = _grade?.displayNumber(decimalDigits: decimalDigits) ?? gradeString;
+    String displayedGrade =
+        _grade?.displayNumber(decimalDigits: decimalDigits) ?? gradeString;
 
     return ElasticAnimation(
       child: CircleAvatar(
@@ -30,8 +32,7 @@ class GradeAvatar extends StatelessWidget {
               ? Theme.of(context).colorScheme.errorContainer
               : null,
           radius: 25,
-          child: Text(
-              displayedGrade,
+          child: Text(displayedGrade,
               style: !_isSufficient
                   ? TextStyle(
                       color: Theme.of(context).colorScheme.onErrorContainer)

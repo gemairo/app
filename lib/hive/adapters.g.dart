@@ -274,22 +274,34 @@ class SubjectAdapter extends TypeAdapter<Subject> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Subject(
-      code: fields[0] as String,
+      rawCode: fields[0] as String,
       id: fields[2] as int?,
-      name: fields[1] as String,
+      rawName: fields[1] as String,
+      customCode: fields[3] as String?,
+      customName: fields[4] as String?,
+      warningEnabled: fields[6] == null ? true : fields[6] as bool,
+      roundOnDecimals: fields[5] as int?,
     );
   }
 
   @override
   void write(BinaryWriter writer, Subject obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(7)
       ..writeByte(0)
-      ..write(obj.code)
+      ..write(obj.rawCode)
       ..writeByte(1)
-      ..write(obj.name)
+      ..write(obj.rawName)
+      ..writeByte(3)
+      ..write(obj.customCode)
+      ..writeByte(4)
+      ..write(obj.customName)
       ..writeByte(2)
-      ..write(obj.id);
+      ..write(obj.id)
+      ..writeByte(5)
+      ..write(obj.roundOnDecimals)
+      ..writeByte(6)
+      ..write(obj.warningEnabled);
   }
 
   @override
@@ -367,6 +379,7 @@ class SchoolYearAdapter extends TypeAdapter<SchoolYear> {
       id: fields[2] as int,
       isEnabled: fields[8] as bool,
       studyCode: fields[5] as String,
+      warningEnabled: fields[9] == null ? true : fields[9] as bool,
     )
       ..grades = (fields[6] as List).cast<Grade>()
       ..schoolQuarters = (fields[7] as List).cast<SchoolQuarter>();
@@ -375,7 +388,7 @@ class SchoolYearAdapter extends TypeAdapter<SchoolYear> {
   @override
   void write(BinaryWriter writer, SchoolYear obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(10)
       ..writeByte(0)
       ..write(obj.start)
       ..writeByte(1)
@@ -393,7 +406,9 @@ class SchoolYearAdapter extends TypeAdapter<SchoolYear> {
       ..writeByte(7)
       ..write(obj.schoolQuarters)
       ..writeByte(8)
-      ..write(obj.isEnabled);
+      ..write(obj.isEnabled)
+      ..writeByte(9)
+      ..write(obj.warningEnabled);
   }
 
   @override

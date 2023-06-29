@@ -15,6 +15,7 @@ import 'package:silvio/hive/adapters.dart';
 
 import 'package:silvio/apis/local_file.dart';
 import 'package:silvio/main.dart';
+import 'package:silvio/widgets/bottom_sheet.dart';
 import 'package:silvio/widgets/card.dart';
 import 'package:silvio/widgets/cards/list_grade.dart';
 
@@ -32,6 +33,7 @@ class SettingsView extends StatefulWidget {
 }
 
 class _SettingsView extends State<SettingsView> {
+  final TextEditingController sufficientController = TextEditingController();
   bool hasMaterialYou = false;
   final Map<String, Color> material3Colors = {
     'M3 Baseline': const Color(0xff6750a4),
@@ -74,14 +76,21 @@ class _SettingsView extends State<SettingsView> {
     }
 
     return Scaffold(
-        appBar: AppBar(
-          title: Text(AppLocalizations.of(context)!.settings),
-        ),
-        body: ListView(
-          children: [
+        body: CustomScrollView(
+      slivers: <Widget>[
+        SliverAppBar.large(
+            title: Text(AppLocalizations.of(context)!.settings),
+            //TMP until a release containing https://github.com/flutter/flutter/pull/122542 is released
+            centerTitle: true),
+        SliverList(
+            delegate: SliverChildListDelegate(
+          [
             ListTile(
               title: Text(AppLocalizations.of(context)!.lookAndFeel,
-                  style: Theme.of(context).textTheme.titleMedium),
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleMedium
+                      ?.copyWith(color: Theme.of(context).colorScheme.primary)),
               dense: true,
             ),
             SwitchListTile(
@@ -162,24 +171,39 @@ class _SettingsView extends State<SettingsView> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
                     Expanded(
-                      flex: 1,
-                      child: TextField(
-                        keyboardType: TextInputType.number,
-                        onSubmitted: (value) {
-                          config.sufficientFrom = double.parse(value);
-                          config.save();
-                          setState(() {});
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            Provider.of<AccountProvider>(context, listen: false)
-                                .changeAccount(null);
-                          });
-                        },
-                        textAlign: TextAlign.center,
-                        decoration: InputDecoration.collapsed(
-                          hintText: config.sufficientFrom.displayNumber(),
-                        ),
-                      ),
-                    )
+                        flex: 1,
+                        child: FocusScope(
+                          onFocusChange: (value) {
+                            if (!value) {
+                              if (double.tryParse(sufficientController.text
+                                          .replaceAll(",", '.'))
+                                      ?.isFinite ??
+                                  false) {
+                                config.sufficientFrom = double.parse(
+                                    sufficientController.text
+                                        .replaceAll(",", '.'));
+                              }
+                              config.save();
+                              setState(() {});
+                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                                Provider.of<AccountProvider>(context,
+                                        listen: false)
+                                    .changeAccount(null);
+                              });
+                              FocusScope.of(context).requestFocus(FocusNode());
+                            }
+                          },
+                          child: TextFormField(
+                            controller: sufficientController,
+                            keyboardType: const TextInputType.numberWithOptions(
+                                decimal: true),
+                            onTapOutside: (event) {},
+                            textAlign: TextAlign.center,
+                            decoration: InputDecoration.collapsed(
+                              hintText: config.sufficientFrom.displayNumber(),
+                            ),
+                          ),
+                        ))
                   ],
                 ),
               ),
@@ -205,7 +229,10 @@ class _SettingsView extends State<SettingsView> {
                     ])),
             ListTile(
               title: Text(AppLocalizations.of(context)!.notifications,
-                  style: Theme.of(context).textTheme.titleMedium),
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleMedium
+                      ?.copyWith(color: Theme.of(context).colorScheme.primary)),
               dense: true,
             ),
             SwitchListTile(
@@ -246,7 +273,10 @@ class _SettingsView extends State<SettingsView> {
             ),
             ListTile(
               title: Text(AppLocalizations.of(context)!.personalSettings,
-                  style: Theme.of(context).textTheme.titleMedium),
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleMedium
+                      ?.copyWith(color: Theme.of(context).colorScheme.primary)),
               dense: true,
             ),
             ListTile(
@@ -263,7 +293,10 @@ class _SettingsView extends State<SettingsView> {
             ),
             ListTile(
               title: Text(AppLocalizations.of(context)!.feedbackAndContact,
-                  style: Theme.of(context).textTheme.titleMedium),
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleMedium
+                      ?.copyWith(color: Theme.of(context).colorScheme.primary)),
               dense: true,
             ),
             ListTile(
@@ -321,7 +354,9 @@ class _SettingsView extends State<SettingsView> {
                     trailing:
                         const CircleAvatar(child: Icon(Icons.navigate_next)))),
           ],
-        ));
+        )),
+      ],
+    ));
   }
 }
 
@@ -432,7 +467,6 @@ class _PersonConfig extends State<PersonConfig> {
                           ),
                           body: grades.isNotEmpty
                               ? GradeList(
-                                  context: context,
                                   grades: grades,
                                 )
                               : const Center(
@@ -467,18 +501,39 @@ class _PersonConfig extends State<PersonConfig> {
               subtitle:
                   Text(AppLocalizations.of(context)!.activeSchoolyearsExpl),
               children: [
-                ...widget.person.rawSchoolYears.map((sY) => CheckboxListTile(
-                    title: Text("${sY.groupName} (${sY.groupCode})"),
-                    value: sY.isEnabled,
-                    onChanged: (value) {
-                      sY.isEnabled = value!;
-                      widget.person.save();
-                      setState(() {});
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                        Provider.of<AccountProvider>(context, listen: false)
-                            .changeAccount(null);
-                      });
-                    })),
+                ...widget.person.rawSchoolYears.map((sY) => ListTile(
+                      title: Text("${sY.groupName} (${sY.groupCode})"),
+                      trailing: Wrap(
+                        children: [
+                          Checkbox(
+                            value: sY.isEnabled,
+                            onChanged: (value) {
+                              sY.isEnabled = value!;
+                              widget.person.save();
+                              setState(() {});
+                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                                Provider.of<AccountProvider>(context,
+                                        listen: false)
+                                    .changeAccount(null);
+                              });
+                            },
+                          ),
+                          IconButton(
+                              icon: const Icon(Icons.settings),
+                              onPressed: () => showSilvioModalBottomSheet(
+                                    context: context,
+                                    children: [
+                                      SchoolYearSettings(
+                                          schoolYear: sY,
+                                          save: () {
+                                            widget.person.save();
+                                            setState(() {});
+                                          })
+                                    ],
+                                  )),
+                        ],
+                      ),
+                    )),
               ],
             )),
         if (widget.person.parentAccount!.api
@@ -665,5 +720,224 @@ class _PersonConfigCarouselState extends State<PersonConfigCarousel> {
                 ))
               : Container(),
         ]);
+  }
+}
+
+class SchoolYearSettings extends StatefulWidget {
+  const SchoolYearSettings(
+      {super.key, required this.schoolYear, required this.save});
+
+  final SchoolYear schoolYear;
+  final void Function() save;
+
+  @override
+  State<SchoolYearSettings> createState() => _SchoolYearSettingsState();
+}
+
+class _SchoolYearSettingsState extends State<SchoolYearSettings> {
+  int subjectExpandableIndex = 0;
+  final PageController controller = PageController();
+
+  void save() {
+    widget.save();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<AccountProvider>(context, listen: false).changeAccount(null);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    List<Subject> subjects = widget.schoolYear.grades.subjects
+      ..sort((a, b) => a.rawName.compareTo(b.rawName));
+    return ListView(
+      physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      children: [
+        ListTile(
+          title: Text(AppLocalizations.of(context)!.schoolYearSettings,
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium
+                  ?.copyWith(color: Theme.of(context).colorScheme.primary)),
+          dense: true,
+        ),
+        SwitchListTile(
+          value: widget.schoolYear.isEnabled,
+          onChanged: (value) {
+            widget.schoolYear.isEnabled = value;
+            setState(() {});
+            save();
+          },
+          secondary: const Icon(Icons.visibility_off),
+          title: Text(AppLocalizations.of(context)!.turnOnThisSchoolYear),
+        ),
+        SwitchListTile(
+          value: widget.schoolYear.warningEnabled,
+          onChanged: (value) {
+            widget.schoolYear.warningEnabled = value;
+            setState(() {});
+            save();
+          },
+          title: Text(AppLocalizations.of(context)!.avarageWarning),
+          secondary: const Icon(Icons.warning_amber_outlined),
+          subtitle: Text(AppLocalizations.of(context)!.avarageWarningExpl),
+        ),
+        ListTile(
+          title: Text(AppLocalizations.of(context)!.subjectSettings,
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium
+                  ?.copyWith(color: Theme.of(context).colorScheme.primary)),
+          dense: true,
+        ),
+        ...subjects.map(
+          (subject) => ExpansionTile(
+            leading: const CircleAvatar(child: Icon(Icons.book)),
+            title: Text(subject.name),
+            children: [
+              //Change name
+              ListTile(
+                title: Text(AppLocalizations.of(context)!.subjectName),
+                leading: const Icon(Icons.short_text),
+                subtitle: Text(AppLocalizations.of(context)!.subjectNameExpl),
+                trailing: SizedBox(
+                  width: 200,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      IconButton.filledTonal(
+                          onPressed: () {
+                            widget.schoolYear.grades
+                                .where(
+                                    (grade) => grade.subject.id == subject.id)
+                                .forEach(
+                                    (grade) => grade.subject.customName = null);
+
+                            setState(() {});
+                            save();
+                          },
+                          icon: const Icon(Icons.undo)),
+                      Expanded(
+                        flex: 1,
+                        child: TextField(
+                          onSubmitted: (value) {
+                            widget.schoolYear.grades
+                                .where(
+                                    (grade) => grade.subject.id == subject.id)
+                                .forEach((grade) =>
+                                    grade.subject.customName = value);
+
+                            setState(() {});
+                            save();
+                          },
+                          textAlign: TextAlign.center,
+                          decoration: InputDecoration.collapsed(
+                            hintText: subject.name,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              ListTile(
+                title: Text(AppLocalizations.of(context)!.subjectNameShort),
+                leading: const Icon(Icons.short_text),
+                subtitle:
+                    Text(AppLocalizations.of(context)!.subjectNameShortExpl),
+                trailing: SizedBox(
+                  width: 100,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      IconButton.filledTonal(
+                          onPressed: () {
+                            widget.schoolYear.grades
+                                .where(
+                                    (grade) => grade.subject.id == subject.id)
+                                .forEach(
+                                    (grade) => grade.subject.customCode = null);
+
+                            setState(() {});
+                            save();
+                          },
+                          icon: const Icon(Icons.undo)),
+                      Expanded(
+                        flex: 1,
+                        child: TextField(
+                          onSubmitted: (value) {
+                            widget.schoolYear.grades
+                                .where(
+                                    (grade) => grade.subject.id == subject.id)
+                                .forEach((grade) =>
+                                    grade.subject.customCode = value);
+
+                            setState(() {});
+                            save();
+                          },
+                          textAlign: TextAlign.center,
+                          decoration: InputDecoration.collapsed(
+                            hintText: subject.code,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              SwitchListTile(
+                value: subject.warningEnabled,
+                onChanged: widget.schoolYear.warningEnabled
+                    ? (value) {
+                        widget.schoolYear.grades
+                            .where((grade) => grade.subject.id == subject.id)
+                            .forEach((grade) =>
+                                grade.subject.warningEnabled = value);
+                        setState(() {});
+                        save();
+                      }
+                    : null,
+                title: Text(AppLocalizations.of(context)!.avarageWarning),
+                secondary: const Icon(Icons.warning_amber_outlined),
+                subtitle: Text(
+                    AppLocalizations.of(context)!.avarageWarningExplSubject),
+              ),
+              SwitchListTile(
+                value: subject.roundOnDecimals != null,
+                onChanged: (value) {
+                  widget.schoolYear.grades
+                      .where((grade) => grade.subject.id == subject.id)
+                      .forEach((grade) =>
+                          grade.subject.roundOnDecimals = value ? 1 : null);
+                  setState(() {});
+                  save();
+                },
+                title: Text(AppLocalizations.of(context)!.decimals),
+                secondary: const Icon(Icons.calculate_outlined),
+                subtitle: Text(AppLocalizations.of(context)!.decimalsExpl),
+              ),
+              if (subject.roundOnDecimals != null)
+                Slider(
+                  onChanged: (double value) {
+                    widget.schoolYear.grades
+                        .where((grade) => grade.subject.id == subject.id)
+                        .forEach((grade) =>
+                            grade.subject.roundOnDecimals = value.toInt());
+                    setState(() {});
+                  },
+                  onChangeEnd: (value) => save(),
+                  divisions: 2,
+                  min: 0,
+                  max: 2,
+                  label: "${subject.roundOnDecimals}",
+                  value: subject.roundOnDecimals?.toDouble() ?? 0,
+                )
+              //Change roundOnDecimals
+              //Disable ??
+            ],
+          ),
+        )
+      ],
+    );
   }
 }

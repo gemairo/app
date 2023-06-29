@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -38,66 +40,65 @@ class _SubjectsListView extends State<SubjectsListView> {
         acP.schoolYear.grades.useable.onlyFilterd(acP.activeFilters());
 
     List<Widget> widgets = [
-      ...grades.subjects.map((e) => ListTile(
-            title: Text(e.name),
+      ...grades.subjects.map((subject) => ListTile(
+            title: Text(subject.name),
             leading: GradeAvatar(
-              decimalDigits: rounded ? 0 : 2,
-              gradeString:
-                  e.grades.average.isNaN ? "-" : e.grades.average.toString(),
+              decimalDigits: rounded ? 0 : null,
+              gradeString: subject.grades.average.isNaN
+                  ? "-"
+                  : subject.roundOnDecimals != null
+                      ? ((subject.grades.average *
+                                      pow(10, subject.roundOnDecimals!))
+                                  .truncate() /
+                              pow(10, subject.roundOnDecimals!))
+                          .toString()
+                      : subject.grades.average.toString(),
             ),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16),
             trailing: Wrap(
               spacing: 8,
               children: [
-                if (e.grades.sufficientSafety > 1 &&
-                    e.grades.numericalGrades.isNotEmpty)
+                if (subject.grades.sufficientSafety > 1 &&
+                    subject.grades.numericalGrades.isNotEmpty &&
+                    subject.warningEnabled &&
+                    acP.schoolYear.warningEnabled)
                   Tooltip(
                       triggerMode: TooltipTriggerMode.tap,
                       showDuration: const Duration(minutes: 60),
-                      decoration: BoxDecoration(
-                        border: Border.fromBorderSide(BorderSide(
-                            color: Theme.of(context).colorScheme.outline,
-                            width: 1)),
-                        color: Theme.of(context).colorScheme.background,
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(4)),
-                      ),
-                      richMessage: TextSpan(
-                          style: TextStyle(
-                              color:
-                                  Theme.of(context).colorScheme.onBackground),
-                          children: [
-                            TextSpan(
-                                text: AppLocalizations.of(context)!
-                                    .sufficientSafety1),
-                            TextSpan(
-                              text: e.grades
-                                  .map((g) => g.weight)
-                                  .average
-                                  .displayNumber(decimalDigits: 2),
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            TextSpan(
-                                text: AppLocalizations.of(context)!
-                                    .sufficientSafety2),
-                            TextSpan(
-                                text: e.grades.sufficientSafety
-                                    .displayNumber(decimalDigits: 2),
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold)),
-                            TextSpan(
-                                text: AppLocalizations.of(context)!
-                                    .sufficientSafety3)
-                          ]),
+                      richMessage: TextSpan(children: [
+                        TextSpan(
+                            text: AppLocalizations.of(context)!
+                                .sufficientSafety1),
+                        TextSpan(
+                          text: subject.grades
+                              .map((g) => g.weight)
+                              .average
+                              .displayNumber(decimalDigits: 2),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        TextSpan(
+                            text: AppLocalizations.of(context)!
+                                .sufficientSafety2),
+                        TextSpan(
+                            text: subject.grades.sufficientSafety
+                                .displayNumber(decimalDigits: 2),
+                            style:
+                                const TextStyle(fontWeight: FontWeight.bold)),
+                        TextSpan(
+                            text:
+                                AppLocalizations.of(context)!.sufficientSafety3)
+                      ]),
                       child: CircleAvatar(
                         backgroundColor: Colors.transparent,
                         foregroundColor:
                             Theme.of(context).colorScheme.onBackground,
                         child: Icon(
-                          e.grades.sufficientSafety < config.sufficientFrom
+                          subject.grades.sufficientSafety <
+                                  config.sufficientFrom
                               ? Icons.info_outline
                               : Icons.warning_amber_outlined,
-                          color: e.grades.sufficientSafety > e.grades.average
+                          color: subject.grades.sufficientSafety >
+                                  subject.grades.average
                               ? Theme.of(context).colorScheme.error
                               : null,
                         ),
@@ -110,15 +111,15 @@ class _SubjectsListView extends State<SubjectsListView> {
             ),
             onTap: () {
               if (acP.schoolYear.grades.subjects
-                  .where((sub) => sub.id == e.id)
+                  .where((sub) => sub.id == subject.id)
                   .isNotEmpty) {
                 Navigate().to(
                     context,
                     SubjectStatisticsView(
                       subject: acP.schoolYear.grades.subjects
-                          .firstWhere((sub) => sub.id == e.id),
+                          .firstWhere((sub) => sub.id == subject.id),
                     ),
-                    "SubjectStatistics/${e.id}/${e.name}");
+                    "SubjectStatistics/${subject.id}/${subject.name}");
               }
             },
           ))

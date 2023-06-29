@@ -177,13 +177,14 @@ class FetchAccountInformation extends StatelessWidget {
       future: account,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          WidgetsBinding.instance.addPostFrameCallback((_) { 
+          WidgetsBinding.instance.addPostFrameCallback((_) {
             Navigator.popUntil(context, (r) => r.isFirst);
             Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => GetGrades(account: snapshot.data!),
-        ));});
+                context,
+                MaterialPageRoute(
+                  builder: (context) => GetGrades(account: snapshot.data!),
+                ));
+          });
         } else if (snapshot.hasError) {
           if (snapshot.error is Account) {
             return Center(

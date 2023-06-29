@@ -25,8 +25,8 @@ class _Terms extends State<Terms> {
                   style: Theme.of(context).textTheme.headlineSmall,
                   children: <TextSpan>[
                     TextSpan(
-                        text: AppLocalizations.of(context)!
-                            .termsContent(company),
+                        text:
+                            AppLocalizations.of(context)!.termsContent(company),
                         style: Theme.of(context).textTheme.bodyMedium),
                   ]))),
           Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [

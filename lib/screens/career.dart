@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:intl/intl.dart';
 import 'package:silvio/widgets/ads.dart';
 import 'package:silvio/widgets/appbar.dart';
 import 'package:provider/provider.dart';
@@ -10,6 +11,7 @@ import 'package:silvio/hive/adapters.dart';
 import 'package:silvio/hive/extentions.dart';
 
 import 'package:silvio/widgets/card.dart';
+import 'package:silvio/widgets/charts/linechart_monthly_average.dart';
 import 'package:silvio/widgets/facts_header.dart';
 import 'package:silvio/widgets/filter.dart';
 import 'package:silvio/widgets/charts/barchart_frequency.dart';
@@ -65,6 +67,25 @@ class _CareerOverview extends State<CareerOverview> {
                       grades: grades,
                     ),
                   ))),
+        if (grades.numericalGrades.isNotEmpty &&
+            grades
+                    .map((g) => DateTime.parse(
+                        DateFormat('yyyy-MM-01').format(g.addedDate)))
+                    .toList()
+                    .unique()
+                    .length >
+                1)
+          StaggeredGridTile.fit(
+              crossAxisCellCount: 2,
+              child: SilvioCard(
+                  title: Text(AppLocalizations.of(context)!.monthlyAverage),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+                    child: MonthlyLineChartGrades(
+                      grades: grades,
+                      showAverage: true,
+                    ),
+                  ))),
         StaggeredGridTile.fit(
             crossAxisCellCount: 4,
             child: SilvioCard(
@@ -73,7 +94,6 @@ class _CareerOverview extends State<CareerOverview> {
                   addOrRemoveBadge: addOrRemoveBadge,
                 ),
                 child: GradeList(
-                    context: context,
                     showGradeCalculate: true,
                     grades: grades
                         .where((grade) => grade.type == GradeType.grade)

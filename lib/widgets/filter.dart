@@ -201,6 +201,7 @@ class _FilterMenu extends State<FilterMenu> {
               AppLocalizations.of(context)!.filters,
               style: Theme.of(context).textTheme.titleLarge,
             ),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
             trailing: IconButton(
                 onPressed: () {
                   acP.removeFromFilterWhere(
@@ -267,20 +268,26 @@ class _FilterMenu extends State<FilterMenu> {
                   onPressed: () async {
                     DateTimeRange? pickedRange = await showDateRangePicker(
                       context: context,
-                      firstDate:
-                          widget.grades.onlyFilterd(activeFilters).isNotEmpty
-                              ? widget.grades
-                                  .onlyFilterd(activeFilters)
-                                  .last
-                                  .addedDate
-                              : DateTime.parse("1970-01-01T00:00:00.0000000Z"),
-                      lastDate:
-                          widget.grades.onlyFilterd(activeFilters).isNotEmpty
-                              ? widget.grades
-                                  .onlyFilterd(activeFilters)
-                                  .first
-                                  .addedDate
-                              : DateTime.now(),
+                      firstDate: widget.grades
+                              .onlyFilterd(activeFilters)
+                              .isNotEmpty
+                          ? widget.grades
+                              .onlyFilterd(activeFilters
+                                  .where((f) => f.type != FilterTypes.dateRange)
+                                  .toList())
+                              .last
+                              .addedDate
+                          : DateTime.parse("1970-01-01T00:00:00.0000000Z"),
+                      lastDate: widget.grades
+                              .onlyFilterd(activeFilters)
+                              .isNotEmpty
+                          ? widget.grades
+                              .onlyFilterd(activeFilters
+                                  .where((f) => f.type != FilterTypes.dateRange)
+                                  .toList())
+                              .first
+                              .addedDate
+                          : DateTime.now(),
                       currentDate: DateTime.now(),
                     );
                     if (pickedRange != null) {
