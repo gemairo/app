@@ -27,7 +27,7 @@ class _GradeCalculate extends State<GradeCalculate> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.preFillWeight != null) {
+    if (widget.preFillWeight != null && weightController.text == "") {
       weightController.text = widget.preFillWeight!.displayNumber();
     }
 
@@ -89,6 +89,7 @@ class _GradeCalculate extends State<GradeCalculate> {
                           },
                           decoration: InputDecoration(
                             labelText: AppLocalizations.of(context)!.weight,
+                            hintText: widget.preFillWeight?.displayNumber(),
                             border: const OutlineInputBorder(),
                             filled: false,
                             isDense: true,

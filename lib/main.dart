@@ -79,6 +79,7 @@ void main() async {
 
 final GlobalKey<ScaffoldMessengerState> rootScaffoldMessengerKey =
     GlobalKey<ScaffoldMessengerState>();
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 class Silvio extends StatefulWidget {
   const Silvio({Key? key}) : super(key: key);
@@ -143,12 +144,19 @@ class SilvioState extends State<Silvio> {
             ),
             badgeTheme: BadgeThemeData(
                 textColor: colorScheme.onPrimaryContainer,
-                backgroundColor: colorScheme.primaryContainer));
+                backgroundColor: colorScheme.primaryContainer),
+            snackBarTheme: SnackBarThemeData(
+                backgroundColor: colorScheme.surfaceVariant,
+                closeIconColor: colorScheme.onSurfaceVariant,
+                contentTextStyle:
+                    TextStyle(color: colorScheme.onSurfaceVariant),
+                actionBackgroundColor: colorScheme.primary));
       }
 
       return ChangeNotifierProvider(
           create: (context) => AccountProvider(),
           child: MaterialApp(
+              navigatorKey: navigatorKey,
               scaffoldMessengerKey: rootScaffoldMessengerKey,
               title: 'Silvio',
               debugShowCheckedModeBanner: false,
