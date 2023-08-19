@@ -351,7 +351,7 @@ class _SettingsView extends State<SettingsView> {
                     leading: const Icon(FontAwesome5.file_contract),
                     trailing:
                         const CircleAvatar(child: Icon(Icons.navigate_next)))),
-            Container(height: MediaQuery.of(context).viewInsets.bottom),
+            SafeArea(top: false, child: Container()),
           ],
         )),
       ],

@@ -308,7 +308,7 @@ class _GradeInformation extends State<GradeInformation> {
         if (afterOptionGrades.getNewGrade(
                     config.sufficientFrom, widget.grade.weight) >
                 widget.grade.grade &&
-            widget.grades.average < config.sufficientFrom)
+            grades.average < config.sufficientFrom)
           Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
               child: SilvioCard(
