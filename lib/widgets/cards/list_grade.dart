@@ -208,7 +208,7 @@ class GradeInformation extends StatefulWidget {
 }
 
 class _GradeInformation extends State<GradeInformation> {
-  bool alsoGradesAfter = false;
+  bool alsoGradesAfter = true;
   bool isRefreshing = false;
   bool subjectCalculate = true;
   @override
@@ -221,6 +221,13 @@ class _GradeInformation extends State<GradeInformation> {
             .where((grade) => grade.subject.id == widget.grade.subject.id)
             .toList()
         : widget.grades;
+
+    List<Grade> afterOptionGrades = grades
+        .where((lGrade) =>
+            lGrade != widget.grade &&
+            !(!alsoGradesAfter &&
+                !lGrade.addedDate.isBefore(widget.grade.addedDate)))
+        .toList();
 
     List<String> warnings = List.of(widget.warnings);
     if (differentSubjects && !subjectCalculate) {
@@ -292,6 +299,31 @@ class _GradeInformation extends State<GradeInformation> {
         Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
             child: SilvioCard(
+              isFilled: false,
+              child: ListTile(
+                leading: const Icon(Icons.redo_outlined),
+                title: Text(AppLocalizations.of(context)!.resit),
+              ),
+            )),
+        if (afterOptionGrades.getNewGrade(
+                    config.sufficientFrom, widget.grade.weight) >
+                widget.grade.grade &&
+            widget.grades.average < config.sufficientFrom)
+          Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+              child: SilvioCard(
+                isFilled: true,
+                child: ListTile(
+                  leading: const Icon(Icons.auto_awesome_outlined),
+                  title: Text(AppLocalizations.of(context)!.gradeForPass),
+                  subtitle: Text(afterOptionGrades
+                      .getNewGrade(config.sufficientFrom, widget.grade.weight)
+                      .displayNumber()),
+                ),
+              )),
+        Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            child: SilvioCard(
                 isFilled: true,
                 trailing: warnings.isNotEmpty
                     ? Padding(
@@ -315,13 +347,7 @@ class _GradeInformation extends State<GradeInformation> {
                       const EdgeInsets.only(left: 16, right: 16, bottom: 8),
                   child: GradeCalculate(
                       context: context,
-                      grades: grades
-                          .where((lGrade) =>
-                              lGrade != widget.grade &&
-                              !(!alsoGradesAfter &&
-                                  !lGrade.addedDate
-                                      .isBefore(widget.grade.addedDate)))
-                          .toList(),
+                      grades: afterOptionGrades,
                       preFillWeight: widget.grade.weight,
                       calcNewAverage: false),
                 ))),
@@ -352,13 +378,7 @@ class _GradeInformation extends State<GradeInformation> {
                       const EdgeInsets.only(left: 16, right: 16, bottom: 8),
                   child: GradeCalculate(
                       context: context,
-                      grades: grades
-                          .where((lGrade) =>
-                              lGrade != widget.grade &&
-                              !(!alsoGradesAfter &&
-                                  !lGrade.addedDate
-                                      .isBefore(widget.grade.addedDate)))
-                          .toList(),
+                      grades: afterOptionGrades,
                       preFillWeight: widget.grade.weight,
                       calcNewAverage: true),
                 ))),
@@ -366,8 +386,16 @@ class _GradeInformation extends State<GradeInformation> {
       Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
           child: SilvioCard(
-              isFilled: true,
+            isFilled: false,
+            child: ListTile(
+              leading: const Icon(Icons.settings_outlined),
               title: Text(AppLocalizations.of(context)!.gradeSettings),
+            ),
+          )),
+      Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          child: SilvioCard(
+              isFilled: true,
               child: Column(children: [
                 if (differentSubjects)
                   SwitchListTile(
@@ -396,20 +424,22 @@ class _GradeInformation extends State<GradeInformation> {
                         .useLaterReciviedGradesExpl),
                   ),
                 SwitchListTile(
-                  secondary: const Icon(Icons.calculate_outlined),
-                  value: widget.grade.isEnabled,
-                  onChanged: (value) {
-                    widget.grade.isEnabled = value;
-                    setState(() {});
-                    Provider.of<AccountProvider>(context, listen: false)
-                        .changeAccount(null);
-                  },
-                  title: Text(AppLocalizations.of(context)!
-                      .useThisGradeForCalculations),
-                ),
+                    secondary: const Icon(Icons.calculate_outlined),
+                    value: widget.grade.isEnabled,
+                    onChanged: (value) {
+                      widget.grade.isEnabled = value;
+                      setState(() {});
+                      Provider.of<AccountProvider>(context, listen: false)
+                          .changeAccount(null);
+                    },
+                    title: Text(AppLocalizations.of(context)!
+                        .useThisGradeForCalculations),
+                    subtitle: Text(AppLocalizations.of(context)!
+                        .useThisGradeForCalculationsExpl)),
                 ListTile(
                   leading: const Icon(Icons.download),
                   title: Text(AppLocalizations.of(context)!.reloadGrade),
+                  subtitle: Text(AppLocalizations.of(context)!.reloadGradeExpl),
                   trailing: Wrap(children: [
                     IconButton(
                       onPressed: () async {

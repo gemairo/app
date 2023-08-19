@@ -4,6 +4,7 @@ import 'package:dynamic_color/dynamic_color.dart';
 import 'package:expandable_page_view/expandable_page_view.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:silvio/apis/magister.dart';
 import 'package:silvio/hive/extentions.dart';
 import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
@@ -78,10 +79,7 @@ class _SettingsView extends State<SettingsView> {
     return Scaffold(
         body: CustomScrollView(
       slivers: <Widget>[
-        SliverAppBar.large(
-            title: Text(AppLocalizations.of(context)!.settings),
-            //TMP until a release containing https://github.com/flutter/flutter/pull/122542 is released
-            centerTitle: true),
+        SliverAppBar.large(title: Text(AppLocalizations.of(context)!.settings)),
         SliverList(
             delegate: SliverChildListDelegate(
           [
@@ -353,6 +351,7 @@ class _SettingsView extends State<SettingsView> {
                     leading: const Icon(FontAwesome5.file_contract),
                     trailing:
                         const CircleAvatar(child: Icon(Icons.navigate_next)))),
+            Container(height: MediaQuery.of(context).viewInsets.bottom),
           ],
         )),
       ],
@@ -639,16 +638,31 @@ class _PersonConfigCarouselState extends State<PersonConfigCarousel> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text("${person.firstName} ${person.lastName}"),
-                          Badge(
-                            alignment: AlignmentDirectional.centerEnd,
-                            backgroundColor:
-                                Theme.of(context).colorScheme.primary,
-                            label: Text(
-                                person.parentAccount!.apiType.name.capitalize(),
-                                style: TextStyle(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onPrimary)),
+                          InkWell(
+                            onTap: () {
+                              if (person.parentAccount!.apiType ==
+                                  AccountAPITypes.magister) {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => SignIn(
+                                          alreadyExistingAccount:
+                                              person.parentAccount!),
+                                    ));
+                              }
+                            },
+                            child: Badge(
+                              alignment: AlignmentDirectional.centerEnd,
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.primary,
+                              label: Text(
+                                  person.parentAccount!.apiType.name
+                                      .capitalize(),
+                                  style: TextStyle(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary)),
+                            ),
                           )
                         ],
                       ),

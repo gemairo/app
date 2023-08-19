@@ -7,7 +7,9 @@ enum _LoginOptions {
 }
 
 class SignIn extends StatelessWidget {
-  const SignIn({super.key});
+  const SignIn({super.key, this.alreadyExistingAccount});
+
+  final Account? alreadyExistingAccount;
 
   @override
   Widget build(BuildContext context) {
@@ -143,9 +145,76 @@ class SignIn extends StatelessWidget {
                   controller: webViewController
                     ..loadRequest(Uri.parse(generateLoginURL())));
             }
-            return FetchAccountInformation(redirectUrl: redirectUrl);
+            return alreadyExistingAccount != null
+                ? ReloadAccount(
+                    account: alreadyExistingAccount!, redirectUrl: redirectUrl)
+                : FetchAccountInformation(redirectUrl: redirectUrl);
           },
         ));
+  }
+}
+
+class ReloadAccount extends StatelessWidget {
+  const ReloadAccount(
+      {super.key, required this.account, required this.redirectUrl});
+
+  final Account account;
+  final ValueNotifier<String> redirectUrl;
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: Future(() async {
+        Account toBeFilledAccount = Account();
+        Magister magister = Magister(toBeFilledAccount);
+        toBeFilledAccount.apiType = AccountAPITypes.magister;
+        magister.api.saveTokens(await getTokenSet(redirectUrl.value));
+        await magister.api.setTenant();
+        await magister.api.setAccountDetails();
+        if (AccountManager()
+            .accountsList
+            .map((e) => e.uuid)
+            .contains(account.uuid)) {
+          //The account exists
+          account.apiStorage = toBeFilledAccount.apiStorage;
+        } else {
+          throw "Account not found";
+        }
+      }),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            Navigator.popUntil(context, (r) => r.isFirst);
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Start(),
+                ));
+          });
+        }
+        if (snapshot.hasError) {
+          return Center(
+            child: ListTile(
+              title: Text("${snapshot.error}"),
+              subtitle: Text("${snapshot.stackTrace}"),
+            ),
+          );
+        }
+        return Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const CircularProgressIndicator(),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(AppLocalizations.of(context)!
+                    .whileAccountInformationFetched),
+              )
+            ],
+          ),
+        );
+      },
+    );
   }
 }
 

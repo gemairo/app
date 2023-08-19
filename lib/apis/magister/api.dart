@@ -37,6 +37,20 @@ class MagisterApi extends Magister {
             rootScaffoldMessengerKey.currentState?.showSnackBar(const SnackBar(
               content: Text("No connection to Magister could be made"),
             ));
+
+            rootScaffoldMessengerKey.currentState?.clearSnackBars();
+            rootScaffoldMessengerKey.currentState?.showSnackBar(SnackBar(
+              duration: const Duration(hours: 4),
+              showCloseIcon: true,
+              content: const Text("Connection failed, please login again"),
+              action: SnackBarAction(
+                  label: "Login",
+                  onPressed: () => navigatorKey.currentState?.push(
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              SignIn(alreadyExistingAccount: account)))),
+            ));
+
             return handler.reject(DioException(
               requestOptions: e.requestOptions,
               error:
