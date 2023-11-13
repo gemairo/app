@@ -188,3 +188,19 @@ CalendarEvent? magisterCalendarEvent([Map? event]) {
   }
   return null;
 }
+
+class MagisterPermission {
+  String name;
+  List<String> accessType;
+
+  MagisterPermission({
+    required this.name,
+    required this.accessType,
+  });
+
+  factory MagisterPermission.fromJson(Map<String, dynamic> json) =>
+      MagisterPermission(
+        name: json["Naam"],
+        accessType: List<String>.from(json["AccessType"].map((x) => x)),
+      );
+}
