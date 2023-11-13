@@ -29,43 +29,6 @@ class MagisterApi extends Magister {
           }
         },
       ),
-      InterceptorsWrapper(
-        onError: (e, handler) async {
-          if (e.response?.data != null &&
-              e.response?.data["error"] == "invalid_grant") {
-            rootScaffoldMessengerKey.currentState?.removeCurrentSnackBar();
-            rootScaffoldMessengerKey.currentState?.showSnackBar(const SnackBar(
-              content: Text("No connection to Magister could be made"),
-            ));
-
-            rootScaffoldMessengerKey.currentState?.clearSnackBars();
-            rootScaffoldMessengerKey.currentState?.showSnackBar(SnackBar(
-              duration: const Duration(hours: 4),
-              showCloseIcon: true,
-              content: const Text("Connection failed, please login again"),
-              action: SnackBarAction(
-                  label: "Login",
-                  onPressed: () => navigatorKey.currentState?.push(
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              SignIn(alreadyExistingAccount: account)))),
-            ));
-
-            return handler.reject(DioException(
-              requestOptions: e.requestOptions,
-              error:
-                  "Dit account is uitgelogd, verwijder je account en log opnieuw in. (Spijt me zeer hier is nog geen automatische support voor)",
-              response: e.response,
-            ));
-            // MagisterLogin().launch(main.appState.context, (tokenSet, _) {
-            //   account.saveTokens(tokenSet);
-            //   if (account.isInBox) account.save();
-            // }, title: "Account is uitgelogd");
-            // return dio.request(e.requestOptions.path, options: e.requestOptions as Options);
-          }
-          handler.next(e);
-        },
-      ),
       QueuedInterceptorsWrapper(
         onRequest: (options, handler) async {
           debugPrint("request: ${options.uri.pathSegments.last}");
@@ -153,6 +116,22 @@ class MagisterApi extends Magister {
       saveTokens(res.data!);
       if (account.isInBox) account.save();
     }).catchError((err) {
+      if (err.response?.data != null &&
+          (err.response?.data["error"] == "invalid_grant" ||
+              err.response?.data["error"] == "invalid_request")) {
+        rootScaffoldMessengerKey.currentState?.clearSnackBars();
+        rootScaffoldMessengerKey.currentState?.showSnackBar(SnackBar(
+          duration: const Duration(hours: 4),
+          showCloseIcon: true,
+          content: const Text("Connection failed, please login again"),
+          action: SnackBarAction(
+              label: "Login",
+              onPressed: () => navigatorKey.currentState?.push(
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          SignIn(alreadyExistingAccount: account)))),
+        ));
+      }
       throw err;
     });
   }
@@ -209,11 +188,18 @@ class MagisterApi extends Magister {
 
   Future<void> setAccountDetails() async {
     Map res = (await dio.get("api/account")).data;
-    account.accountType = res["Groep"].first["Naam"] == "Leerling"
-        ? AccountTypes.student
-        : res["Groep"].first["Naam"] == "Ouder"
-            ? AccountTypes.parent
-            : AccountTypes.other;
+
+    List<MagisterPermission> perms = List<MagisterPermission>.from(res["Groep"]
+        .first["Privileges"]
+        .map((x) => MagisterPermission.fromJson(x)));
+
+    account.accountType = perms
+                .firstWhereOrNull((p) => p.name == "Kinderen")
+                ?.accessType
+                .contains("Read") ??
+            false
+        ? AccountTypes.parent
+        : AccountTypes.student;
     account.id = res["Persoon"]["Id"];
     account.dateOfBirth = DateTime.parse(
         res["Persoon"]["Geboortedatum"] ?? DateTime.now().toIso8601String());
@@ -263,7 +249,7 @@ String generateRandomString() {
   return Iterable.generate(50, (_) => chars[r.nextInt(chars.length)]).join();
 }
 
-String generateLoginURL() {
+String generateLoginURL({String? tenant, String? username}) {
   String generateRandomBase64(length) {
     var r = Random.secure();
     var chars = 'abcdef0123456789';
@@ -279,9 +265,9 @@ String generateLoginURL() {
       .replaceAll('=', '');
   String str =
       "https://accounts.magister.net/connect/authorize?client_id=M6LOAPP&redirect_uri=m6loapp%3A%2F%2Foauth2redirect%2F&scope=openid%20profile%20offline_access%20magister.mobile%20magister.ecs&response_type=code%20id_token&state=$state&nonce=$nonce&code_challenge=$codeChallenge&code_challenge_method=S256";
-  if (preFill != null) {
-    str +=
-        "&acr_values=tenant:${preFill?["tenant"]}&prompt=select_account&login_hint=${preFill?['username']}";
+  if (tenant != null) {
+    str += "&acr_values=tenant:${Uri.parse(tenant).host}&prompt=select_account";
+    if (username != null) str += "&login_hint=${preFill?['username']}";
   }
   return str;
 }

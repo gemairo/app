@@ -43,12 +43,17 @@ class SignIn extends StatelessWidget {
                   onSelected: (value) async {
                     switch (value) {
                       case _LoginOptions.refresh:
-                        webViewController
-                            .loadRequest(Uri.parse(generateLoginURL()));
+                        webViewController.loadRequest(Uri.parse(
+                            generateLoginURL(
+                                tenant: alreadyExistingAccount
+                                    ?.apiStorage?.baseUrl)));
 
                         break;
                       case _LoginOptions.browser:
-                        await launchUrl(Uri.parse(generateLoginURL()),
+                        await launchUrl(
+                            Uri.parse(generateLoginURL(
+                                tenant: alreadyExistingAccount
+                                    ?.apiStorage?.baseUrl)),
                             mode: LaunchMode.externalNonBrowserApplication,
                             webViewConfiguration: const WebViewConfiguration(
                                 enableDomStorage: false));
@@ -143,7 +148,8 @@ class SignIn extends StatelessWidget {
 
               return WebViewWidget(
                   controller: webViewController
-                    ..loadRequest(Uri.parse(generateLoginURL())));
+                    ..loadRequest(Uri.parse(generateLoginURL(
+                        tenant: alreadyExistingAccount?.apiStorage?.baseUrl))));
             }
             return alreadyExistingAccount != null
                 ? ReloadAccount(
@@ -174,11 +180,13 @@ class ReloadAccount extends StatelessWidget {
         if (AccountManager()
             .accountsList
             .map((e) => e.uuid)
-            .contains(account.uuid)) {
+            .contains(toBeFilledAccount.uuid)) {
           //The account exists
           account.apiStorage = toBeFilledAccount.apiStorage;
+          await account.save();
+          return Future.value(true);
         } else {
-          throw "Account not found";
+          throw "Account not found, please try again with the correct account.";
         }
       }),
       builder: (context, snapshot) {
@@ -188,7 +196,7 @@ class ReloadAccount extends StatelessWidget {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Start(),
+                  builder: (context) => const Start(),
                 ));
           });
         }
