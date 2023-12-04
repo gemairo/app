@@ -63,17 +63,20 @@ class Magister implements Api {
     dynamic futures = await Future.wait([
       api.dio.get(
           "/api/personen/${person.id}/afspraken?status=1&tot=${DateTime.now().add(const Duration(days: 60)).toIso8601String()}&van=${DateTime.now().toIso8601String()}"),
-      api.dio.get(
-          "/api/personen/${person.id}/opdrachten?skip=0&top=250&einddatum=${DateTime.now().add(const Duration(days: 60)).toIso8601String()}&startdatum=${DateTime.now().toIso8601String()}"),
+      if (person.config.supportsAssignments)
+        api.dio.get(
+            "/api/personen/${person.id}/opdrachten?skip=0&top=250&einddatum=${DateTime.now().add(const Duration(days: 60)).toIso8601String()}&startdatum=${DateTime.now().toIso8601String()}"),
     ]);
 
     person.calendarEvents = (futures[0].data["Items"] as List)
         .map((event) => magisterCalendarEvent(event)!)
         .toList();
 
-    person.calendarEvents.addAll((futures[1].data["Items"] as List)
-        .map((assignment) => magisterAssignmentToCalendarEvent(assignment)!)
-        .toList());
+    if (person.config.supportsAssignments) {
+      person.calendarEvents.addAll((futures[1].data["Items"] as List)
+          .map((assignment) => magisterAssignmentToCalendarEvent(assignment)!)
+          .toList());
+    }
 
     for (CalendarEvent event in person.calendarEvents) {
       if (event.description != null) {
