@@ -149,6 +149,8 @@ class PersonConfig {
   bool useForGradeCheck = true;
   @HiveField(2, defaultValue: false)
   bool useForTestCheck = false;
+  @HiveField(3, defaultValue: true)
+  bool supportsAssignments = true;
 }
 
 enum FilterTypes { quarterCode, subject, teacher, inputString, pta, dateRange }

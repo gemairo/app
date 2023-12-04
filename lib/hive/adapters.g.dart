@@ -167,19 +167,22 @@ class PersonConfigAdapter extends TypeAdapter<PersonConfig> {
     return PersonConfig()
       ..activeSchoolYearId = fields[0] as int
       ..useForGradeCheck = fields[1] as bool
-      ..useForTestCheck = fields[2] == null ? false : fields[2] as bool;
+      ..useForTestCheck = fields[2] == null ? false : fields[2] as bool
+      ..supportsAssignments = fields[3] == null ? true : fields[3] as bool;
   }
 
   @override
   void write(BinaryWriter writer, PersonConfig obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.activeSchoolYearId)
       ..writeByte(1)
       ..write(obj.useForGradeCheck)
       ..writeByte(2)
-      ..write(obj.useForTestCheck);
+      ..write(obj.useForTestCheck)
+      ..writeByte(3)
+      ..write(obj.supportsAssignments);
   }
 
   @override

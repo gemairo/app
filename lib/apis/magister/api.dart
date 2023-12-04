@@ -205,6 +205,12 @@ class MagisterApi extends Magister {
         res["Persoon"]["Geboortedatum"] ?? DateTime.now().toIso8601String());
 
     Future<void> initPerson(Person person) async {
+      person.config.supportsAssignments = perms
+              .firstWhereOrNull((p) => p.name == "EloOpdracht")
+              ?.accessType
+              .contains("Read") ??
+          false;
+
       await refreshProfilePicture(person);
       await refreshCalendarEvents(person);
       await setSchoolYears(person);
