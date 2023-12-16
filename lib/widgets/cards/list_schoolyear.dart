@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'package:silvio/apis/account_manager.dart';
-import 'package:silvio/hive/adapters.dart';
-import 'package:silvio/hive/extentions.dart';
+import 'package:gemairo/apis/account_manager.dart';
+import 'package:gemairo/hive/adapters.dart';
+import 'package:gemairo/hive/extentions.dart';
 
-import 'package:silvio/widgets/avatars.dart';
-import 'package:silvio/widgets/card.dart';
-import 'package:silvio/widgets/navigation.dart';
+import 'package:gemairo/widgets/avatars.dart';
+import 'package:gemairo/widgets/card.dart';
+import 'package:gemairo/widgets/navigation.dart';
 
 class RelatedSchoolYearsCard extends StatelessWidget {
   const RelatedSchoolYearsCard({super.key, required this.subject});

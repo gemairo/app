@@ -6,14 +6,14 @@ import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:silvio/apis/abstact_api.dart';
-import 'package:silvio/apis/account_manager.dart';
-import 'package:silvio/hive/adapters.dart';
-import 'package:silvio/hive/extentions.dart';
-import 'package:silvio/main.dart';
-import 'package:silvio/screens/post_login.dart';
-import 'package:silvio/widgets/card.dart';
-import 'package:silvio/widgets/facts_header.dart';
+import 'package:gemairo/apis/abstact_api.dart';
+import 'package:gemairo/apis/account_manager.dart';
+import 'package:gemairo/hive/adapters.dart';
+import 'package:gemairo/hive/extentions.dart';
+import 'package:gemairo/main.dart';
+import 'package:gemairo/screens/post_login.dart';
+import 'package:gemairo/widgets/card.dart';
+import 'package:gemairo/widgets/facts_header.dart';
 import 'package:mobile_scanner/mobile_scanner.dart' hide CalendarEvent;
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:uni_links/uni_links.dart';
@@ -22,11 +22,11 @@ import 'package:webview_flutter/webview_flutter.dart';
 import 'package:pointycastle/export.dart' as castle;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-part 'package:silvio/apis/magister/screens/terms.dart';
-part 'package:silvio/apis/magister/screens/login.dart';
-part 'package:silvio/apis/magister/screens/config.dart';
-part 'package:silvio/apis/magister/translate.dart';
-part 'package:silvio/apis/magister/api.dart';
+part 'package:gemairo/apis/magister/screens/terms.dart';
+part 'package:gemairo/apis/magister/screens/login.dart';
+part 'package:gemairo/apis/magister/screens/config.dart';
+part 'package:gemairo/apis/magister/translate.dart';
+part 'package:gemairo/apis/magister/api.dart';
 
 class Magister implements Api {
   @override
@@ -220,7 +220,7 @@ class Magister implements Api {
     //Get latest schoolQuaters
     await api.setSchoolQuarters(person, schoolYear);
 
-    //Convert all Magister grades to Silvio grades
+    //Convert all Magister grades to Gemairo grades
     schoolYear.grades.addAll(cijferoverzichtvooraanmelding
         .map((cijfer) => magisterGrade(
             schoolYear.schoolQuarters.firstWhereOrNull(

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:silvio/screens/career.dart';
-import 'package:silvio/widgets/card.dart';
-import 'package:silvio/widgets/filter.dart';
+import 'package:gemairo/screens/career.dart';
+import 'package:gemairo/widgets/card.dart';
+import 'package:gemairo/widgets/filter.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'package:silvio/apis/account_manager.dart';
-import 'package:silvio/hive/adapters.dart';
-import 'package:silvio/hive/extentions.dart';
+import 'package:gemairo/apis/account_manager.dart';
+import 'package:gemairo/hive/adapters.dart';
+import 'package:gemairo/hive/extentions.dart';
 
-import 'package:silvio/widgets/cards/list_grade.dart';
+import 'package:gemairo/widgets/cards/list_grade.dart';
 
 class SearchView extends StatefulWidget {
   const SearchView({super.key});
@@ -51,7 +51,7 @@ class _SearchView extends State<SearchView> {
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-          child: SilvioCard(
+          child: GemairoCard(
             child: Padding(
               padding: const EdgeInsets.all(4),
               child: TextField(

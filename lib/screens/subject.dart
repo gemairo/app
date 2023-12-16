@@ -3,21 +3,21 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'package:silvio/apis/account_manager.dart';
-import 'package:silvio/hive/adapters.dart';
-import 'package:silvio/hive/extentions.dart';
-import 'package:silvio/widgets/ads.dart';
+import 'package:gemairo/apis/account_manager.dart';
+import 'package:gemairo/hive/adapters.dart';
+import 'package:gemairo/hive/extentions.dart';
+import 'package:gemairo/widgets/ads.dart';
 
-import 'package:silvio/widgets/card.dart';
-import 'package:silvio/widgets/appbar.dart';
-import 'package:silvio/widgets/facts_header.dart';
-import 'package:silvio/widgets/filter.dart';
-import 'package:silvio/widgets/charts/barchart_frequency.dart';
-import 'package:silvio/widgets/charts/linechart_grades.dart';
-import 'package:silvio/widgets/cards/grade_calculations.dart';
-import 'package:silvio/widgets/cards/list_grade.dart';
-import 'package:silvio/widgets/cards/list_schoolyear.dart';
-import 'package:silvio/widgets/cards/list_test.dart';
+import 'package:gemairo/widgets/card.dart';
+import 'package:gemairo/widgets/appbar.dart';
+import 'package:gemairo/widgets/facts_header.dart';
+import 'package:gemairo/widgets/filter.dart';
+import 'package:gemairo/widgets/charts/barchart_frequency.dart';
+import 'package:gemairo/widgets/charts/linechart_grades.dart';
+import 'package:gemairo/widgets/cards/grade_calculations.dart';
+import 'package:gemairo/widgets/cards/list_grade.dart';
+import 'package:gemairo/widgets/cards/list_schoolyear.dart';
+import 'package:gemairo/widgets/cards/list_test.dart';
 
 class SubjectStatisticsView extends StatefulWidget {
   const SubjectStatisticsView({super.key, required this.subject});
@@ -54,7 +54,7 @@ class _SubjectStatisticsView extends State<SubjectStatisticsView> {
       if (grades.numericalGrades.length > 1)
         StaggeredGridTile.fit(
             crossAxisCellCount: 2,
-            child: SilvioCard(
+            child: GemairoCard(
                 child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: LineChartGrades(grades: grades, showAverage: true),
@@ -78,7 +78,7 @@ class _SubjectStatisticsView extends State<SubjectStatisticsView> {
             crossAxisCellCount: 2,
             child: SizedBox(
                 height: 250,
-                child: SilvioCard(
+                child: GemairoCard(
                     title: Text(AppLocalizations.of(context)!.whatShouldIGet),
                     child: Expanded(
                         child: Padding(
@@ -92,7 +92,7 @@ class _SubjectStatisticsView extends State<SubjectStatisticsView> {
             crossAxisCellCount: 2,
             child: SizedBox(
                 height: 250,
-                child: SilvioCard(
+                child: GemairoCard(
                   title: Text(AppLocalizations.of(context)!
                       .whatIsGoingToBeMyNewAverage),
                   child: Expanded(
@@ -104,7 +104,7 @@ class _SubjectStatisticsView extends State<SubjectStatisticsView> {
                 ))),
         StaggeredGridTile.fit(
             crossAxisCellCount: 2,
-            child: SilvioCard(
+            child: GemairoCard(
                 title: Text(AppLocalizations.of(context)!.histogram),
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
@@ -113,7 +113,7 @@ class _SubjectStatisticsView extends State<SubjectStatisticsView> {
       ],
       StaggeredGridTile.fit(
           crossAxisCellCount: 4,
-          child: SilvioCard(
+          child: GemairoCard(
               title: Text(AppLocalizations.of(context)!.grades),
               trailing: GradeListOptions(
                 addOrRemoveBadge: addOrRemoveBadge,
@@ -125,7 +125,7 @@ class _SubjectStatisticsView extends State<SubjectStatisticsView> {
     ];
 
     return Scaffold(
-        appBar: SilvioAppBar(
+        appBar: GemairoAppBar(
           title: widget.subject.name,
         ),
         body: BottomBanner(
@@ -140,7 +140,7 @@ class _SubjectStatisticsView extends State<SubjectStatisticsView> {
                 child: FilterChips(
                   grades: widget.subject.grades,
                 )),
-            SilvioCardList(
+            GemairoCardList(
               maxCrossAxisExtent: 250,
               children: widgets,
             )

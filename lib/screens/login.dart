@@ -3,14 +3,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'package:silvio/hive/adapters.dart';
+import 'package:gemairo/hive/adapters.dart';
 
-import 'package:silvio/apis/local_file.dart';
-import 'package:silvio/apis/random.dart';
-import 'package:silvio/apis/somtoday.dart';
-import 'package:silvio/apis/magister.dart';
+import 'package:gemairo/apis/local_file.dart';
+import 'package:gemairo/apis/random.dart';
+import 'package:gemairo/apis/somtoday.dart';
+import 'package:gemairo/apis/magister.dart';
 
-import 'package:silvio/widgets/card.dart';
+import 'package:gemairo/widgets/card.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -82,7 +82,7 @@ class _LoginView extends State<LoginView> {
                           ),
                         ),
                         Text(
-                          " Silvio",
+                          " Gemairo",
                           style: Theme.of(context)
                               .textTheme
                               .headlineLarge
@@ -98,7 +98,7 @@ class _LoginView extends State<LoginView> {
                     .map((method) => Padding(
                           padding: const EdgeInsets.symmetric(
                               vertical: 5, horizontal: 16),
-                          child: SilvioCard(
+                          child: GemairoCard(
                               child: ListTile(
                             leading: CircleAvatar(child: Icon(method.icon)),
                             title: Text(AppLocalizations.of(context)!

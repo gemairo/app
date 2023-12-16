@@ -1,4 +1,4 @@
-part of 'package:silvio/apis/magister.dart';
+part of 'package:gemairo/apis/magister.dart';
 
 class MagisterApi extends Magister {
   MagisterApi(super.account);

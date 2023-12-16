@@ -6,18 +6,18 @@ import 'package:provider/provider.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'package:silvio/apis/account_manager.dart';
-import 'package:silvio/hive/adapters.dart';
-import 'package:silvio/hive/extentions.dart';
+import 'package:gemairo/apis/account_manager.dart';
+import 'package:gemairo/hive/adapters.dart';
+import 'package:gemairo/hive/extentions.dart';
 
-import 'package:silvio/screens/subject.dart';
-import 'package:silvio/widgets/card.dart';
-import 'package:silvio/widgets/charts/barchart_subjects_min_max.dart';
-import 'package:silvio/widgets/charts/barchart_subjects_average.dart';
-import 'package:silvio/widgets/charts/barchart_subjects_weight.dart';
-import 'package:silvio/widgets/filter.dart';
-import 'package:silvio/widgets/avatars.dart';
-import 'package:silvio/widgets/navigation.dart';
+import 'package:gemairo/screens/subject.dart';
+import 'package:gemairo/widgets/card.dart';
+import 'package:gemairo/widgets/charts/barchart_subjects_min_max.dart';
+import 'package:gemairo/widgets/charts/barchart_subjects_average.dart';
+import 'package:gemairo/widgets/charts/barchart_subjects_weight.dart';
+import 'package:gemairo/widgets/filter.dart';
+import 'package:gemairo/widgets/avatars.dart';
+import 'package:gemairo/widgets/navigation.dart';
 
 class SubjectsListView extends StatefulWidget {
   const SubjectsListView({super.key});
@@ -130,7 +130,7 @@ class _SubjectsListView extends State<SubjectsListView> {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: CarouselSlider(
               items: [
-                SilvioCard(
+                GemairoCard(
                     title: Text(AppLocalizations.of(context)!.averages),
                     child: Padding(
                         padding: const EdgeInsets.only(bottom: 8, top: 0),
@@ -138,14 +138,14 @@ class _SubjectsListView extends State<SubjectsListView> {
                           subjects: grades.numericalGrades.subjects,
                           rounded: rounded,
                         ))),
-                SilvioCard(
+                GemairoCard(
                     title: Text(AppLocalizations.of(context)!.minMax),
                     child: Padding(
                         padding: const EdgeInsets.only(bottom: 8, top: 0),
                         child: BarChartSubjectsMinMax(
                           subjects: grades.numericalGrades.subjects,
                         ))),
-                SilvioCard(
+                GemairoCard(
                     title: Text(AppLocalizations.of(context)!.averageWeight),
                     child: Padding(
                         padding: const EdgeInsets.only(bottom: 8, top: 0),
@@ -170,7 +170,7 @@ class _SubjectsListView extends State<SubjectsListView> {
             ],
             grades: acP.schoolYear.grades,
           )),
-      SilvioCardList(children: widgets)
+      GemairoCardList(children: widgets)
     ]);
   }
 }

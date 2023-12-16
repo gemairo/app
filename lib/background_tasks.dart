@@ -67,7 +67,7 @@ Future<void> backgroundCheck() async {
             1);
         await flutterLocalNotificationsPlugin.show(
             person.uuid,
-            'Nieuwe cijfers in Silvio',
+            'Nieuwe cijfers in Gemairo',
             difference.length == 1 ||
                     difference.subjects.every(
                         (subject) => subject.id == difference.first.subject.id)
@@ -75,14 +75,14 @@ Future<void> backgroundCheck() async {
                 : 'Er zijn ${difference.length} nieuwe cijfers beschikbaar${showPersonName ? " voor ${person.firstName}" : ""}',
             const NotificationDetails(
               android: AndroidNotificationDetails(
-                  "SilvioGrades", "Nieuwe cijfers",
+                  "GemairoGrades", "Nieuwe cijfers",
                   channelDescription:
                       "Ontvang een bericht zodra er een nieuw cijfer beschikbaar is!",
                   importance: Importance.high,
                   priority: Priority.high,
-                  groupKey: "SilvioGrades",
+                  groupKey: "GemairoGrades",
                   icon: 'notification'),
-              iOS: DarwinNotificationDetails(threadIdentifier: "SilvioGrades"),
+              iOS: DarwinNotificationDetails(threadIdentifier: "GemairoGrades"),
             ),
             payload: "${person.uuid}-grade");
       }
@@ -113,7 +113,7 @@ Future<void> backgroundCheck() async {
             1);
         await flutterLocalNotificationsPlugin.show(
             person.uuid,
-            'Silvio heeft nieuwe toetsen gevonden',
+            'Gemairo heeft nieuwe toetsen gevonden',
             difference.length == 1 ||
                     difference.map((e) => e.subjectsNames).every(
                         (subject) => subject == difference.first.subjectsNames)
@@ -121,14 +121,14 @@ Future<void> backgroundCheck() async {
                 : 'Er zijn ${difference.length} nieuwe toetsen beschikbaar${showPersonName ? " voor ${person.firstName}" : ""}',
             const NotificationDetails(
               android: AndroidNotificationDetails(
-                  "SilvioTests", "Nieuwe toetsen",
+                  "GemairoTests", "Nieuwe toetsen",
                   channelDescription:
                       "Ontvang een bericht zodra er een nieuwe toets gevonden is!",
                   importance: Importance.high,
                   priority: Priority.high,
-                  groupKey: "SilvioTests",
+                  groupKey: "GemairoTests",
                   icon: 'notification'),
-              iOS: DarwinNotificationDetails(threadIdentifier: "SilvioTests"),
+              iOS: DarwinNotificationDetails(threadIdentifier: "GemairoTests"),
             ),
             payload: "${person.uuid}-test");
       }

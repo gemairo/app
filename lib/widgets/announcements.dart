@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:silvio/widgets/card.dart';
+import 'package:gemairo/widgets/card.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Announcement {
@@ -34,7 +34,7 @@ class AnnouncementCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SilvioCard(
+    return GemairoCard(
         elevation: 2,
         title: Text(announcement.title),
         child: Padding(

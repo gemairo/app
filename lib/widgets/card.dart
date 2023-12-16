@@ -4,8 +4,8 @@ import 'dart:math' as math;
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
-class SilvioCard extends StatelessWidget {
-  const SilvioCard(
+class GemairoCard extends StatelessWidget {
+  const GemairoCard(
       {super.key,
       required this.child,
       this.title,
@@ -49,8 +49,8 @@ class SilvioCard extends StatelessWidget {
   }
 }
 
-class SilvioCardList extends StatelessWidget {
-  const SilvioCardList(
+class GemairoCardList extends StatelessWidget {
+  const GemairoCardList(
       {super.key, required this.children, this.maxCrossAxisExtent = 640});
 
   final List<Widget> children;
@@ -92,7 +92,7 @@ class _CarouselCard extends State<CarouselCard> {
 
   @override
   Widget build(BuildContext context) {
-    return SilvioCard(
+    return GemairoCard(
       title: Text(widget.title),
       child: Expanded(
         child: Column(

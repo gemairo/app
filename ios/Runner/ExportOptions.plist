@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<dict>
-	<key>destination</key>
-	<string>export</string>
-	<key>manageAppVersionAndBuildNumber</key>
-	<true/>
-	<key>method</key>
-	<string>app-store</string>
-	<key>provisioningProfiles</key>
 	<dict>
-		<key>dev.harrydekat.silvio</key>
-		<string>Silvio</string>
+		<key>destination</key>
+		<string>export</string>
+		<key>manageAppVersionAndBuildNumber</key>
+		<true />
+		<key>method</key>
+		<string>app-store</string>
+		<key>provisioningProfiles</key>
+		<dict>
+			<key>app.netlob.magiscore</key>
+			<string>Gemairo</string>
+		</dict>
+		<key>signingCertificate</key>
+		<string>7F82AD4C6C02266F4743AE9FCE9B08CD7BEE285D</string>
+		<key>signingStyle</key>
+		<string>manual</string>
+		<key>stripSwiftSymbols</key>
+		<true />
+		<key>teamID</key>
+		<string>FCB4S3W235</string>
+		<key>uploadSymbols</key>
+		<true />
 	</dict>
-	<key>signingCertificate</key>
-	<string>7F82AD4C6C02266F4743AE9FCE9B08CD7BEE285D</string>
-	<key>signingStyle</key>
-	<string>manual</string>
-	<key>stripSwiftSymbols</key>
-	<true/>
-	<key>teamID</key>
-	<string>DUGUWCFH8P</string>
-	<key>uploadSymbols</key>
-	<true/>
-</dict>
 </plist>

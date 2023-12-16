@@ -5,18 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Silvio",
+            "name": "Gemairo",
             "request": "launch",
             "type": "dart"
         },
         {
-            "name": "Silvio (profile mode)",
+            "name": "Gemairo (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
-            "name": "Silvio (release mode)",
+            "name": "Gemairo (release mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"

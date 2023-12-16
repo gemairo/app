@@ -1,4 +1,4 @@
-part of 'package:silvio/apis/somtoday.dart';
+part of 'package:gemairo/apis/somtoday.dart';
 
 enum _LoginOptions {
   refresh,

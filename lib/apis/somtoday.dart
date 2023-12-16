@@ -4,10 +4,10 @@ import 'dart:math';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:silvio/apis/account_manager.dart';
-import 'package:silvio/hive/adapters.dart';
-import 'package:silvio/hive/extentions.dart';
-import 'package:silvio/widgets/card.dart';
+import 'package:gemairo/apis/account_manager.dart';
+import 'package:gemairo/hive/adapters.dart';
+import 'package:gemairo/hive/extentions.dart';
+import 'package:gemairo/widgets/card.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -15,12 +15,12 @@ import 'abstact_api.dart';
 import 'package:pointycastle/export.dart' as castle;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-part 'package:silvio/apis/somtoday/api.dart';
-part 'package:silvio/apis/somtoday/screens/config.dart';
-part 'package:silvio/apis/somtoday/screens/login.dart';
-part 'package:silvio/apis/somtoday/screens/school_picker.dart';
-part 'package:silvio/apis/somtoday/screens/terms.dart';
-part 'package:silvio/apis/somtoday/translate.dart';
+part 'package:gemairo/apis/somtoday/api.dart';
+part 'package:gemairo/apis/somtoday/screens/config.dart';
+part 'package:gemairo/apis/somtoday/screens/login.dart';
+part 'package:gemairo/apis/somtoday/screens/school_picker.dart';
+part 'package:gemairo/apis/somtoday/screens/terms.dart';
+part 'package:gemairo/apis/somtoday/translate.dart';
 
 class SomToDay implements Api {
   @override

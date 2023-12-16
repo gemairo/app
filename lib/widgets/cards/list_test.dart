@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:silvio/widgets/card.dart';
+import 'package:gemairo/widgets/card.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'package:silvio/hive/adapters.dart';
-import 'package:silvio/hive/extentions.dart';
-import 'package:silvio/widgets/bottom_sheet.dart';
+import 'package:gemairo/hive/adapters.dart';
+import 'package:gemairo/hive/extentions.dart';
+import 'package:gemairo/widgets/bottom_sheet.dart';
 
 class TestList extends StatelessWidget {
   const TestList({super.key, required context, this.calendarEvents = const []});
@@ -43,7 +43,7 @@ class TestList extends StatelessWidget {
                           softWrap: false,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        onTap: () => showSilvioModalBottomSheet(children: [
+                        onTap: () => showGemairoModalBottomSheet(children: [
                               EventInformation(context: context, event: test)
                             ], context: context),
                         trailing: Column(
@@ -102,7 +102,7 @@ class EventInformation extends StatelessWidget {
       ),
       Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          child: SilvioCard(
+          child: GemairoCard(
               isFilled: true,
               title: Text(AppLocalizations.of(context)!.information),
               child: Column(children: [
@@ -155,7 +155,7 @@ class UpcomingTestsCard extends StatelessWidget {
                     child: InkWell(
                         borderRadius:
                             const BorderRadius.all(Radius.circular(32)),
-                        onTap: () => showSilvioModalBottomSheet(children: [
+                        onTap: () => showGemairoModalBottomSheet(children: [
                               EventInformation(
                                 context: context,
                                 event: event,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:silvio/hive/adapters.dart';
+import 'package:gemairo/hive/adapters.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:silvio/hive/extentions.dart';
+import 'package:gemairo/hive/extentions.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 

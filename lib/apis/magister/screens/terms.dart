@@ -1,4 +1,4 @@
-part of 'package:silvio/apis/magister.dart';
+part of 'package:gemairo/apis/magister.dart';
 
 class Terms extends StatefulWidget {
   const Terms({super.key});

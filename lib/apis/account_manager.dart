@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:silvio/hive/adapters.dart';
-import 'package:silvio/hive/extentions.dart';
+import 'package:gemairo/hive/adapters.dart';
+import 'package:gemairo/hive/extentions.dart';
 import 'package:hive/hive.dart';
 
 class AccountManager {

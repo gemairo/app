@@ -4,21 +4,21 @@ import 'package:dynamic_color/dynamic_color.dart';
 import 'package:expandable_page_view/expandable_page_view.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:silvio/apis/magister.dart';
-import 'package:silvio/hive/extentions.dart';
+import 'package:gemairo/apis/magister.dart';
+import 'package:gemairo/hive/extentions.dart';
 import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'package:silvio/apis/account_manager.dart';
-import 'package:silvio/hive/adapters.dart';
+import 'package:gemairo/apis/account_manager.dart';
+import 'package:gemairo/hive/adapters.dart';
 
-import 'package:silvio/apis/local_file.dart';
-import 'package:silvio/main.dart';
-import 'package:silvio/widgets/bottom_sheet.dart';
-import 'package:silvio/widgets/card.dart';
-import 'package:silvio/widgets/cards/list_grade.dart';
+import 'package:gemairo/apis/local_file.dart';
+import 'package:gemairo/main.dart';
+import 'package:gemairo/widgets/bottom_sheet.dart';
+import 'package:gemairo/widgets/card.dart';
+import 'package:gemairo/widgets/cards/list_grade.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
@@ -38,7 +38,7 @@ class _SettingsView extends State<SettingsView> {
   bool hasMaterialYou = false;
   final Map<String, Color> material3Colors = {
     'M3 Baseline': const Color(0xff6750a4),
-    'Silvio Violet': const Color(0xff713DCD),
+    'Gemairo Violet': const Color(0xff713DCD),
     'Indigo': Colors.indigo,
     'Blue': Colors.blue,
     'Teal': Colors.teal,
@@ -100,7 +100,7 @@ class _SettingsView extends State<SettingsView> {
                       config.darkMode = value;
                       config.save();
                       setState(() {});
-                      Silvio.of(context).update();
+                      Gemairo.of(context).update();
                     }
                   : null,
             ),
@@ -113,7 +113,7 @@ class _SettingsView extends State<SettingsView> {
                 config.autoDarkMode = value;
                 config.save();
                 setState(() {});
-                Silvio.of(context).update();
+                Gemairo.of(context).update();
               },
             ),
             Column(
@@ -129,7 +129,7 @@ class _SettingsView extends State<SettingsView> {
                           config.useMaterialYou = value;
                           config.save();
                           setState(() {});
-                          Silvio.of(context).update();
+                          Gemairo.of(context).update();
                         }
                       : null,
                 ),
@@ -150,7 +150,7 @@ class _SettingsView extends State<SettingsView> {
                                 config.activeMaterialYouColorInt = value.value;
                                 config.save();
                                 setState(() {});
-                                Silvio.of(context).update();
+                                Gemairo.of(context).update();
                               },
                             ))
                       ],
@@ -216,7 +216,7 @@ class _SettingsView extends State<SettingsView> {
                       config.usedLocaleCode = value;
                       config.save();
                       setState(() {});
-                      Silvio.of(context).update();
+                      Gemairo.of(context).update();
                     },
                     items: [
                       const DropdownMenuItem(value: null, child: Text("auto")),
@@ -264,7 +264,7 @@ class _SettingsView extends State<SettingsView> {
                   }
                   setState(() {});
                   WidgetsBinding.instance.addPostFrameCallback((_) {
-                    Silvio.of(context).update();
+                    Gemairo.of(context).update();
                   });
                 }
               },
@@ -299,7 +299,7 @@ class _SettingsView extends State<SettingsView> {
             ),
             ListTile(
                 onTap: () => launchUrl(
-                    Uri(scheme: 'mailto', path: 'silvio@harrydekat.dev'),
+                    Uri(scheme: 'mailto', path: 'hallo@gemairo.app'),
                     mode: LaunchMode.externalApplication),
                 title: const Text("Email"),
                 subtitle: Text(AppLocalizations.of(context)!.discordExpl),
@@ -308,7 +308,7 @@ class _SettingsView extends State<SettingsView> {
             ListTile(
                 onTap: () => launchUrl(
                     Uri.parse(
-                        "https://github.com/HarryDeKat/Silvio/issues/new/choose"),
+                        "https://github.com/gemairo/app/issues/new/choose"),
                     mode: LaunchMode.externalApplication),
                 title: Text(AppLocalizations.of(context)!.bugReport),
                 subtitle: Text(AppLocalizations.of(context)!.bugReportExpl),
@@ -316,7 +316,7 @@ class _SettingsView extends State<SettingsView> {
                 trailing: const CircleAvatar(child: Icon(Icons.open_in_new))),
             ListTile(
                 onTap: () => launchUrl(
-                    Uri.parse("https://github.com/HarryDeKat/Silvio"),
+                    Uri.parse("https://github.com/HarryDeKat/Gemairo"),
                     mode: LaunchMode.externalApplication),
                 title: const Text("Github"),
                 subtitle: Text(AppLocalizations.of(context)!.githubExpl),
@@ -326,7 +326,7 @@ class _SettingsView extends State<SettingsView> {
                 onLongPress: () {
                   config.noAds = !config.noAds;
                   config.save();
-                  Silvio.of(context).update();
+                  Gemairo.of(context).update();
                 },
                 child: ListTile(
                     onTap: () async {
@@ -519,7 +519,7 @@ class _PersonConfig extends State<PersonConfig> {
                           ),
                           IconButton(
                               icon: const Icon(Icons.settings),
-                              onPressed: () => showSilvioModalBottomSheet(
+                              onPressed: () => showGemairoModalBottomSheet(
                                     context: context,
                                     children: [
                                       SchoolYearSettings(
@@ -632,7 +632,7 @@ class _PersonConfigCarouselState extends State<PersonConfigCarousel> {
               ...widget.profiles.map((person) => Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                  child: SilvioCard(
+                  child: GemairoCard(
                       title: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,

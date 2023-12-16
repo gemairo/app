@@ -1,4 +1,4 @@
-part of 'package:silvio/apis/magister.dart';
+part of 'package:gemairo/apis/magister.dart';
 
 enum _LoginOptions {
   refresh,
@@ -267,7 +267,7 @@ class FetchAccountInformation extends StatelessWidget {
             return Center(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: SilvioCard(
+                child: GemairoCard(
                     title:
                         Text(AppLocalizations.of(context)!.accountExistWarning),
                     child: Column(

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:silvio/apis/account_manager.dart';
-import 'package:silvio/hive/adapters.dart';
-import 'package:silvio/hive/extentions.dart';
-import 'package:silvio/widgets/bottom_sheet.dart';
+import 'package:gemairo/apis/account_manager.dart';
+import 'package:gemairo/hive/adapters.dart';
+import 'package:gemairo/hive/extentions.dart';
+import 'package:gemairo/widgets/bottom_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -55,7 +55,7 @@ class _FilterChips extends State<FilterChips> {
                 label: Text(AppLocalizations.of(context)!.filter),
                 onPressed: () {
                   //Open filters
-                  showSilvioModalBottomSheet(children: [
+                  showGemairoModalBottomSheet(children: [
                     FilterMenu(
                       grades: widget.grades,
                       isGlobal: widget.isGlobal,
@@ -102,7 +102,7 @@ class _FilterChips extends State<FilterChips> {
                 });
               },
             ),
-          ...quaters.map((sQ) => SilvioFilterChip(context,
+          ...quaters.map((sQ) => GemairoFilterChip(context,
               isGlobal: widget.isGlobal,
               filter: Filter(
                   name: sQ.schoolQuarter?.shortname ?? "*",
@@ -211,14 +211,14 @@ class _FilterMenu extends State<FilterMenu> {
             dense: true,
           ),
           if (filters.length > 1 || filters.first.quaters.length > 1)
-            ...filters.map((filter) => SilvioFilterChipList(
+            ...filters.map((filter) => GemairoFilterChipList(
                     title: AppLocalizations.of(context)!.periods +
                         (filter.addition != null
                             ? " (${filter.addition})"
                             : ""),
                     icon: const Icon(Icons.calendar_month),
                     widgets: [
-                      ...filter.quaters.map((Grade grade) => SilvioFilterChip(
+                      ...filter.quaters.map((Grade grade) => GemairoFilterChip(
                           context,
                           isGlobal: widget.isGlobal,
                           filter: Filter(
@@ -227,14 +227,14 @@ class _FilterMenu extends State<FilterMenu> {
                               filter: grade.schoolQuarter?.id.toString())))
                     ])),
           if (filters.length > 1 || filters.first.subjects.length > 1)
-            ...filters.map((filter) => SilvioFilterChipList(
+            ...filters.map((filter) => GemairoFilterChipList(
                     title: AppLocalizations.of(context)!.subjects +
                         (filter.addition != null
                             ? " (${filter.addition})"
                             : ""),
                     icon: const Icon(Icons.book_outlined),
                     widgets: [
-                      ...filter.subjects.map((Grade grade) => SilvioFilterChip(
+                      ...filter.subjects.map((Grade grade) => GemairoFilterChip(
                           context,
                           isGlobal: widget.isGlobal,
                           filter: Filter(
@@ -243,14 +243,14 @@ class _FilterMenu extends State<FilterMenu> {
                               filter: grade.subject.id.toString())))
                     ])),
           if (filters.length > 1 || filters.first.teachers.length > 1)
-            ...filters.map((filter) => SilvioFilterChipList(
+            ...filters.map((filter) => GemairoFilterChipList(
                     title: AppLocalizations.of(context)!.teachers +
                         (filter.addition != null
                             ? " (${filter.addition})"
                             : ""),
                     icon: const Icon(Icons.supervisor_account),
                     widgets: [
-                      ...filter.teachers.map((Grade grade) => SilvioFilterChip(
+                      ...filter.teachers.map((Grade grade) => GemairoFilterChip(
                           context,
                           isGlobal: widget.isGlobal,
                           filter: Filter(
@@ -258,7 +258,7 @@ class _FilterMenu extends State<FilterMenu> {
                               type: FilterTypes.teacher,
                               filter: grade.teacherCode!)))
                     ])),
-          SilvioFilterChipList(
+          GemairoFilterChipList(
               title: AppLocalizations.of(context)!.dateRange,
               icon: const Icon(Icons.date_range_outlined),
               widgets: [
@@ -322,7 +322,7 @@ class _FilterMenu extends State<FilterMenu> {
                   .contains(FilterTypes.inputString) ||
               widget.grades.useable.map((g) => g.isPTA).contains(true) &&
                   widget.grades.useable.map((g) => g.isPTA).contains(false))
-            SilvioFilterChipList(
+            GemairoFilterChipList(
                 title: AppLocalizations.of(context)!.other,
                 icon: const Icon(Icons.filter_alt_outlined),
                 widgets: [
@@ -420,8 +420,8 @@ class _FilterMenu extends State<FilterMenu> {
   }
 }
 
-class SilvioFilterChipList extends StatelessWidget {
-  const SilvioFilterChipList(
+class GemairoFilterChipList extends StatelessWidget {
+  const GemairoFilterChipList(
       {super.key, required this.title, this.icon, this.widgets = const []});
 
   final String title;
@@ -444,18 +444,18 @@ class SilvioFilterChipList extends StatelessWidget {
   }
 }
 
-class SilvioFilterChip extends StatefulWidget {
-  const SilvioFilterChip(context,
+class GemairoFilterChip extends StatefulWidget {
+  const GemairoFilterChip(context,
       {super.key, required this.filter, this.isGlobal = false});
 
   final Filter filter;
   final bool isGlobal;
 
   @override
-  State<SilvioFilterChip> createState() => _SilvioFilterChip();
+  State<GemairoFilterChip> createState() => _GemairoFilterChip();
 }
 
-class _SilvioFilterChip extends State<SilvioFilterChip> {
+class _GemairoFilterChip extends State<GemairoFilterChip> {
   @override
   Widget build(BuildContext context) {
     final AccountProvider acP = Provider.of<AccountProvider>(context);

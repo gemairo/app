@@ -1,4 +1,4 @@
-part of 'package:silvio/apis/magister.dart';
+part of 'package:gemairo/apis/magister.dart';
 
 Grade? magisterGrade(SchoolQuarter? schoolQuarter, [Map? gotGrade]) {
   if (gotGrade != null) {

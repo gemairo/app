@@ -1,14 +1,14 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:silvio/apis/account_manager.dart';
-import 'package:silvio/apis/random.dart';
+import 'package:gemairo/apis/account_manager.dart';
+import 'package:gemairo/apis/random.dart';
 import 'package:hive/hive.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'package:silvio/apis/abstact_api.dart';
-import 'package:silvio/apis/magister.dart';
-import 'package:silvio/apis/local_file.dart';
-import 'package:silvio/apis/somtoday.dart';
+import 'package:gemairo/apis/abstact_api.dart';
+import 'package:gemairo/apis/magister.dart';
+import 'package:gemairo/apis/local_file.dart';
+import 'package:gemairo/apis/somtoday.dart';
 
 part 'adapters.g.dart';
 

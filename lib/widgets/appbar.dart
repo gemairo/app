@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'package:silvio/apis/account_manager.dart';
-import 'package:silvio/hive/adapters.dart';
+import 'package:gemairo/apis/account_manager.dart';
+import 'package:gemairo/hive/adapters.dart';
 
-import 'package:silvio/screens/login.dart';
-import 'package:silvio/screens/settings.dart';
-import 'package:silvio/widgets/navigation.dart';
+import 'package:gemairo/screens/login.dart';
+import 'package:gemairo/screens/settings.dart';
+import 'package:gemairo/widgets/navigation.dart';
 
-class SilvioAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const SilvioAppBar({super.key, this.title, this.enableYearSwitcher = true});
+class GemairoAppBar extends StatelessWidget implements PreferredSizeWidget {
+  const GemairoAppBar({super.key, this.title, this.enableYearSwitcher = true});
 
   final String? title;
   final bool enableYearSwitcher;
@@ -123,7 +123,7 @@ class AccountSwitcher extends StatelessWidget {
                       size: 28,
                     ),
                     Text(
-                      " Silvio",
+                      " Gemairo",
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                     )

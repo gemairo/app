@@ -1,9 +1,9 @@
 <div align="center">
-  <a href="https://github.com/HarryDeKat/Silvio">
+  <a href="https://github.com/HarryDeKat/Gemairo">
     <img src="/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_foreground.png" alt="Logo" width="120" height="120">
   </a>
 
-  <h2 align="center">Silvio Statistiek voor Magister</h3>
+  <h2 align="center">Gemairo Statistiek voor Magister</h3>
 
   <p align="center">
     Krijg beter inzicht in je cijfers
@@ -11,21 +11,21 @@
     <a href="https://flutter.dev/"><img style="border-radius: 4px;" src="https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&amp;logo=flutter&amp;logoColor=white"></a>
     <a href="https://apps.apple.com/us/app/silvio-voor-magister/id6449495003"><img style="border-radius: 4px;"src="https://img.shields.io/badge/App_Store-0D96F6?style=for-the-badge&amp;logo=app-store&amp;logoColor=white"></a>
     <a href="https://play.google.com/store/apps/details?id=dev.harrydekat.silvio"><img style="border-radius: 4px;" src="https://img.shields.io/badge/Google_Play-414141?style=for-the-badge&amp;logo=google-play&amp;logoColor=white"></a>
-    <a href="https://github.com/HarryDeKat/Silvio/issues/new/choose"><img style="border-radius: 4px;" src="https://img.shields.io/badge/Maak%20een%20suggestie-713DCD.svg?style=for-the-badge&amp;logo=github&amp;logoColor=white"></a>
-       <a href="https://github.com/HarryDeKat/Silvio/actions/workflows/build-release.yml"><img style="border-radius: 4px;" src="https://img.shields.io/github/actions/workflow/status/HarryDeKat/Silvio/build-release.yml?branch=stable&logoColor=white&label=Build&logo=githubActions&style=for-the-badge"></a>
+    <a href="https://github.com/HarryDeKat/Gemairo/issues/new/choose"><img style="border-radius: 4px;" src="https://img.shields.io/badge/Maak%20een%20suggestie-713DCD.svg?style=for-the-badge&amp;logo=github&amp;logoColor=white"></a>
+       <a href="https://github.com/HarryDeKat/Gemairo/actions/workflows/build-release.yml"><img style="border-radius: 4px;" src="https://img.shields.io/github/actions/workflow/status/HarryDeKat/Gemairo/build-release.yml?branch=stable&logoColor=white&label=Build&logo=githubActions&style=for-the-badge"></a>
   </p>
 </div>
 
 > **Note**
-> Silvio is niet verbonden met, of onderdeel van Iddink Group.
+> Gemairo is niet verbonden met, of onderdeel van Iddink Group.
 
 ## Wat is dit?
 
-Silvio is een manier om je cijfers uit het [leerlingvolgsysteem Magister](https://magister.nl) te bekijken. Hun eigen app mist veel functionaliteiten, dus heb ik een poging gedaan om in ieder geval het bekijken van je cijfers te verbeteren. 
+Gemairo is een manier om je cijfers uit het [leerlingvolgsysteem Magister](https://magister.nl) te bekijken. Hun eigen app mist veel functionaliteiten, dus heb ik een poging gedaan om in ieder geval het bekijken van je cijfers te verbeteren.
 
 ## Is dit project verbonden met Magister of haar moeder bedrijf?
 
-**Nee**, Silvio is een **privé-initiatief** en heeft geen elke connectie met Magister of haar moeder bedrijf. Alle code voor Silvio is openbaar beschikbaar, dus het is mogelijk om zelf te controleren welke en hoe Silvio je gegevens gebruikt. 
+**Nee**, Gemairo is een **privé-initiatief** en heeft geen elke connectie met Magister of haar moeder bedrijf. Alle code voor Gemairo is openbaar beschikbaar, dus het is mogelijk om zelf te controleren welke en hoe Gemairo je gegevens gebruikt.
 
 ![screenshots](https://www.harrydekat.dev/Silvio/screenshot.png)
 
@@ -37,8 +37,9 @@ Alle contributies **zijn erg welkom**, omdat ik dit project niet voor eeuwig zel
 
 HarryDeKat - Discord (HarryDeKat#4914) - [silvio@harrydekat.dev](mailto:silvio@harrydekat.dev)
 
-Project Link: [https://github.com/HarryDeKat/Silvio](https://github.com/HarryDeKat/Silvio)
+Project Link: [https://github.com/HarryDeKat/Gemairo](https://github.com/HarryDeKat/Gemairo)
 
 ## Vergelijkbare projecten:
-* [Argo](https://argo-magister.nl)
-* [Gemairo](https://gemairo.nl)
+
+- [Argo](https://argo-magister.nl)
+- [Gemairo](https://gemairo.nl)

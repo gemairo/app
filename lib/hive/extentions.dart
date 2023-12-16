@@ -4,11 +4,11 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import 'package:silvio/hive/adapters.dart';
+import 'package:gemairo/hive/adapters.dart';
 
-import 'package:silvio/widgets/cards/list_grade.dart';
-import 'package:silvio/widgets/cards/list_test.dart';
-import 'package:silvio/widgets/bottom_sheet.dart';
+import 'package:gemairo/widgets/cards/list_grade.dart';
+import 'package:gemairo/widgets/cards/list_test.dart';
+import 'package:gemairo/widgets/bottom_sheet.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 extension Unique<E, Id> on List<E> {
@@ -188,7 +188,7 @@ extension GradeCalculations on List<Grade> {
 
   List<Fact> generateFactsList(context, Person? person) {
     void Function() displayGrade(Grade grade) {
-      return () => showSilvioModalBottomSheet(children: [
+      return () => showGemairoModalBottomSheet(children: [
             GradeInformation(
               context: context,
               grade: grade,
@@ -217,7 +217,7 @@ extension GradeCalculations on List<Grade> {
                 .first
                 .start
                 .countdownString(context),
-            onTap: () => showSilvioModalBottomSheet(children: [
+            onTap: () => showGemairoModalBottomSheet(children: [
                   EventInformation(
                       context: context,
                       event: getLinkedTests(person.calendarEvents)

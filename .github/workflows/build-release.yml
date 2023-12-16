@@ -136,7 +136,7 @@ jobs:
           path: build/ios/ipa/*.ipa
 
   release:
-    name: Create a Github release 
+    name: Create a Github release
     needs: [buildandroid, buildios]
     runs-on: ubuntu-latest
     steps:
@@ -187,7 +187,7 @@ jobs:
   #       uses: r0adkll/upload-google-play@v1
   #       with:
   #         serviceAccountJsonPlainText: ${{ secrets.PLAYSTORE_ACCOUNT_KEY }}
-  #         packageName: dev.harrydekat.silvio
+  #         packageName: app.netlob.magiscore
   #         releaseFiles: app-release.aab
   #         track: internal
   #         status: completed

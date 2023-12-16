@@ -4,12 +4,12 @@ import 'package:provider/provider.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'package:silvio/apis/account_manager.dart';
-import 'package:silvio/hive/adapters.dart';
-import 'package:silvio/hive/extentions.dart';
-import 'package:silvio/widgets/animations.dart';
+import 'package:gemairo/apis/account_manager.dart';
+import 'package:gemairo/hive/adapters.dart';
+import 'package:gemairo/hive/extentions.dart';
+import 'package:gemairo/widgets/animations.dart';
 
-import 'package:silvio/widgets/card.dart';
+import 'package:gemairo/widgets/card.dart';
 
 class FactsHeader extends StatefulWidget {
   const FactsHeader({super.key, required this.grades});
@@ -125,7 +125,7 @@ class FactCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SilvioCard(
+    return GemairoCard(
       title: Text(
         title,
         style: Theme.of(context).textTheme.titleSmall,

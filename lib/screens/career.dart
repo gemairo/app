@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:intl/intl.dart';
-import 'package:silvio/widgets/ads.dart';
-import 'package:silvio/widgets/appbar.dart';
+import 'package:gemairo/widgets/ads.dart';
+import 'package:gemairo/widgets/appbar.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'package:silvio/apis/account_manager.dart';
-import 'package:silvio/hive/adapters.dart';
-import 'package:silvio/hive/extentions.dart';
+import 'package:gemairo/apis/account_manager.dart';
+import 'package:gemairo/hive/adapters.dart';
+import 'package:gemairo/hive/extentions.dart';
 
-import 'package:silvio/widgets/card.dart';
-import 'package:silvio/widgets/charts/linechart_monthly_average.dart';
-import 'package:silvio/widgets/facts_header.dart';
-import 'package:silvio/widgets/filter.dart';
-import 'package:silvio/widgets/charts/barchart_frequency.dart';
-import 'package:silvio/widgets/charts/linechart_grades.dart';
-import 'package:silvio/widgets/cards/list_grade.dart';
+import 'package:gemairo/widgets/card.dart';
+import 'package:gemairo/widgets/charts/linechart_monthly_average.dart';
+import 'package:gemairo/widgets/facts_header.dart';
+import 'package:gemairo/widgets/filter.dart';
+import 'package:gemairo/widgets/charts/barchart_frequency.dart';
+import 'package:gemairo/widgets/charts/linechart_grades.dart';
+import 'package:gemairo/widgets/cards/list_grade.dart';
 
 class CareerOverview extends StatefulWidget {
   const CareerOverview({super.key});
@@ -48,7 +48,7 @@ class _CareerOverview extends State<CareerOverview> {
         if (grades.numericalGrades.length > 1)
           StaggeredGridTile.fit(
               crossAxisCellCount: 2,
-              child: SilvioCard(
+              child: GemairoCard(
                 child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: LineChartGrades(
@@ -59,7 +59,7 @@ class _CareerOverview extends State<CareerOverview> {
         if (grades.numericalGrades.isNotEmpty)
           StaggeredGridTile.fit(
               crossAxisCellCount: 2,
-              child: SilvioCard(
+              child: GemairoCard(
                   title: Text(AppLocalizations.of(context)!.histogram),
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
@@ -77,7 +77,7 @@ class _CareerOverview extends State<CareerOverview> {
                 1)
           StaggeredGridTile.fit(
               crossAxisCellCount: 2,
-              child: SilvioCard(
+              child: GemairoCard(
                   title: Text(AppLocalizations.of(context)!.monthlyAverage),
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
@@ -88,7 +88,7 @@ class _CareerOverview extends State<CareerOverview> {
                   ))),
         StaggeredGridTile.fit(
             crossAxisCellCount: 4,
-            child: SilvioCard(
+            child: GemairoCard(
                 title: Text(AppLocalizations.of(context)!.grades),
                 trailing: GradeListOptions(
                   addOrRemoveBadge: addOrRemoveBadge,
@@ -102,7 +102,7 @@ class _CareerOverview extends State<CareerOverview> {
     ];
 
     return Scaffold(
-      appBar: SilvioAppBar(
+      appBar: GemairoAppBar(
           enableYearSwitcher: false,
           title: AppLocalizations.of(context)!.searchStatistics),
       body: RefreshIndicator(
@@ -123,7 +123,7 @@ class _CareerOverview extends State<CareerOverview> {
                     isGlobal: true,
                     grades: allGrades,
                   )),
-              SilvioCardList(
+              GemairoCardList(
                 maxCrossAxisExtent: 250,
                 children: widgets,
               )

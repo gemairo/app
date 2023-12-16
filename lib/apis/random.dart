@@ -1,8 +1,8 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:silvio/apis/abstact_api.dart';
-import 'package:silvio/hive/adapters.dart';
-import 'package:silvio/main.dart';
+import 'package:gemairo/apis/abstact_api.dart';
+import 'package:gemairo/hive/adapters.dart';
+import 'package:gemairo/main.dart';
 import 'package:hive/hive.dart';
 
 Random random = Random();

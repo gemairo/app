@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:silvio/hive/adapters.dart';
+import 'package:gemairo/hive/adapters.dart';
 
 abstract class Api {
   Account account;

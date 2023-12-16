@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:silvio/hive/adapters.dart';
-import 'package:silvio/hive/extentions.dart';
-import 'package:silvio/widgets/animations.dart';
+import 'package:gemairo/hive/adapters.dart';
+import 'package:gemairo/hive/extentions.dart';
+import 'package:gemairo/widgets/animations.dart';
 
 class GradeAvatar extends StatelessWidget {
   const GradeAvatar(

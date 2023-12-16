@@ -1,4 +1,4 @@
-part of 'package:silvio/apis/somtoday.dart';
+part of 'package:gemairo/apis/somtoday.dart';
 
 Future<List<SomToDaySchool>> getSchools() async {
   var test = (await Dio().get('https://servers.somtoday.nl/organisaties.json'))
@@ -45,7 +45,7 @@ class SchoolPicker extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 16, vertical: 10),
-                          child: SilvioCard(
+                          child: GemairoCard(
                             child: Padding(
                               padding: const EdgeInsets.all(4),
                               child: TextField(

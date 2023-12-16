@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:silvio/hive/adapters.dart' hide PersonConfig;
-import 'package:silvio/main.dart';
-import 'package:silvio/screens/settings.dart';
+import 'package:gemairo/hive/adapters.dart' hide PersonConfig;
+import 'package:gemairo/main.dart';
+import 'package:gemairo/screens/settings.dart';
 
 class SettingsReminder extends StatefulWidget {
   const SettingsReminder({super.key, required this.account});
@@ -62,7 +62,7 @@ class _SettingsReminder extends State<SettingsReminder> {
                         }
                         setState(() {});
                         WidgetsBinding.instance.addPostFrameCallback((_) {
-                          Silvio.of(context).update();
+                          Gemairo.of(context).update();
                         });
                       }
                     },

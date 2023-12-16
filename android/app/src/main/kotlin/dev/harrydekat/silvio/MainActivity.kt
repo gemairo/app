@@ -1,4 +1,4 @@
-package dev.harrydekat.silvio
+package app.netlob.magiscore
 
 import io.flutter.embedding.android.FlutterActivity
 

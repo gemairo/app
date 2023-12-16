@@ -1,21 +1,25 @@
 import 'package:app_tracking_transparency/app_tracking_transparency.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gemairo/firebase_options.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:silvio/widgets/ads.dart';
+import 'package:gemairo/widgets/ads.dart';
 import 'hive/adapters.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'package:silvio/apis/account_manager.dart';
-import 'package:silvio/apis/abstact_api.dart';
-import 'package:silvio/hive/extentions.dart';
+import 'package:gemairo/apis/account_manager.dart';
+import 'package:gemairo/apis/abstact_api.dart';
+import 'package:gemairo/hive/extentions.dart';
 
-import 'package:silvio/screens/login.dart';
-import 'package:silvio/widgets/appbar.dart';
-import 'package:silvio/widgets/navigation.dart';
+import 'package:gemairo/screens/login.dart';
+import 'package:gemairo/widgets/appbar.dart';
+import 'package:gemairo/widgets/navigation.dart';
 
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
@@ -67,13 +71,23 @@ void main() async {
   );
 
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  await FirebaseRemoteConfig.instance.setConfigSettings(RemoteConfigSettings(
+    fetchTimeout: const Duration(seconds: 5),
+    minimumFetchInterval: kDebugMode ? Duration.zero : const Duration(hours: 1),
+  ));
+  await FirebaseRemoteConfig.instance.fetchAndActivate();
+
   await AppTrackingTransparency.requestTrackingAuthorization();
   MobileAds.instance.initialize();
   final RequestConfiguration requestConfiguration = RequestConfiguration(
       tagForUnderAgeOfConsent: TagForUnderAgeOfConsent.yes);
   MobileAds.instance.updateRequestConfiguration(requestConfiguration);
 
-  runApp(const Silvio());
+  runApp(const Gemairo());
   BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
 }
 
@@ -81,16 +95,16 @@ final GlobalKey<ScaffoldMessengerState> rootScaffoldMessengerKey =
     GlobalKey<ScaffoldMessengerState>();
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-class Silvio extends StatefulWidget {
-  const Silvio({Key? key}) : super(key: key);
+class Gemairo extends StatefulWidget {
+  const Gemairo({Key? key}) : super(key: key);
 
   @override
-  State<Silvio> createState() => SilvioState();
-  static SilvioState of(BuildContext context) =>
-      context.findAncestorStateOfType<SilvioState>()!;
+  State<Gemairo> createState() => GemairoState();
+  static GemairoState of(BuildContext context) =>
+      context.findAncestorStateOfType<GemairoState>()!;
 }
 
-class SilvioState extends State<Silvio> {
+class GemairoState extends State<Gemairo> {
   @override
   void initState() {
     super.initState();
@@ -158,7 +172,7 @@ class SilvioState extends State<Silvio> {
           child: MaterialApp(
               navigatorKey: navigatorKey,
               scaffoldMessengerKey: rootScaffoldMessengerKey,
-              title: 'Silvio',
+              title: 'Gemairo',
               debugShowCheckedModeBanner: false,
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
@@ -196,6 +210,17 @@ class _Start extends State<Start> {
   }
 
   @override
+  void initState() {
+    super.initState();
+
+    // AccountProvider acP = Provider.of<AccountProvider>(context, listen: false);
+    // FirebaseAnalytics.instance.setUserProperty(
+    //   name: 'api_provider',
+    //   value: acP.account.apiType.toString(),
+    // );
+  }
+
+  @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
       if (AccountManager().personList.isEmpty ||
@@ -206,7 +231,7 @@ class _Start extends State<Start> {
 
       if (constraints.maxWidth < 450) {
         return Scaffold(
-          appBar: SilvioAppBar(
+          appBar: GemairoAppBar(
             title: screenIndex == 2
                 ? AppLocalizations.of(context)?.searchView
                 : null,
@@ -220,7 +245,7 @@ class _Start extends State<Start> {
                     acP.changeAccount(null);
                   },
                   child: ScreensSwitch(index: screenIndex))),
-          bottomNavigationBar: SilvioNavigationBar(
+          bottomNavigationBar: GemairoNavigationBar(
             onSelectItem: handleScreenChanged,
             screenIndex: screenIndex,
           ),
@@ -236,11 +261,11 @@ class _Start extends State<Start> {
                 Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 5),
                     child: constraints.maxWidth < 900
-                        ? SilvioNavigationRail(
+                        ? GemairoNavigationRail(
                             onSelectItem: handleScreenChanged,
                             selectedIndex: screenIndex,
                           )
-                        : SilvioNavigationDrawer(
+                        : GemairoNavigationDrawer(
                             onSelectItem: handleScreenChanged,
                             selectedIndex: screenIndex,
                           )),
@@ -248,7 +273,7 @@ class _Start extends State<Start> {
                   const VerticalDivider(thickness: 1, width: 1),
                 Expanded(
                     child: Scaffold(
-                        appBar: const SilvioAppBar(),
+                        appBar: const GemairoAppBar(),
                         body: BottomBanner(
                             child: RefreshIndicator(
                                 onRefresh: () async {

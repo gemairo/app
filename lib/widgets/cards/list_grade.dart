@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:silvio/widgets/avatars.dart';
-import 'package:silvio/widgets/card.dart';
+import 'package:gemairo/widgets/avatars.dart';
+import 'package:gemairo/widgets/card.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
-import 'package:silvio/hive/adapters.dart';
-import 'package:silvio/hive/extentions.dart';
-import 'package:silvio/widgets/bottom_sheet.dart';
-import 'package:silvio/apis/account_manager.dart';
-import 'package:silvio/widgets/cards/grade_calculations.dart';
+import 'package:gemairo/hive/adapters.dart';
+import 'package:gemairo/hive/extentions.dart';
+import 'package:gemairo/widgets/bottom_sheet.dart';
+import 'package:gemairo/apis/account_manager.dart';
+import 'package:gemairo/widgets/cards/grade_calculations.dart';
 
 class GradeList extends StatefulWidget {
   const GradeList(
@@ -73,7 +73,7 @@ class _GradeList extends State<GradeList> {
                             overflow: TextOverflow.ellipsis,
                           )
                         : null,
-                    onTap: () => showSilvioModalBottomSheet(children: [
+                    onTap: () => showGemairoModalBottomSheet(children: [
                           GradeInformation(
                             context: context,
                             grade: grade,
@@ -262,7 +262,7 @@ class _GradeInformation extends State<GradeInformation> {
       ),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-        child: SilvioCard(
+        child: GemairoCard(
             isFilled: true,
             title: Text(AppLocalizations.of(context)!.information),
             child: Column(
@@ -298,7 +298,7 @@ class _GradeInformation extends State<GradeInformation> {
           widget.showGradeCalculate) ...[
         Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-            child: SilvioCard(
+            child: GemairoCard(
               isFilled: false,
               child: ListTile(
                 leading: const Icon(Icons.redo_outlined),
@@ -311,7 +311,7 @@ class _GradeInformation extends State<GradeInformation> {
             grades.average < config.sufficientFrom)
           Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-              child: SilvioCard(
+              child: GemairoCard(
                 isFilled: true,
                 child: ListTile(
                   leading: const Icon(Icons.auto_awesome_outlined),
@@ -323,7 +323,7 @@ class _GradeInformation extends State<GradeInformation> {
               )),
         Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-            child: SilvioCard(
+            child: GemairoCard(
                 isFilled: true,
                 trailing: warnings.isNotEmpty
                     ? Padding(
@@ -353,7 +353,7 @@ class _GradeInformation extends State<GradeInformation> {
                 ))),
         Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-            child: SilvioCard(
+            child: GemairoCard(
                 isFilled: true,
                 trailing: warnings.isNotEmpty
                     ? Padding(
@@ -385,7 +385,7 @@ class _GradeInformation extends State<GradeInformation> {
       ],
       Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          child: SilvioCard(
+          child: GemairoCard(
             isFilled: false,
             child: ListTile(
               leading: const Icon(Icons.settings_outlined),
@@ -394,7 +394,7 @@ class _GradeInformation extends State<GradeInformation> {
           )),
       Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          child: SilvioCard(
+          child: GemairoCard(
               isFilled: true,
               child: Column(children: [
                 if (differentSubjects)
@@ -528,7 +528,7 @@ class RecentGradeCard extends StatelessWidget {
                     child: InkWell(
                         borderRadius:
                             const BorderRadius.all(Radius.circular(32)),
-                        onTap: () => showSilvioModalBottomSheet(children: [
+                        onTap: () => showGemairoModalBottomSheet(children: [
                               GradeInformation(
                                 context: context,
                                 grade: grade,

@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:silvio/screens/search.dart';
+import 'package:gemairo/screens/search.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'package:silvio/apis/account_manager.dart';
-import 'package:silvio/hive/adapters.dart';
-import 'package:silvio/hive/extentions.dart';
+import 'package:gemairo/apis/account_manager.dart';
+import 'package:gemairo/hive/adapters.dart';
+import 'package:gemairo/hive/extentions.dart';
 
-import 'package:silvio/screens/subject.dart';
-import 'package:silvio/screens/subjects.dart';
-import 'package:silvio/screens/year.dart';
+import 'package:gemairo/screens/subject.dart';
+import 'package:gemairo/screens/subjects.dart';
+import 'package:gemairo/screens/year.dart';
 
 List<NavigationDestination> appBarDestinations(BuildContext context) => [
       NavigationDestination(
@@ -50,8 +50,8 @@ List<NavigationRailDestination> navRailDestinations(BuildContext context) =>
         )
         .toList();
 
-class SilvioNavigationRail extends StatelessWidget {
-  const SilvioNavigationRail({
+class GemairoNavigationRail extends StatelessWidget {
+  const GemairoNavigationRail({
     super.key,
     this.selectedIndex = 0,
     this.onSelectItem,
@@ -83,8 +83,8 @@ class SilvioNavigationRail extends StatelessWidget {
   }
 }
 
-class SilvioNavigationDrawer extends StatelessWidget {
-  const SilvioNavigationDrawer({
+class GemairoNavigationDrawer extends StatelessWidget {
+  const GemairoNavigationDrawer({
     super.key,
     this.selectedIndex = 0,
     this.onSelectItem,
@@ -112,7 +112,7 @@ class SilvioNavigationDrawer extends StatelessWidget {
                   Icons.query_stats_rounded,
                 ),
                 Text(
-                  " Silvio",
+                  " Gemairo",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                 )
               ],
@@ -128,8 +128,8 @@ class SilvioNavigationDrawer extends StatelessWidget {
   }
 }
 
-class SilvioNavigationBar extends StatelessWidget {
-  const SilvioNavigationBar({
+class GemairoNavigationBar extends StatelessWidget {
+  const GemairoNavigationBar({
     super.key,
     this.screenIndex = 0,
     this.onSelectItem,
@@ -188,7 +188,7 @@ void changeSchoolYear(BuildContext context, {required int newid}) {
       Provider.of<AccountProvider>(context, listen: false);
   acP.changeSchoolYear(newid);
 
-  //If the user is viewing a subject that also exists in the new school year Silvio opens the page on that subject
+  //If the user is viewing a subject that also exists in the new school year Gemairo opens the page on that subject
   if (ModalRoute.of(context)!.settings.name != null &&
       ModalRoute.of(context)!.settings.name!.contains("SubjectStatistics")) {
     //A subject view is open.
