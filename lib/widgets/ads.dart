@@ -88,21 +88,40 @@ class _Advertisement extends State<Advertisement> {
   }
 }
 
+Future loadGDPRForm() async {
+  var status = await ConsentInformation.instance.getConsentStatus();
+  ConsentForm.loadConsentForm(
+    (ConsentForm consentForm) async {
+      if (status == ConsentStatus.required) {
+        consentForm.show((formError) {
+          loadGDPRForm();
+        });
+      }
+    },
+    (formError) {
+      print(formError.message);
+    },
+  );
+}
+
 class BottomBanner extends StatelessWidget {
-  const BottomBanner({super.key, required this.child});
+  const BottomBanner({super.key, required this.child, this.isEnabled = true});
 
   final Widget child;
+  final bool isEnabled;
 
   @override
   Widget build(BuildContext context) => Column(children: <Widget>[
         Expanded(child: child),
-        SafeArea(
-          child: Container(
-              decoration: BoxDecoration(
-                  color: Theme.of(context).navigationBarTheme.backgroundColor),
-              child: const Advertisement(
-                size: AdSize.fullBanner,
-              )),
-        ),
+        if (isEnabled)
+          SafeArea(
+            child: Container(
+                decoration: BoxDecoration(
+                    color:
+                        Theme.of(context).navigationBarTheme.backgroundColor),
+                child: const Advertisement(
+                  size: AdSize.fullBanner,
+                )),
+          ),
       ]);
 }

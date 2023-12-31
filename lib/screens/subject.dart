@@ -7,6 +7,7 @@ import 'package:silvio/apis/account_manager.dart';
 import 'package:silvio/hive/adapters.dart';
 import 'package:silvio/hive/extentions.dart';
 import 'package:silvio/widgets/ads.dart';
+import 'package:silvio/widgets/bottom_sheet.dart';
 
 import 'package:silvio/widgets/card.dart';
 import 'package:silvio/widgets/appbar.dart';
@@ -111,17 +112,6 @@ class _SubjectStatisticsView extends State<SubjectStatisticsView> {
                   child: BarChartFrequency(grades: grades),
                 ))),
       ],
-      StaggeredGridTile.fit(
-          crossAxisCellCount: 4,
-          child: SilvioCard(
-              title: Text(AppLocalizations.of(context)!.grades),
-              trailing: GradeListOptions(
-                addOrRemoveBadge: addOrRemoveBadge,
-              ),
-              child: GradeList(
-                grades: grades,
-                showGradeCalculate: true,
-              )))
     ];
 
     return Scaffold(
@@ -143,7 +133,50 @@ class _SubjectStatisticsView extends State<SubjectStatisticsView> {
             SilvioCardList(
               maxCrossAxisExtent: 250,
               children: widgets,
-            )
+            ),
+            if (grades.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                child: ListTile(
+                  title: Text(AppLocalizations.of(context)!.grades),
+                  leading: Icon(Icons.numbers),
+                  trailing: GradeListOptions(
+                    addOrRemoveBadge: addOrRemoveBadge,
+                  ),
+                ),
+              ),
+            ...grades
+                .sortByDate((e) => e.addedDate, doNotSort: true)
+                .entries
+                .map(
+                  (e) => Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Column(children: [
+                      ListTile(
+                        title: Text(e.key,
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium
+                                ?.copyWith(
+                                    color:
+                                        Theme.of(context).colorScheme.primary)),
+                        dense: true,
+                      ),
+                      ...e.value.map((e) => GradeTile(
+                            grade: e,
+                            grades: grades,
+                            onTap: () => showSilvioModalBottomSheet(children: [
+                              GradeInformation(
+                                context: context,
+                                grade: e,
+                                grades: grades,
+                                showGradeCalculate: true,
+                              )
+                            ], context: context),
+                          ))
+                    ]),
+                  ),
+                )
           ]),
         ));
   }

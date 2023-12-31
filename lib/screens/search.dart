@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:silvio/screens/career.dart';
+import 'package:silvio/widgets/appbar.dart';
+import 'package:silvio/widgets/bottom_sheet.dart';
 import 'package:silvio/widgets/card.dart';
 import 'package:silvio/widgets/filter.dart';
 import 'package:provider/provider.dart';
@@ -10,6 +12,7 @@ import 'package:silvio/hive/adapters.dart';
 import 'package:silvio/hive/extentions.dart';
 
 import 'package:silvio/widgets/cards/list_grade.dart';
+import 'package:silvio/widgets/global/skeletons.dart';
 
 class SearchView extends StatefulWidget {
   const SearchView({super.key});
@@ -33,6 +36,14 @@ class _SearchView extends State<SearchView> {
   @override
   Widget build(BuildContext context) {
     final AccountProvider acP = Provider.of<AccountProvider>(context);
+    List<Grade> useable = acP.person.allGrades.onlyFilterd([
+      if (controller.text != "" || acP.person.activeFilters.isEmpty)
+        Filter(
+            name: "SearchValue",
+            type: FilterTypes.inputString,
+            filter: controller.text),
+      ...acP.activeFilters(isGlobal: true)
+    ]);
 
     void textfieldToFilter() => setState(() {
           if (controller.text != "") {
@@ -46,8 +57,13 @@ class _SearchView extends State<SearchView> {
           controller.clear();
         });
 
-    return ListView(
-      padding: const EdgeInsets.only(bottom: 16),
+    return ScaffoldSkeleton(
+      onRefresh: () async {
+        AccountProvider acP =
+            Provider.of<AccountProvider>(context, listen: false);
+        await acP.account.api.refreshAll(acP.person);
+        acP.changeAccount(null);
+      },
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -113,16 +129,32 @@ class _SearchView extends State<SearchView> {
           ],
         ),
         const SizedBox(height: 10),
-        GradeList(
-          grades: acP.person.allGrades.onlyFilterd([
-            if (controller.text != "" || acP.person.activeFilters.isEmpty)
-              Filter(
-                  name: "SearchValue",
-                  type: FilterTypes.inputString,
-                  filter: controller.text),
-            ...acP.activeFilters(isGlobal: true)
-          ]),
-        ),
+        ...useable
+            .sortByDate((e) => e.addedDate, doNotSort: true)
+            .entries
+            .map(
+              (e) => Column(children: [
+                ListTile(
+                  title: Text(e.key,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.primary)),
+                  dense: true,
+                ),
+                ...e.value.map((e) => GradeTile(
+                      grade: e,
+                      grades: useable,
+                      onTap: () => showSilvioModalBottomSheet(children: [
+                        GradeInformation(
+                          context: context,
+                          grade: e,
+                          grades: useable,
+                          showGradeCalculate: true,
+                        )
+                      ], context: context),
+                    ))
+              ]),
+            )
+            .toList(),
       ],
     );
   }

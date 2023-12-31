@@ -54,6 +54,8 @@ dependencies:
   app_tracking_transparency: ^2.0.4
   cr_file_saver: ^0.0.2+1
   expandable_page_view: ^1.0.17
+  app_links: ^3.5.0
+  desktop_webview_window: ^0.2.3
 
 dev_dependencies:
   flutter_test:

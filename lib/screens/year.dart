@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:intl/intl.dart';
 import 'package:silvio/widgets/announcements.dart';
+import 'package:silvio/widgets/appbar.dart';
+import 'package:silvio/widgets/bottom_sheet.dart';
 import 'package:silvio/widgets/cards/list_test.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -17,6 +19,7 @@ import 'package:silvio/widgets/filter.dart';
 import 'package:silvio/widgets/charts/barchart_frequency.dart';
 import 'package:silvio/widgets/charts/linechart_grades.dart';
 import 'package:silvio/widgets/cards/list_grade.dart';
+import 'package:silvio/widgets/global/skeletons.dart';
 
 class SchoolYearStatisticsView extends StatefulWidget {
   const SchoolYearStatisticsView({super.key});
@@ -120,36 +123,77 @@ class _SchoolYearStatisticsView extends State<SchoolYearStatisticsView> {
                       showAverage: true,
                     ),
                   ))),
-        StaggeredGridTile.fit(
-            crossAxisCellCount: 4,
-            child: SilvioCard(
-                title: Text(AppLocalizations.of(context)!.grades),
-                trailing: GradeListOptions(
-                  addOrRemoveBadge: addOrRemoveBadge,
-                ),
-                child: GradeList(
-                    showGradeCalculate: true,
-                    grades: allGrades
-                        .where((grade) => grade.type == GradeType.grade)
-                        .toList())))
       ],
     ];
 
-    return ListView(padding: const EdgeInsets.only(bottom: 16), children: [
-      Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: FactsHeader(
-            grades: grades.useable,
-          )),
-      Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          child: FilterChips(
-            grades: acP.schoolYear.grades,
-          )),
-      SilvioCardList(
-        maxCrossAxisExtent: 250,
-        children: widgets,
-      )
-    ]);
+    List<Grade> useable =
+        allGrades.where((grade) => grade.type == GradeType.grade).toList();
+
+    return ScaffoldSkeleton(
+        onRefresh: () async {
+          AccountProvider acP =
+              Provider.of<AccountProvider>(context, listen: false);
+          await acP.account.api.refreshAll(acP.person);
+          acP.changeAccount(null);
+        },
+        children: [
+          Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: FactsHeader(
+                grades: grades.useable,
+              )),
+          Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: FilterChips(
+                grades: acP.schoolYear.grades,
+              )),
+          SilvioCardList(
+            maxCrossAxisExtent: 250,
+            children: widgets,
+          ),
+          if (useable.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: ListTile(
+                title: Text(AppLocalizations.of(context)!.grades),
+                leading: Icon(Icons.numbers),
+                trailing: GradeListOptions(
+                  addOrRemoveBadge: addOrRemoveBadge,
+                ),
+              ),
+            ),
+          ...useable
+              .sortByDate((e) => e.addedDate, doNotSort: true)
+              .entries
+              .map(
+                (e) => Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Column(children: [
+                    ListTile(
+                      title: Text(e.key,
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleMedium
+                              ?.copyWith(
+                                  color:
+                                      Theme.of(context).colorScheme.primary)),
+                      dense: true,
+                    ),
+                    ...e.value.map((e) => GradeTile(
+                          grade: e,
+                          grades: useable,
+                          onTap: () => showSilvioModalBottomSheet(children: [
+                            GradeInformation(
+                              context: context,
+                              grade: e,
+                              grades: useable,
+                              showGradeCalculate: true,
+                            )
+                          ], context: context),
+                        ))
+                  ]),
+                ),
+              )
+        ]);
   }
 }

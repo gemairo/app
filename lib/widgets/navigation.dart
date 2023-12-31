@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:silvio/apis/magister.dart';
 import 'package:silvio/screens/search.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -11,6 +12,7 @@ import 'package:silvio/hive/extentions.dart';
 import 'package:silvio/screens/subject.dart';
 import 'package:silvio/screens/subjects.dart';
 import 'package:silvio/screens/year.dart';
+import 'package:silvio/widgets/global/skeletons.dart';
 
 List<NavigationDestination> appBarDestinations(BuildContext context) => [
       NavigationDestination(
@@ -188,6 +190,19 @@ void changeSchoolYear(BuildContext context, {required int newid}) {
       Provider.of<AccountProvider>(context, listen: false);
   acP.changeSchoolYear(newid);
 
+  if (acP.person.activeSchoolYear.grades.isEmpty) {
+    //No grades, show message
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => FetchWeightsScreen(
+              account: acP.account,
+              customContinue: () {
+                Navigator.of(context).pop();
+                acP.changeSchoolYear(acP.person.activeSchoolYear.id);
+              },
+              forcedEnabledId: acP.person.activeSchoolYear.id,
+            )));
+  }
+
   //If the user is viewing a subject that also exists in the new school year Silvio opens the page on that subject
   if (ModalRoute.of(context)!.settings.name != null &&
       ModalRoute.of(context)!.settings.name!.contains("SubjectStatistics")) {
@@ -217,6 +232,19 @@ void changeProfile(BuildContext context, {required int newid}) {
   final AccountProvider acP =
       Provider.of<AccountProvider>(context, listen: false);
   acP.changeAccount(newid);
+
+  if (acP.person.activeSchoolYear.grades.isEmpty) {
+    //No grades, show message
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => FetchWeightsScreen(
+              account: acP.account,
+              customContinue: () {
+                Navigator.of(context).pop();
+                acP.changeSchoolYear(acP.person.activeSchoolYear.id);
+              },
+              forcedEnabledId: acP.person.activeSchoolYear.id,
+            )));
+  }
 
   //Is the subject view open?
   if (ModalRoute.of(context)!.settings.name != null &&

@@ -10,8 +10,6 @@ import 'package:silvio/apis/random.dart';
 import 'package:silvio/apis/somtoday.dart';
 import 'package:silvio/apis/magister.dart';
 
-import 'package:silvio/widgets/card.dart';
-
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
 
@@ -31,14 +29,19 @@ class _LoginView extends State<LoginView> {
     Icons.functions_outlined,
     Icons.sports_basketball_outlined
   ];
+  late final List<IconData> icons;
+
+  @override
+  void initState() {
+    super.initState();
+    icons = List<IconData>.generate(
+        2000,
+        (int index) =>
+            backgroundIcons[Random().nextInt(backgroundIcons.length)]);
+  }
+
   @override
   Widget build(BuildContext context) {
-    List<Widget> icons = List<Widget>.generate(2000, (int index) {
-      return Icon(
-        backgroundIcons[Random().nextInt(backgroundIcons.length)],
-        color: Theme.of(context).colorScheme.surfaceVariant,
-      );
-    });
     return Scaffold(
         extendBodyBehindAppBar: true,
         appBar: AppBar(
@@ -54,78 +57,116 @@ class _LoginView extends State<LoginView> {
               alignment: WrapAlignment.spaceEvenly,
               spacing: 5,
               runSpacing: 5,
-              children: icons,
+              children: icons
+                  .map((e) => Icon(
+                        e,
+                        color: Theme.of(context).colorScheme.surfaceVariant,
+                      ))
+                  .toList(),
             ),
           ),
           SafeArea(
-            child: Column(
-              children: [
-                Expanded(
-                  child: Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        InkWell(
-                          onLongPress: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => RandomAccount(Account())
-                                    .buildLogin(context),
-                              )),
-                          child: Icon(
-                            Icons.query_stats_rounded,
-                            size: Theme.of(context)
-                                    .textTheme
-                                    .headlineLarge!
-                                    .fontSize! *
-                                1.5,
-                          ),
-                        ),
-                        Text(
-                          " Silvio",
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineLarge
-                              ?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                ...loginMethods
-                    .map((method) => Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 5, horizontal: 16),
-                          child: SilvioCard(
-                              child: ListTile(
-                            leading: CircleAvatar(child: Icon(method.icon)),
-                            title: Text(AppLocalizations.of(context)!
-                                .loginWith(method.name)),
-                            trailing: const Icon(Icons.navigate_next),
-                            onTap: () => Navigator.push(
+            child: Padding(
+              padding: const EdgeInsets.all(32.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          InkWell(
+                            onLongPress: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      method.buildLogin(context),
+                                  builder: (context) => RandomAccount(Account())
+                                      .buildLogin(context),
                                 )),
-                          )),
-                        ))
-                    .toList(),
-                Container(height: 11)
-              ],
+                            child: Icon(
+                              Icons.query_stats_rounded,
+                              size: Theme.of(context)
+                                      .textTheme
+                                      .headlineLarge!
+                                      .fontSize! *
+                                  1.5,
+                            ),
+                          ),
+                          Text(
+                            " Silvio",
+                            style: Theme.of(context)
+                                .textTheme
+                                .headlineLarge
+                                ?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  Wrap(
+                    alignment: WrapAlignment.spaceBetween,
+                    children: [
+                      FilledButton.tonal(
+                          onPressed: () => otherLoginDialog(context),
+                          child: Text(AppLocalizations.of(context)!.other)),
+                      FilledButton.icon(
+                          onPressed: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    Magister(Account()).buildLogin(context),
+                              )),
+                          icon: const Icon(Icons.login),
+                          label: Text(AppLocalizations.of(context)!
+                              .loginWith("Magister"))),
+                    ],
+                  ),
+                ],
+              ),
             ),
           )
         ]));
   }
+
+  Future<void> otherLoginDialog(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Login op een andere manier'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ...otherLoginMethods.map(
+                (e) => ListTile(
+                    leading: Icon(e.icon),
+                    title:
+                        Text(AppLocalizations.of(context)!.loginWith(e.name)),
+                    onTap: () => Navigator.of(context).push(
+                          MaterialPageRoute(builder: e.buildLogin),
+                        )),
+              ),
+            ]
+                .map((e) => Card(
+                      elevation: 0,
+                      child: e,
+                    ))
+                .toList(),
+          ),
+        );
+      },
+    );
+  }
 }
 
-List<LoginMethod> loginMethods = [
-  LoginMethod(
-    name: 'Magister',
-    buildLogin: Magister(Account()).buildLogin,
-  ),
+List<LoginMethod> otherLoginMethods = [
+  // LoginMethod(
+  //   name: 'Magister',
+  //   buildLogin: Magister(Account()).buildLogin,
+  // ),
   if (!kReleaseMode)
     LoginMethod(
       name: 'Somtoday',

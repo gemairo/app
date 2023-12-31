@@ -207,5 +207,8 @@
   "teacher": "Docent",
   "dateOfTest": "Datum van afname",
   "typeTest": "Type toets",
-  "description": "Beschrijving"
+  "description": "Beschrijving",
+  "unknownWeights": "Onbekende wegingen",
+  "unknownWeightsDesc": "Selecteer de schooljaren waarvoor je de wegingen wilt ophalen. Dit kan later ook nog.",
+  "getGrades": "Ophalen" 
 }

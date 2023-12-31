@@ -103,7 +103,7 @@ class EventInformation extends StatelessWidget {
       Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
           child: SilvioCard(
-              isFilled: true,
+              elevation: 0,
               title: Text(AppLocalizations.of(context)!.information),
               child: Column(children: [
                 ListTile(

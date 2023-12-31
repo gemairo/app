@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:app_tracking_transparency/app_tracking_transparency.dart';
+import 'package:desktop_webview_window/desktop_webview_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -52,7 +55,7 @@ Future<void> initHive() async {
   if (!Hive.isAdapterRegistered(8)) Hive.registerAdapter(GradeTypeAdapter());
 }
 
-void main() async {
+void main(args) async {
   await initHive();
 
   await Hive.openBox<Config>('config');
@@ -67,11 +70,36 @@ void main() async {
   );
 
   WidgetsFlutterBinding.ensureInitialized();
+
+  //Desktop webview
+  if (runWebViewTitleBarWidget(args)) {
+    return;
+  }
+
   await AppTrackingTransparency.requestTrackingAuthorization();
-  MobileAds.instance.initialize();
-  final RequestConfiguration requestConfiguration = RequestConfiguration(
-      tagForUnderAgeOfConsent: TagForUnderAgeOfConsent.yes);
-  MobileAds.instance.updateRequestConfiguration(requestConfiguration);
+  if (Platform.isIOS || Platform.isAndroid) {
+    MobileAds.instance.initialize();
+    final RequestConfiguration requestConfiguration = RequestConfiguration(
+        tagForUnderAgeOfConsent: TagForUnderAgeOfConsent.yes);
+    MobileAds.instance.updateRequestConfiguration(requestConfiguration);
+    Future(() async {
+      final params = ConsentRequestParameters();
+      ConsentInformation.instance.requestConsentInfoUpdate(
+        params,
+        () async {
+          if (await ConsentInformation.instance.isConsentFormAvailable()) {
+            ConsentForm.loadConsentForm(
+              (ConsentForm consentForm) async {
+                loadGDPRForm();
+              },
+              (FormError formError) => formError.message,
+            );
+          }
+        },
+        (error) => print(error.message),
+      );
+    });
+  }
 
   runApp(const Silvio());
   BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
@@ -211,15 +239,7 @@ class _Start extends State<Start> {
                 ? AppLocalizations.of(context)?.searchView
                 : null,
           ),
-          body: BottomBanner(
-              child: RefreshIndicator(
-                  onRefresh: () async {
-                    AccountProvider acP =
-                        Provider.of<AccountProvider>(context, listen: false);
-                    await acP.account.api.refreshAll(acP.person);
-                    acP.changeAccount(null);
-                  },
-                  child: ScreensSwitch(index: screenIndex))),
+          body: BottomBanner(child: ScreensSwitch(index: screenIndex)),
           bottomNavigationBar: SilvioNavigationBar(
             onSelectItem: handleScreenChanged,
             screenIndex: screenIndex,
@@ -248,17 +268,13 @@ class _Start extends State<Start> {
                   const VerticalDivider(thickness: 1, width: 1),
                 Expanded(
                     child: Scaffold(
-                        appBar: const SilvioAppBar(),
+                        appBar: SilvioAppBar(
+                          title: screenIndex == 2
+                              ? AppLocalizations.of(context)?.searchView
+                              : null,
+                        ),
                         body: BottomBanner(
-                            child: RefreshIndicator(
-                                onRefresh: () async {
-                                  AccountProvider acP =
-                                      Provider.of<AccountProvider>(context,
-                                          listen: false);
-                                  await acP.account.api.refreshAll(acP.person);
-                                  acP.changeAccount(null);
-                                },
-                                child: ScreensSwitch(index: screenIndex))))),
+                            child: ScreensSwitch(index: screenIndex)))),
               ],
             ),
           ),
