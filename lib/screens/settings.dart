@@ -334,8 +334,8 @@ class _SettingsView extends State<SettingsView> {
                           "${packageInfo.version} (${packageInfo.buildNumber})",
                       applicationName: packageInfo.appName,
                       applicationIcon: Icon(
-                        Icons.query_stats_rounded,
-                        size: 64,
+                        const IconData(0xf201, fontFamily: "Gemairo"),
+                        size: 64 * 0.8,
                         color: Theme.of(context).colorScheme.primary,
                       ),
                     );

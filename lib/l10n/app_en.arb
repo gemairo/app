@@ -151,7 +151,7 @@
   "sufficientBorderExpl": "Set when a grade is a pass.",
   "teachers": "Teachers",
   "terms": "Terms",
-  "termsContent": "Gemairo is a private initiative and is not affiliated with, or part of, {company}.\nAll data is stored locally and will never be shared with others.\nSometimes the app may not function properly, if this case send an email to silvio@harrydekat.dev or describe the error on Github. For the full privacy policy, visit silvio.harrydekat.dev/privacypolicy and for terms of service, visit silvio.harrydekat.dev/termsofservice. By clicking \"I agree\" you agree to this and {company}'s statements.",
+  "termsContent": "Gemairo is a private initiative and is not affiliated with, or part of, {company}.\nAll data is stored locally and will never be shared with others.\nSometimes the app may not function properly, if this case send an email to support@gemairo.app or describe the error on Github. For the full privacy policy, visit https://gemairo.app/privacy and for terms of service, visit https://gemairo.app/terms. By clicking \"I agree\" you agree to this and {company}'s statements.",
   "test": "Test",
   "testInClassroom": "{schoolHour}: {type} in {classroom}",
   "totalWeight": "Total weight: {weight}",

@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:app_tracking_transparency/app_tracking_transparency.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:desktop_webview_window/desktop_webview_window.dart';
@@ -75,25 +74,28 @@ void main(args) async {
 
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  await FirebaseRemoteConfig.instance.setConfigSettings(RemoteConfigSettings(
-    fetchTimeout: const Duration(seconds: 5),
-    minimumFetchInterval: kDebugMode ? Duration.zero : const Duration(hours: 1),
-  ));
-  await FirebaseRemoteConfig.instance.fetchAndActivate();
+  if (!Platform.isLinux) {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    await FirebaseRemoteConfig.instance.setConfigSettings(RemoteConfigSettings(
+      fetchTimeout: const Duration(seconds: 5),
+      minimumFetchInterval:
+          kDebugMode ? Duration.zero : const Duration(hours: 1),
+    ));
+    await FirebaseRemoteConfig.instance.fetchAndActivate();
+
+    await AppTrackingTransparency.requestTrackingAuthorization();
+    MobileAds.instance.initialize();
+    final RequestConfiguration requestConfiguration = RequestConfiguration(
+        tagForUnderAgeOfConsent: TagForUnderAgeOfConsent.yes);
+    MobileAds.instance.updateRequestConfiguration(requestConfiguration);
+  }
 
   //Desktop webview
   if (runWebViewTitleBarWidget(args)) {
     return;
   }
-
-  await AppTrackingTransparency.requestTrackingAuthorization();
-  MobileAds.instance.initialize();
-  final RequestConfiguration requestConfiguration = RequestConfiguration(
-      tagForUnderAgeOfConsent: TagForUnderAgeOfConsent.yes);
-  MobileAds.instance.updateRequestConfiguration(requestConfiguration);
 
   runApp(const Gemairo());
   BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
@@ -154,6 +156,7 @@ class GemairoState extends State<Gemairo> {
         return ThemeData(
             brightness: useDarkMode ? Brightness.dark : Brightness.light,
             colorScheme: colorScheme,
+            platform: Platform.isLinux ? TargetPlatform.android : null,
             useMaterial3: true,
             tooltipTheme: TooltipThemeData(
               textStyle: TextStyle(color: colorScheme.onBackground),

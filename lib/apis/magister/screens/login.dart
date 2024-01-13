@@ -128,6 +128,7 @@ class _FetchWeightsScreenState extends State<FetchWeightsScreen> {
     return IntroductionSkeleton(
       title: AppLocalizations.of(context)!.unknownWeights,
       subTitle: AppLocalizations.of(context)!.unknownWeightsDesc,
+      icon: Icons.balance_rounded,
       actions: [
         FilledButton.icon(
             onPressed: selected.isEmpty || isLoading

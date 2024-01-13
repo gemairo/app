@@ -38,7 +38,7 @@
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-9170931639371270~4644085927" />
         <meta-data
-            android:name="silvio_notification_icon"
+            android:name="notification"
             android:resource="@drawable/notification" />
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->

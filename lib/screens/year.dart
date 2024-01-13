@@ -3,7 +3,6 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:gemairo/widgets/global/skeletons.dart';
 import 'package:intl/intl.dart';
 import 'package:gemairo/widgets/announcements.dart';
-import 'package:gemairo/widgets/appbar.dart';
 import 'package:gemairo/widgets/bottom_sheet.dart';
 import 'package:gemairo/widgets/cards/list_test.dart';
 import 'package:provider/provider.dart';

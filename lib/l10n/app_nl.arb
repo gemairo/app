@@ -151,7 +151,7 @@
   "sufficientBorderExpl": "Stel in wanneer een cijfer een voldoende is.",
   "teachers": "Docenten",
   "terms": "Voorwaarden",
-  "termsContent": "Gemairo is een particulier initiatief en is niet gelieerd aan, of onderdeel van, {company}.\nAlle gegevens worden lokaal opgeslagen en zullen nooit met anderen worden gedeeld.\nSoms werkt de app niet naar behoren, stuur in dit geval een e-mail naar silvio@harrydekat.dev of beschrijf de fout op Github. Ga voor het volledige privacybeleid naar silvio.harrydekat.dev/privacypolicy en ga voor de servicevoorwaarden naar silvio.harrydekat.dev/termsofservice. Door op \"Ik ga akkoord\" te klikken, gaat u akkoord met deze en de verklaringen van {company}.",
+  "termsContent": "Gemairo is een particulier initiatief en is niet gelieerd aan, of onderdeel van, {company}.\nAlle gegevens worden lokaal opgeslagen en zullen nooit met anderen worden gedeeld.\nSoms werkt de app niet naar behoren, stuur in dit geval een e-mail naar support@gemairo.app of beschrijf de fout op Github. Ga voor het volledige privacybeleid naar gemairo.app/privacy en ga voor de servicevoorwaarden naar gemairo.app/terms. Door op \"Ik ga akkoord\" te klikken, gaat u akkoord met deze en de verklaringen van {company}.",
   "test": "Proefwerk",
   "testInClassroom": "{schoolHour}: {type} in {classroom}",
   "totalWeight": "Totale weging: {weight}",

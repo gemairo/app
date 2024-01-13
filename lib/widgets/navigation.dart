@@ -72,8 +72,8 @@ class GemairoNavigationRail extends StatelessWidget {
       leading: const Padding(
         padding: EdgeInsets.symmetric(vertical: 16),
         child: Icon(
-          Icons.query_stats_rounded,
-          size: 24,
+          IconData(0xf201, fontFamily: "Gemairo"),
+          size: 24 * 0.8,
         ),
       ),
       destinations: navRailDestinations(context),
@@ -109,11 +109,9 @@ class GemairoNavigationDrawer extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  Icons.query_stats_rounded,
-                ),
+                Icon(IconData(0xf201, fontFamily: "Gemairo")),
                 Text(
-                  " Gemairo",
+                  "  Gemairo",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                 )
               ],

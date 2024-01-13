@@ -70,3 +70,7 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   generate: true
+  fonts: 
+  - family: Gemairo
+    fonts:
+      - asset: assets/font_package/fonts/Gemairo.ttf

@@ -1,5 +1,5 @@
 <div align="center">
-  <a href="https://github.com/HarryDeKat/Gemairo">
+  <a href="https://github.com/Gemairo/app">
     <img src="/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_foreground.png" alt="Logo" width="120" height="120">
   </a>
 
@@ -10,9 +10,9 @@
     <br><br>
     <a href="https://flutter.dev/"><img style="border-radius: 4px;" src="https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&amp;logo=flutter&amp;logoColor=white"></a>
     <a href="https://apps.apple.com/us/app/silvio-voor-magister/id6449495003"><img style="border-radius: 4px;"src="https://img.shields.io/badge/App_Store-0D96F6?style=for-the-badge&amp;logo=app-store&amp;logoColor=white"></a>
-    <a href="https://play.google.com/store/apps/details?id=dev.harrydekat.silvio"><img style="border-radius: 4px;" src="https://img.shields.io/badge/Google_Play-414141?style=for-the-badge&amp;logo=google-play&amp;logoColor=white"></a>
-    <a href="https://github.com/HarryDeKat/Gemairo/issues/new/choose"><img style="border-radius: 4px;" src="https://img.shields.io/badge/Maak%20een%20suggestie-713DCD.svg?style=for-the-badge&amp;logo=github&amp;logoColor=white"></a>
-       <a href="https://github.com/HarryDeKat/Gemairo/actions/workflows/build-release.yml"><img style="border-radius: 4px;" src="https://img.shields.io/github/actions/workflow/status/HarryDeKat/Gemairo/build-release.yml?branch=stable&logoColor=white&label=Build&logo=githubActions&style=for-the-badge"></a>
+    <a href="https://play.google.com/store/apps/details?id=app.netlob.magiscore"><img style="border-radius: 4px;" src="https://img.shields.io/badge/Google_Play-414141?style=for-the-badge&amp;logo=google-play&amp;logoColor=white"></a>
+    <a href="https://github.com/Gemairo/app/issues/new/choose"><img style="border-radius: 4px;" src="https://img.shields.io/badge/Maak%20een%20suggestie-713DCD.svg?style=for-the-badge&amp;logo=github&amp;logoColor=white"></a>
+       <a href="https://github.com/Gemairo/app/actions/workflows/build-release.yml"><img style="border-radius: 4px;" src="https://img.shields.io/github/actions/workflow/status/Gemairo/app/build-release.yml?branch=stable&logoColor=white&label=Build&logo=githubActions&style=for-the-badge"></a>
   </p>
 </div>
 
@@ -35,11 +35,11 @@ Alle contributies **zijn erg welkom**, omdat ik dit project niet voor eeuwig zel
 
 ## Contact
 
-HarryDeKat - Discord (HarryDeKat#4914) - [silvio@harrydekat.dev](mailto:silvio@harrydekat.dev)
+<!-- HarryDeKat - Discord (HarryDeKat#4914) - [harry@harrydekat.dev](mailto:harry@harrydekat.dev) -->
 
-Project Link: [https://github.com/HarryDeKat/Gemairo](https://github.com/HarryDeKat/Gemairo)
+Project Link: [https://github.com/Gemairo/app](https://github.com/Gemairo/app)
 
-## Vergelijkbare projecten:
+<!-- ## Vergelijkbare projecten:
 
-- [Argo](https://argo-magister.nl)
-- [Gemairo](https://gemairo.nl)
+- [Argo](https://argo-magister.nl) -->
+<!-- - [Gemairo](https://gemairo.nl) -->

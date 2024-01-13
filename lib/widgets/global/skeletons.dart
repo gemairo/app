@@ -11,7 +11,7 @@ class IntroductionSkeleton extends StatelessWidget {
     required this.subTitle,
     this.content,
     this.actions = const [],
-    this.icon = Icons.query_stats_rounded,
+    this.icon = const IconData(0xf201, fontFamily: "Gemairo"),
   });
 
   final String title;
@@ -138,8 +138,8 @@ class ScaffoldSkeleton extends StatelessWidget {
                       hasScrollBody: false,
                       child: Center(
                           child: Icon(
-                        Icons.query_stats_rounded,
-                        size: 64,
+                        const IconData(0xf201, fontFamily: "Gemairo"),
+                        size: 64 * .8,
                         color: Theme.of(context).colorScheme.surfaceVariant,
                       )),
                     )

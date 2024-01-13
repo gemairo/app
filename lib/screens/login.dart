@@ -10,8 +10,6 @@ import 'package:gemairo/apis/random.dart';
 import 'package:gemairo/apis/somtoday.dart';
 import 'package:gemairo/apis/magister.dart';
 
-import 'package:gemairo/widgets/card.dart';
-
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
 
@@ -87,16 +85,16 @@ class _LoginView extends State<LoginView> {
                                       .buildLogin(context),
                                 )),
                             child: Icon(
-                              Icons.query_stats_rounded,
+                              const IconData(0xf201, fontFamily: "Gemairo"),
                               size: Theme.of(context)
                                       .textTheme
                                       .headlineLarge!
                                       .fontSize! *
-                                  1.5,
+                                  1.20,
                             ),
                           ),
                           Text(
-                            " Gemairo",
+                            "  Gemairo",
                             style: Theme.of(context)
                                 .textTheme
                                 .headlineLarge

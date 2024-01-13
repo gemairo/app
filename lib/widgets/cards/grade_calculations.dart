@@ -113,8 +113,8 @@ class _GradeCalculate extends State<GradeCalculate> {
               key: ValueKey(widget.grades),
               child: result().isNaN
                   ? Icon(
-                      Icons.query_stats_rounded,
-                      size: 32,
+                      const IconData(0xf201, fontFamily: "Gemairo"),
+                      size: 32 * 0.8,
                       color: Theme.of(context).colorScheme.surfaceTint,
                     )
                   : InkWell(
