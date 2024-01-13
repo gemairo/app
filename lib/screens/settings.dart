@@ -3,6 +3,8 @@ import 'package:collection/collection.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:expandable_page_view/expandable_page_view.dart';
 import 'package:flutter/material.dart';
+import 'package:gemairo/widgets/ads.dart';
+import 'package:gemairo/widgets/global/skeletons.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:gemairo/apis/magister.dart';
 import 'package:gemairo/hive/extentions.dart';
@@ -76,286 +78,276 @@ class _SettingsView extends State<SettingsView> {
       });
     }
 
-    return Scaffold(
-        body: CustomScrollView(
-      slivers: <Widget>[
-        SliverAppBar.large(title: Text(AppLocalizations.of(context)!.settings)),
-        SliverList(
-            delegate: SliverChildListDelegate(
-          [
-            ListTile(
-              title: Text(AppLocalizations.of(context)!.lookAndFeel,
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleMedium
-                      ?.copyWith(color: Theme.of(context).colorScheme.primary)),
-              dense: true,
-            ),
+    return ScaffoldSkeleton(
+      sliverAppBar: SliverAppBar.large(
+        title: Text(AppLocalizations.of(context)!.settings),
+      ),
+      children: [
+        ListTile(
+          title: Text(AppLocalizations.of(context)!.lookAndFeel,
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium
+                  ?.copyWith(color: Theme.of(context).colorScheme.primary)),
+          dense: true,
+        ),
+        SwitchListTile(
+          title: Text(AppLocalizations.of(context)!.darkMode),
+          secondary: const Icon(Icons.dark_mode),
+          value: config.darkMode,
+          onChanged: !config.autoDarkMode
+              ? (bool value) {
+                  config.darkMode = value;
+                  config.save();
+                  setState(() {});
+                  Gemairo.of(context).update();
+                }
+              : null,
+        ),
+        SwitchListTile(
+          title: Text(AppLocalizations.of(context)!.autoDarkMode),
+          secondary: const Icon(Icons.brightness_auto),
+          subtitle: Text(AppLocalizations.of(context)!.autoDarkModeExpl),
+          value: config.autoDarkMode,
+          onChanged: (bool value) {
+            config.autoDarkMode = value;
+            config.save();
+            setState(() {});
+            Gemairo.of(context).update();
+          },
+        ),
+        Column(
+          children: [
             SwitchListTile(
-              title: Text(AppLocalizations.of(context)!.darkMode),
-              secondary: const Icon(Icons.dark_mode),
-              value: config.darkMode,
-              onChanged: !config.autoDarkMode
+              title: Text(AppLocalizations.of(context)!.useMaterialYou),
+              secondary: const Icon(Icons.color_lens),
+              subtitle: Text(AppLocalizations.of(context)!.useMaterialYouExpl),
+              value: config.useMaterialYou,
+              onChanged: hasMaterialYou
                   ? (bool value) {
-                      config.darkMode = value;
+                      config.useMaterialYou = value;
                       config.save();
                       setState(() {});
                       Gemairo.of(context).update();
                     }
                   : null,
             ),
-            SwitchListTile(
-              title: Text(AppLocalizations.of(context)!.autoDarkMode),
-              secondary: const Icon(Icons.brightness_auto),
-              subtitle: Text(AppLocalizations.of(context)!.autoDarkModeExpl),
-              value: config.autoDarkMode,
-              onChanged: (bool value) {
-                config.autoDarkMode = value;
-                config.save();
-                setState(() {});
-                Gemairo.of(context).update();
-              },
-            ),
-            Column(
-              children: [
-                SwitchListTile(
-                  title: Text(AppLocalizations.of(context)!.useMaterialYou),
-                  secondary: const Icon(Icons.color_lens),
-                  subtitle:
-                      Text(AppLocalizations.of(context)!.useMaterialYouExpl),
-                  value: config.useMaterialYou,
-                  onChanged: hasMaterialYou
-                      ? (bool value) {
-                          config.useMaterialYou = value;
-                          config.save();
-                          setState(() {});
-                          Gemairo.of(context).update();
-                        }
-                      : null,
-                ),
-                if (!config.useMaterialYou || !hasMaterialYou)
-                  ListTile(
-                    leading: const Icon(Icons.format_color_fill),
-                    enabled: !config.useMaterialYou,
-                    subtitle: Wrap(
-                      alignment: WrapAlignment.spaceEvenly,
-                      children: [
-                        ...material3Colors.values.map((value) => IconButton(
-                              icon: const Icon(Icons.radio_button_unchecked),
-                              color: value,
-                              isSelected: config.activeMaterialYouColorInt ==
-                                  value.value,
-                              selectedIcon: const Icon(Icons.circle),
-                              onPressed: () {
-                                config.activeMaterialYouColorInt = value.value;
-                                config.save();
-                                setState(() {});
-                                Gemairo.of(context).update();
-                              },
-                            ))
-                      ],
-                    ),
-                  ),
-              ],
-            ),
-            ListTile(
-              title: Text(AppLocalizations.of(context)!.sufficientBorder),
-              leading: const Icon(Icons.grading),
-              subtitle:
-                  Text(AppLocalizations.of(context)!.sufficientBorderExpl),
-              trailing: SizedBox(
-                width: 60,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    Expanded(
-                        flex: 1,
-                        child: FocusScope(
-                          onFocusChange: (value) {
-                            if (!value) {
-                              if (double.tryParse(sufficientController.text
-                                          .replaceAll(",", '.'))
-                                      ?.isFinite ??
-                                  false) {
-                                config.sufficientFrom = double.parse(
-                                    sufficientController.text
-                                        .replaceAll(",", '.'));
-                              }
-                              config.save();
-                              setState(() {});
-                              WidgetsBinding.instance.addPostFrameCallback((_) {
-                                Provider.of<AccountProvider>(context,
-                                        listen: false)
-                                    .changeAccount(null);
-                              });
-                              FocusScope.of(context).requestFocus(FocusNode());
-                            }
+            if (!config.useMaterialYou || !hasMaterialYou)
+              ListTile(
+                leading: const Icon(Icons.format_color_fill),
+                enabled: !config.useMaterialYou,
+                subtitle: Wrap(
+                  alignment: WrapAlignment.spaceEvenly,
+                  children: [
+                    ...material3Colors.values.map((value) => IconButton(
+                          icon: const Icon(Icons.radio_button_unchecked),
+                          color: value,
+                          isSelected:
+                              config.activeMaterialYouColorInt == value.value,
+                          selectedIcon: const Icon(Icons.circle),
+                          onPressed: () {
+                            config.activeMaterialYouColorInt = value.value;
+                            config.save();
+                            setState(() {});
+                            Gemairo.of(context).update();
                           },
-                          child: TextFormField(
-                            controller: sufficientController,
-                            keyboardType: const TextInputType.numberWithOptions(
-                                decimal: true),
-                            onTapOutside: (event) {},
-                            textAlign: TextAlign.center,
-                            decoration: InputDecoration.collapsed(
-                              hintText: config.sufficientFrom.displayNumber(),
-                            ),
-                          ),
                         ))
                   ],
                 ),
               ),
+          ],
+        ),
+        ListTile(
+          title: Text(AppLocalizations.of(context)!.sufficientBorder),
+          leading: const Icon(Icons.grading),
+          subtitle: Text(AppLocalizations.of(context)!.sufficientBorderExpl),
+          trailing: SizedBox(
+            width: 60,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                Expanded(
+                    flex: 1,
+                    child: FocusScope(
+                      onFocusChange: (value) {
+                        if (!value) {
+                          if (double.tryParse(sufficientController.text
+                                      .replaceAll(",", '.'))
+                                  ?.isFinite ??
+                              false) {
+                            config.sufficientFrom = double.parse(
+                                sufficientController.text.replaceAll(",", '.'));
+                          }
+                          config.save();
+                          setState(() {});
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            Provider.of<AccountProvider>(context, listen: false)
+                                .changeAccount(null);
+                          });
+                          FocusScope.of(context).requestFocus(FocusNode());
+                        }
+                      },
+                      child: TextFormField(
+                        controller: sufficientController,
+                        keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true),
+                        onTapOutside: (event) {},
+                        textAlign: TextAlign.center,
+                        decoration: InputDecoration.collapsed(
+                          hintText: config.sufficientFrom.displayNumber(),
+                        ),
+                      ),
+                    ))
+              ],
             ),
-            ListTile(
-                title: Text(AppLocalizations.of(context)!.usedLanguage),
-                leading: const Icon(Icons.language),
-                subtitle: Text(AppLocalizations.of(context)!.usedLanguageExpl),
-                trailing: DropdownButton(
-                    value: config.usedLocaleCode,
-                    onChanged: (value) {
-                      config.usedLocaleCode = value;
-                      config.save();
-                      setState(() {});
-                      Gemairo.of(context).update();
-                    },
-                    items: [
-                      const DropdownMenuItem(value: null, child: Text("auto")),
-                      ...AppLocalizations.supportedLocales.map((locale) =>
-                          DropdownMenuItem(
-                              value: locale.languageCode,
-                              child: Text(locale.toLanguageTag())))
-                    ])),
-            ListTile(
-              title: Text(AppLocalizations.of(context)!.notifications,
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleMedium
-                      ?.copyWith(color: Theme.of(context).colorScheme.primary)),
-              dense: true,
-            ),
-            SwitchListTile(
-              title: Text(AppLocalizations.of(context)!.notifications),
-              secondary: const Icon(Icons.notifications_active),
-              subtitle: Text(AppLocalizations.of(context)!.notificationsExpl),
-              value: config.enableNotifications,
-              onChanged: (bool value) async {
-                config.enableNotifications = value;
-                config.save();
-                FlutterLocalNotificationsPlugin
-                    flutterLocalNotificationsPlugin =
-                    FlutterLocalNotificationsPlugin();
-                final bool? androidResult =
-                    await flutterLocalNotificationsPlugin
-                        .resolvePlatformSpecificImplementation<
-                            AndroidFlutterLocalNotificationsPlugin>()
-                        ?.requestPermission();
-                final bool? iOSResult = await flutterLocalNotificationsPlugin
-                    .resolvePlatformSpecificImplementation<
-                        IOSFlutterLocalNotificationsPlugin>()
-                    ?.requestPermissions(
-                      alert: true,
-                      badge: true,
-                      sound: true,
-                    );
-                if (androidResult == true || iOSResult == true) {
-                  if (!(await Permission
-                      .ignoreBatteryOptimizations.isGranted)) {
-                    Permission.ignoreBatteryOptimizations.request();
-                  }
-                  setState(() {});
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    Gemairo.of(context).update();
-                  });
-                }
-              },
-            ),
-            ListTile(
-              title: Text(AppLocalizations.of(context)!.personalSettings,
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleMedium
-                      ?.copyWith(color: Theme.of(context).colorScheme.primary)),
-              dense: true,
-            ),
-            ListTile(
-                onTap: () => backupHiveBox<Account>(
-                    boxName: 'accountList', context: context),
-                title: Text(AppLocalizations.of(context)!.exportAccounts),
-                subtitle:
-                    Text(AppLocalizations.of(context)!.exportAccountsExpl),
-                leading: const Icon(Icons.save),
-                trailing: const CircleAvatar(child: Icon(Icons.save_alt))),
-            PersonConfigCarousel(
-              profiles: AccountManager().personList,
-              callback: () => setState(() {}),
-            ),
-            ListTile(
-              title: Text(AppLocalizations.of(context)!.feedbackAndContact,
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleMedium
-                      ?.copyWith(color: Theme.of(context).colorScheme.primary)),
-              dense: true,
-            ),
-            ListTile(
-                onTap: () => launchUrl(
-                    Uri(scheme: 'mailto', path: 'hallo@gemairo.app'),
-                    mode: LaunchMode.externalApplication),
-                title: const Text("Email"),
-                subtitle: Text(AppLocalizations.of(context)!.discordExpl),
-                leading: const Icon(Icons.mail),
-                trailing: const CircleAvatar(child: Icon(Icons.open_in_new))),
-            ListTile(
-                onTap: () => launchUrl(
-                    Uri.parse(
-                        "https://github.com/gemairo/app/issues/new/choose"),
-                    mode: LaunchMode.externalApplication),
-                title: Text(AppLocalizations.of(context)!.bugReport),
-                subtitle: Text(AppLocalizations.of(context)!.bugReportExpl),
-                leading: const Icon(Icons.bug_report),
-                trailing: const CircleAvatar(child: Icon(Icons.open_in_new))),
-            ListTile(
-                onTap: () => launchUrl(
-                    Uri.parse("https://github.com/HarryDeKat/Gemairo"),
-                    mode: LaunchMode.externalApplication),
-                title: const Text("Github"),
-                subtitle: Text(AppLocalizations.of(context)!.githubExpl),
-                leading: const Icon(FontAwesome5.github),
-                trailing: const CircleAvatar(child: Icon(Icons.open_in_new))),
-            InkWell(
-                onLongPress: () {
-                  config.noAds = !config.noAds;
+          ),
+        ),
+        ListTile(
+            title: Text(AppLocalizations.of(context)!.usedLanguage),
+            leading: const Icon(Icons.language),
+            subtitle: Text(AppLocalizations.of(context)!.usedLanguageExpl),
+            trailing: DropdownButton(
+                value: config.usedLocaleCode,
+                onChanged: (value) {
+                  config.usedLocaleCode = value;
                   config.save();
+                  setState(() {});
                   Gemairo.of(context).update();
                 },
-                child: ListTile(
-                    onTap: () async {
-                      PackageInfo packageInfo =
-                          await PackageInfo.fromPlatform();
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                        showLicensePage(
-                          context: context,
-                          applicationVersion:
-                              "${packageInfo.version} (${packageInfo.buildNumber})",
-                          applicationName: packageInfo.appName,
-                          applicationIcon: Icon(
-                            Icons.query_stats_rounded,
-                            size: 64,
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
-                        );
-                      });
-                    },
-                    title: Text(AppLocalizations.of(context)!.licenses),
-                    subtitle: Text(AppLocalizations.of(context)!.licensesExpl),
-                    leading: const Icon(FontAwesome5.file_contract),
-                    trailing:
-                        const CircleAvatar(child: Icon(Icons.navigate_next)))),
-            SafeArea(top: false, child: Container()),
-          ],
-        )),
+                items: [
+                  const DropdownMenuItem(value: null, child: Text("auto")),
+                  ...AppLocalizations.supportedLocales.map((locale) =>
+                      DropdownMenuItem(
+                          value: locale.languageCode,
+                          child: Text(locale.toLanguageTag())))
+                ])),
+        ListTile(
+          title: Text(AppLocalizations.of(context)!.notifications,
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium
+                  ?.copyWith(color: Theme.of(context).colorScheme.primary)),
+          dense: true,
+        ),
+        SwitchListTile(
+          title: Text(AppLocalizations.of(context)!.notifications),
+          secondary: const Icon(Icons.notifications_active),
+          subtitle: Text(AppLocalizations.of(context)!.notificationsExpl),
+          value: config.enableNotifications,
+          onChanged: (bool value) async {
+            config.enableNotifications = value;
+            config.save();
+            FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+                FlutterLocalNotificationsPlugin();
+            final bool? androidResult = await flutterLocalNotificationsPlugin
+                .resolvePlatformSpecificImplementation<
+                    AndroidFlutterLocalNotificationsPlugin>()
+                ?.requestPermission();
+            final bool? iOSResult = await flutterLocalNotificationsPlugin
+                .resolvePlatformSpecificImplementation<
+                    IOSFlutterLocalNotificationsPlugin>()
+                ?.requestPermissions(
+                  alert: true,
+                  badge: true,
+                  sound: true,
+                );
+            if (androidResult == true || iOSResult == true) {
+              if (!(await Permission.ignoreBatteryOptimizations.isGranted)) {
+                Permission.ignoreBatteryOptimizations.request();
+              }
+              setState(() {});
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                Gemairo.of(context).update();
+              });
+            }
+          },
+        ),
+        ListTile(
+          title: Text(AppLocalizations.of(context)!.personalSettings,
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium
+                  ?.copyWith(color: Theme.of(context).colorScheme.primary)),
+          dense: true,
+        ),
+        ListTile(
+            onTap: () => backupHiveBox<Account>(
+                boxName: 'accountList', context: context),
+            title: Text(AppLocalizations.of(context)!.exportAccounts),
+            subtitle: Text(AppLocalizations.of(context)!.exportAccountsExpl),
+            leading: const Icon(Icons.save),
+            trailing: const CircleAvatar(child: Icon(Icons.save_alt))),
+        PersonConfigCarousel(
+          profiles: AccountManager().personList,
+          callback: () => setState(() {}),
+        ),
+        ListTile(
+          title: Text(AppLocalizations.of(context)!.feedbackAndContact,
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium
+                  ?.copyWith(color: Theme.of(context).colorScheme.primary)),
+          dense: true,
+        ),
+        ListTile(
+          onTap: () async => await loadGDPRForm(),
+          title: Text("GDPR"),
+          leading: const Icon(Icons.ads_click),
+          trailing: const CircleAvatar(child: Icon(Icons.navigate_next)),
+        ),
+        ListTile(
+            onTap: () => launchUrl(
+                Uri(scheme: 'mailto', path: 'support@gemairo.app'),
+                mode: LaunchMode.externalApplication),
+            title: const Text("Email"),
+            subtitle: Text(AppLocalizations.of(context)!.discordExpl),
+            leading: const Icon(Icons.mail),
+            trailing: const CircleAvatar(child: Icon(Icons.open_in_new))),
+        ListTile(
+            onTap: () => launchUrl(
+                Uri.parse("https://github.com/Gemairo/app/issues/new/choose"),
+                mode: LaunchMode.externalApplication),
+            title: Text(AppLocalizations.of(context)!.bugReport),
+            subtitle: Text(AppLocalizations.of(context)!.bugReportExpl),
+            leading: const Icon(Icons.bug_report),
+            trailing: const CircleAvatar(child: Icon(Icons.open_in_new))),
+        ListTile(
+            onTap: () => launchUrl(Uri.parse("https://github.com/Gemairo/app"),
+                mode: LaunchMode.externalApplication),
+            title: const Text("Github"),
+            subtitle: Text(AppLocalizations.of(context)!.githubExpl),
+            leading: const Icon(FontAwesome5.github),
+            trailing: const CircleAvatar(child: Icon(Icons.open_in_new))),
+        InkWell(
+            onLongPress: () {
+              config.noAds = !config.noAds;
+              config.save();
+              Gemairo.of(context).update();
+            },
+            child: ListTile(
+                onTap: () async {
+                  PackageInfo packageInfo = await PackageInfo.fromPlatform();
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    showLicensePage(
+                      context: context,
+                      applicationVersion:
+                          "${packageInfo.version} (${packageInfo.buildNumber})",
+                      applicationName: packageInfo.appName,
+                      applicationIcon: Icon(
+                        Icons.query_stats_rounded,
+                        size: 64,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    );
+                  });
+                },
+                title: Text(AppLocalizations.of(context)!.licenses),
+                subtitle: Text(AppLocalizations.of(context)!.licensesExpl),
+                leading: const Icon(FontAwesome5.file_contract),
+                trailing:
+                    const CircleAvatar(child: Icon(Icons.navigate_next)))),
       ],
-    ));
+    );
   }
 }
 

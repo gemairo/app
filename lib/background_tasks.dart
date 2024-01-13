@@ -46,7 +46,7 @@ Future<void> backgroundCheck() async {
       List<Grade> beforeFetchLatestGrades =
           List.of(person.schoolYears.allGrades.useable).toList();
       //Refresh grade list
-      await Future.wait(person.schoolYears.map(
+      await Future.wait(person.schoolYears.where((g) => g.grades.isNotEmpty).map(
           (SchoolYear sY) => api.refreshSchoolYear(person, sY, (i, t) {})));
       //Save new grade list
       List<Grade> afterFetchLatestGrades =
@@ -166,7 +166,7 @@ void loadLatestData() {
   Future.forEach(accountsToCheck, (account) async {
     Api api = account.api;
     Future.forEach(account.profiles, (person) async {
-      await Future.wait(person.schoolYears.map(
+      await Future.wait(person.schoolYears.where((g) => g.grades.isNotEmpty).map(
           (SchoolYear sY) => api.refreshSchoolYear(person, sY, (i, t) {})));
       api.refreshCalendarEvents(person);
     });

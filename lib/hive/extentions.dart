@@ -389,3 +389,85 @@ Future<List<T>> progressWait<T>(
   return Future.wait<T>(
       [for (var future in futures) future.whenComplete(complete)]);
 }
+
+extension DateTimeHelp on DateTime {
+  int get weekNumber {
+    return ((difference(DateTime.parse(DateFormat("yyyy-01-01").format(this)))
+                        .inHours /
+                    24)
+                .round() /
+            7)
+        .ceil();
+  }
+
+  DateTime get dayOnly => DateTime.parse(DateFormat('yyyy-MM-dd').format(this));
+
+  bool get isToday =>
+      DateTime.now().year == year &&
+      DateTime.now().month == month &&
+      DateTime.now().day == day;
+}
+
+extension DateList<E> on List<E> {
+  Map<String, List<E>> sortByDate(DateTime? Function(E element)? dateTime,
+      {bool inplace = false,
+      int? take,
+      bool removeNull = false,
+      bool removeDuplicates = false,
+      bool doNotSort = false}) {
+    final today = DateTime.now();
+    final lastSevenDays = today.subtract(const Duration(days: 7));
+
+    final groupedByTime = <String, List<E>>{};
+    final seenMessages = <int, bool>{};
+
+    void _addToMap(Map<String, List<E>> groupedByTime, String key, E element) {
+      if (!groupedByTime.containsKey(key)) {
+        groupedByTime[key] = [];
+      }
+      groupedByTime[key]!.add(element);
+    }
+
+    customSort(List list) {
+      return doNotSort ? list : list
+        ..sort((a, b) =>
+            dateTime!(b)?.compareTo(dateTime(a) ?? DateTime(2000)) ?? 0);
+    }
+
+    for (final bericht in customSort(
+            where((e) => dateTime!(e) != null || !removeNull).toList())
+        .take(take ?? length)) {
+      if (dateTime!(bericht) == null) {
+        if (!seenMessages.containsKey(dateTime(bericht).toString())) {
+          _addToMap(groupedByTime, 'Overige data', bericht);
+        }
+      } else if (dateTime(bericht)!.isToday) {
+        if (!seenMessages.containsKey(dateTime(bericht).toString())) {
+          _addToMap(groupedByTime, 'Vandaag', bericht);
+          seenMessages[bericht.hashCode] = true;
+        }
+      } else if (dateTime(bericht)!.add(const Duration(days: 1)).isToday) {
+        if (!seenMessages.containsKey(dateTime(bericht).toString())) {
+          _addToMap(groupedByTime, 'Gisteren', bericht);
+          seenMessages[bericht.hashCode] = true;
+        }
+      } else if (dateTime(bericht)!.isAfter(lastSevenDays)) {
+        if (!seenMessages.containsKey(dateTime(bericht).toString())) {
+          _addToMap(groupedByTime, 'Afgelopen 7 dagen', bericht);
+          seenMessages[bericht.hashCode] = true;
+        }
+      } else {
+        final monthName = DateFormat.yMMMM().format(dateTime(bericht)!);
+        if (!groupedByTime.containsKey(monthName)) {
+          groupedByTime[monthName] = [];
+        }
+        if (!seenMessages.containsKey(dateTime(bericht).toString())) {
+          groupedByTime[monthName]!.add(bericht);
+          seenMessages[bericht.hashCode] = true;
+        }
+      }
+    }
+
+    return groupedByTime;
+  }
+}

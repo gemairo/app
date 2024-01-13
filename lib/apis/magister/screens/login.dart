@@ -1,478 +1,343 @@
 part of 'package:gemairo/apis/magister.dart';
 
-enum _LoginOptions {
-  refresh,
-  browser,
-  token,
-}
-
-class SignIn extends StatelessWidget {
+class SignIn extends StatefulWidget {
   const SignIn({super.key, this.alreadyExistingAccount});
 
   final Account? alreadyExistingAccount;
 
   @override
+  State<SignIn> createState() => _SignInState();
+}
+
+class _SignInState extends State<SignIn> {
+  ValueNotifier<Map<dynamic, dynamic>?> tokenSet = ValueNotifier(null);
+  late Magister magister;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => setTokenSet());
+  }
+
+  Future<void> setTokenSet() async {
+    tokenSet.value = await showMagisterLoginDialog(context)
+        .onError((error, stackTrace) => null);
+    //If the dialog was dismissed and no token was retrieved, return to the previous page.
+    if (tokenSet.value == null) {
+      WidgetsBinding.instance
+          .addPostFrameCallback((_) async => Navigator.of(context).pop());
+    }
+  }
+
+  Future<Account> getAccount() async {
+    Magister magister = Magister(Account()..apiType = AccountAPITypes.magister);
+    magister.api.saveTokens(tokenSet.value);
+    await magister.api.setTenant();
+    await magister.api.setAccountDetails();
+
+    //Check if the account already exists in storage
+    if (AccountManager()
+        .accountsList
+        .map((e) => e.uuid)
+        .contains(magister.account.uuid)) {
+      //Write new tokenSet to account.
+      Account existingAccount = AccountManager()
+          .accountsList
+          .firstWhere((e) => e.uuid == magister.account.uuid);
+      await (existingAccount..apiStorage = magister.account.apiStorage).save();
+      return existingAccount;
+    } else {
+      return magister.account;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final ValueNotifier<String> redirectUrl = ValueNotifier("");
-    WebViewController webViewController = WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setNavigationDelegate(
-        NavigationDelegate(
-          onNavigationRequest: (NavigationRequest request) {
-            if (request.url.contains("#code")) {
-              redirectUrl.value = request.url;
-              return NavigationDecision.prevent;
-            }
-            return NavigationDecision.navigate;
-          },
-        ),
-      );
+    return IntroductionSkeleton(
+      icon: Icons.person_search_rounded,
+      title: AppLocalizations.of(context)!.loginWith("Magister"),
+      subTitle: AppLocalizations.of(context)!.whileAccountInformationFetched,
+      content: ValueListenableBuilder(
+          valueListenable: tokenSet,
+          builder: (context, value, widget) {
+            return value == null
+                ? const Center(child: LinearProgressIndicator())
+                : FutureBuilder(
+                    future: getAccount(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        return Text(snapshot.error.toString());
+                      }
+                      if (snapshot.hasData) {
+                        WidgetsBinding.instance.addPostFrameCallback(
+                            (_) async => Navigator.of(context)
+                                    .pushReplacement(MaterialPageRoute(
+                                  builder: (context) => FetchWeightsScreen(
+                                    account: snapshot.data!,
+                                  ),
+                                )));
+                      }
+                      return const Center(child: LinearProgressIndicator());
+                    },
+                  );
+          }),
+    );
+  }
+}
 
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(AppLocalizations.of(context)!.loginWith("Magister")),
-          actions: [
-            ValueListenableBuilder(
-              valueListenable: redirectUrl,
-              builder: (context, _, __) {
-                if (redirectUrl.value != "") {
-                  return Container();
-                }
+class FetchWeightsScreen extends StatefulWidget {
+  const FetchWeightsScreen(
+      {super.key,
+      required this.account,
+      this.forcedEnabledId,
+      this.customContinue});
 
-                return PopupMenuButton<_LoginOptions>(
-                  onSelected: (value) async {
-                    switch (value) {
-                      case _LoginOptions.refresh:
-                        webViewController.loadRequest(Uri.parse(
-                            generateLoginURL(
-                                tenant: alreadyExistingAccount
-                                    ?.apiStorage?.baseUrl)));
+  final Account account;
+  final int? forcedEnabledId;
+  final void Function()? customContinue;
 
-                        break;
-                      case _LoginOptions.browser:
-                        await launchUrl(
-                            Uri.parse(generateLoginURL(
-                                tenant: alreadyExistingAccount
-                                    ?.apiStorage?.baseUrl)),
-                            mode: LaunchMode.externalNonBrowserApplication,
-                            webViewConfiguration: const WebViewConfiguration(
-                                enableDomStorage: false));
-                        redirectUrl.value = (await linkStream.first)!;
-                        break;
-                      case _LoginOptions.token:
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return Dialog(
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
-                                  children: [
-                                    SizedBox(
-                                      height: 50,
-                                      child: Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: IconButton(
-                                            onPressed: () =>
-                                                Navigator.of(context).pop(),
-                                            icon: const Icon(Icons.close)),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: ClipRRect(
-                                          borderRadius: const BorderRadius.all(
-                                              Radius.circular(16)),
-                                          child: MobileScanner(
-                                            controller: MobileScannerController(
-                                                detectionSpeed: DetectionSpeed
-                                                    .noDuplicates),
-                                            onDetect: (capture) {
-                                              final List<Barcode> barcodes =
-                                                  capture.barcodes;
-                                              for (final barcode in barcodes) {
-                                                String stringjson = jsonDecode(
-                                                    utf8.decode(base64.decode(
-                                                        barcode.rawValue!)));
-                                                Map<String, dynamic>
-                                                    decodedjson =
-                                                    jsonDecode(stringjson);
-                                                if (decodedjson.containsValue(
-                                                        "Magister") &&
-                                                    decodedjson.containsKey(
-                                                        "refresh_token")) {
-                                                  Navigator.of(context).pop();
-                                                  redirectUrl.value =
-                                                      "refreshtoken=${decodedjson["refresh_token"]}";
-                                                }
-                                              }
-                                            },
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            });
-                        break;
-                    }
+  @override
+  State<FetchWeightsScreen> createState() => _FetchWeightsScreenState();
+}
+
+class _FetchWeightsScreenState extends State<FetchWeightsScreen> {
+  Map<SchoolYear, ValueNotifier<Map<int, int>>> schoolyearsMap = {};
+  Map<SchoolYear, ValueNotifier<Map<int, int>>> selected = {};
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    schoolyearsMap = {
+      for (var s
+          in widget.account.profiles.expand<SchoolYear>((e) => e.schoolYears))
+        s: ValueNotifier({0: 0})
+    };
+    if (widget.forcedEnabledId == null)
+      selected.addAll({schoolyearsMap.keys.first: schoolyearsMap.values.first});
+    if (widget.forcedEnabledId != null)
+      selected.addAll(schoolyearsMap.entries
+          .where((e) => e.key.id == widget.forcedEnabledId)
+          .map<Map<SchoolYear, ValueNotifier<Map<int, int>>>>(
+              (e) => {e.key: e.value})
+          .first);
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return IntroductionSkeleton(
+      title: AppLocalizations.of(context)!.unknownWeights,
+      subTitle: AppLocalizations.of(context)!.unknownWeightsDesc,
+      actions: [
+        FilledButton.icon(
+            onPressed: selected.isEmpty || isLoading
+                ? null
+                : () async {
+                    setState(() {
+                      isLoading = true;
+                    });
+                    await Future.wait([
+                      ...selected.entries
+                          .map((e) => widget.account.api.refreshSchoolYear(
+                                widget.account.profiles.firstWhere((p) => p
+                                    .schoolYears
+                                    .map((e) => e.id)
+                                    .contains(e.key.id)),
+                                e.key,
+                                (completed, total) {
+                                  e.value.value = {completed: total};
+                                },
+                              ))
+                    ]);
+                    setState(() {
+                      isLoading = false;
+                      selected.removeWhere((key, value) =>
+                          value.value.keys.first ==
+                          value.value.values.toList().first);
+                    });
                   },
-                  itemBuilder: (_) => [
-                    PopupMenuItem(
-                      value: _LoginOptions.refresh,
-                      child: Text(AppLocalizations.of(context)!.reload),
-                    ),
-                    if (!Platform.isIOS)
-                      PopupMenuItem(
-                        value: _LoginOptions.browser,
-                        child:
-                            Text(AppLocalizations.of(context)!.openInBrowser),
-                      ),
-                    PopupMenuItem(
-                      value: _LoginOptions.token,
-                      child: Text(AppLocalizations.of(context)!.loginWithQR),
-                    )
-                  ],
-                );
-              },
-            )
-          ],
+            icon: const Icon(Icons.sync),
+            label: Text(AppLocalizations.of(context)!.getGrades)),
+        FilledButton.icon(
+          label: Text(AppLocalizations.of(context)!.gContinue),
+          onPressed: (widget.account.profiles
+                          .expand((e) => e.schoolYears)
+                          .any((e) => e.grades.isNotEmpty) &&
+                      widget.forcedEnabledId == null ||
+                  widget.forcedEnabledId != null &&
+                      widget.account.profiles
+                          .expand((e) => e.schoolYears)
+                          .firstWhere((e) => e.id == widget.forcedEnabledId)
+                          .grades
+                          .isNotEmpty)
+              ? widget.customContinue ??
+                  () {
+                    AccountManager().addAccount(widget.account);
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      Navigator.of(context).popUntil((r) => r.isFirst);
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (context) =>
+                            SettingsReminder(account: widget.account),
+                      ));
+                    });
+                  }
+              : null,
+          icon: const Icon(Icons.navigate_next),
         ),
-        body: ValueListenableBuilder(
-          valueListenable: redirectUrl,
-          builder: (context, _, __) {
-            if (redirectUrl.value == "") {
-              WebViewCookieManager().clearCookies();
-
-              return WebViewWidget(
-                  controller: webViewController
-                    ..loadRequest(Uri.parse(generateLoginURL(
-                        tenant: alreadyExistingAccount?.apiStorage?.baseUrl))));
-            }
-            return alreadyExistingAccount != null
-                ? ReloadAccount(
-                    account: alreadyExistingAccount!, redirectUrl: redirectUrl)
-                : FetchAccountInformation(redirectUrl: redirectUrl);
-          },
-        ));
-  }
-}
-
-class ReloadAccount extends StatelessWidget {
-  const ReloadAccount(
-      {super.key, required this.account, required this.redirectUrl});
-
-  final Account account;
-  final ValueNotifier<String> redirectUrl;
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: Future(() async {
-        Account toBeFilledAccount = Account();
-        Magister magister = Magister(toBeFilledAccount);
-        toBeFilledAccount.apiType = AccountAPITypes.magister;
-        magister.api.saveTokens(await getTokenSet(redirectUrl.value));
-        await magister.api.setTenant();
-        await magister.api.setAccountDetails();
-        if (AccountManager()
-            .accountsList
-            .map((e) => e.uuid)
-            .contains(toBeFilledAccount.uuid)) {
-          //The account exists
-          account.apiStorage = toBeFilledAccount.apiStorage;
-          await account.save();
-          return Future.value(true);
-        } else {
-          throw "Account not found, please try again with the correct account.";
-        }
-      }),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            Navigator.popUntil(context, (r) => r.isFirst);
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const Start(),
-                ));
-          });
-        }
-        if (snapshot.hasError) {
-          return Center(
-            child: ListTile(
-              title: Text("${snapshot.error}"),
-              subtitle: Text("${snapshot.stackTrace}"),
-            ),
-          );
-        }
-        return Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const CircularProgressIndicator(),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(AppLocalizations.of(context)!
-                    .whileAccountInformationFetched),
-              )
-            ],
-          ),
-        );
-      },
+      ],
+      content: Column(
+          children: schoolyearsMap.entries
+              .map((e) => Card(
+                  elevation: 0,
+                  color: Theme.of(context).colorScheme.surfaceVariant,
+                  child: ValueListenableBuilder(
+                      valueListenable: e.value,
+                      builder: (context, value, widget) {
+                        return SwitchListTile(
+                            value: value.keys.first / value.values.first == 1
+                                ? false
+                                : selected.keys.contains(e.key),
+                            title: Text(e.key.groupName),
+                            subtitle: value.keys.first != 0
+                                ? Text(
+                                    "${value.keys.first}/${value.values.first}")
+                                : null,
+                            secondary: value.keys.first / value.values.first >
+                                        0 &&
+                                    value.keys.first / value.values.first < 1
+                                ? CircularProgressIndicator(
+                                    value:
+                                        value.keys.first / value.values.first)
+                                : const Icon(Icons.list),
+                            onChanged: isLoading || e.key.grades.isNotEmpty
+                                ? null
+                                : (value) => setState(() {
+                                      if (value) {
+                                        selected.addAll({e.key: e.value});
+                                      } else {
+                                        selected.removeWhere(
+                                          (key, value) => key.id == e.key.id,
+                                        );
+                                      }
+                                    }));
+                      })))
+              .toList()),
     );
   }
 }
 
-class FetchAccountInformation extends StatelessWidget {
-  const FetchAccountInformation({super.key, required this.redirectUrl});
+///Returns a tokenset from Magister.
+Future<Map<dynamic, dynamic>?> showMagisterLoginDialog(
+    BuildContext context) async {
+  ValueNotifier<Uri?> redirectUrl = ValueNotifier<Uri?>(null);
 
-  final ValueNotifier<String> redirectUrl;
-
-  @override
-  Widget build(BuildContext context) {
-    Future<Account> account = Future(() async {
-      Account toBeFilledAccount = Account();
-
-      Magister magister = Magister(toBeFilledAccount);
-      toBeFilledAccount.apiType = AccountAPITypes.magister;
-      magister.api.saveTokens(await getTokenSet(redirectUrl.value));
-      await magister.api.setTenant();
-      await magister.api.setAccountDetails();
-
-      if (AccountManager().alreadyExists(toBeFilledAccount, unsaved: true)) {
-        //Account already exists
-        throw toBeFilledAccount;
-      } else {
-        return Future.value(toBeFilledAccount);
-      }
-    });
-
-    return FutureBuilder(
-      future: account,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            Navigator.popUntil(context, (r) => r.isFirst);
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => GetGrades(account: snapshot.data!),
-                ));
-          });
-        } else if (snapshot.hasError) {
-          if (snapshot.error is Account) {
-            return Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: GemairoCard(
-                    title:
-                        Text(AppLocalizations.of(context)!.accountExistWarning),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: ((snapshot.error as Account)
-                                  .apiStorage
-                                  ?.refreshToken !=
-                              null)
-                          ? [
-                              Text(AppLocalizations.of(context)!
-                                  .accountExistExpl),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: QrImageView(
-                                    dataModuleStyle: QrDataModuleStyle(
-                                        dataModuleShape:
-                                            QrDataModuleShape.square,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onBackground),
-                                    eyeStyle: QrEyeStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onBackground),
-                                    data: base64Encode(utf8.encode(jsonEncode(
-                                        '{"refresh_token":"${(snapshot.error as Account).apiStorage!.refreshToken}","type":"Magister"}')))
-                                    // "Dit is een Magister refreshtoken\n${n}",
-                                    ),
-                              ),
-                            ]
-                          : [],
-                    )),
-              ),
-            );
+  //Settings for the webview (iOS & Android only)
+  late WebViewController webViewController = WebViewController()
+    ..setJavaScriptMode(JavaScriptMode.unrestricted)
+    ..setNavigationDelegate(
+      NavigationDelegate(
+        onNavigationRequest: (NavigationRequest request) {
+          if (request.url.contains("#code")) {
+            redirectUrl.value = Uri.parse(request.url);
+            return NavigationDecision.prevent;
           }
-          return Center(
-            child: ListTile(
-              title: Text("${snapshot.error}"),
-              subtitle: Text("${snapshot.stackTrace}"),
-            ),
-          );
-        }
-        return Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const CircularProgressIndicator(),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(AppLocalizations.of(context)!
-                    .whileAccountInformationFetched),
-              )
-            ],
-          ),
-        );
-      },
-    );
-  }
-}
-
-class GetGrades extends StatelessWidget {
-  const GetGrades({super.key, required this.account});
-
-  final Account account;
-
-  @override
-  Widget build(BuildContext context) {
-    ValueNotifier<int> futures = ValueNotifier(0);
-    ValueNotifier<Map<String, List<int>>> precentDone = ValueNotifier({});
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.loginWith("Magister")),
-        bottom: const PreferredSize(
-            preferredSize: Size(1, 2), child: LinearProgressIndicator()),
-      ),
-      body: FutureBuilder(
-        future: Future(() async {
-          await Future.doWhile(() async {
-            await Future.delayed(const Duration(seconds: 1));
-            if (futures.value ==
-                account.profiles
-                    .expand((profile) => profile.schoolYears)
-                    .length) {
-              return false;
-            }
-            return true;
-          });
-          return futures.value;
-        }),
-        builder: (context, waitForFutures) {
-          //Success
-          if (waitForFutures.hasData) {
-            AccountManager().addAccount(account);
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              Navigator.of(context).popUntil((r) => r.isFirst);
-              Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (context) => SettingsReminder(account: account),
-              ));
-            });
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          //Getting all grades from Magister
-          Magister magister = Magister(account);
-          return Center(
-            child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 640),
-                child: Column(
-                  children: [
-                    ValueListenableBuilder<Map<String, List<int>>>(
-                      valueListenable: precentDone,
-                      builder: (context, _, __) => Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: SizedBox(
-                            height: 100,
-                            child: FactCard(
-                              value:
-                                  "${precentDone.value.values.map((e) => e.first).sum.toInt()}/${precentDone.value.values.map((e) => e.last).sum.toInt()}",
-                              extra: FactCardProgress(
-                                  value: precentDone.value.values
-                                          .map((e) => e.first)
-                                          .sum /
-                                      precentDone.value.values
-                                          .map((e) => e.last)
-                                          .sum),
-                              title:
-                                  AppLocalizations.of(context)!.fetchedGrades,
-                            )),
-                      ),
-                    ),
-                    Expanded(
-                      child: Center(
-                        child: SingleChildScrollView(
-                            child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                              ...account.profiles
-                                  .expand((profile) => profile.schoolYears)
-                                  .map((SchoolYear sY) => ListTile(
-                                        title: Text(
-                                            "${sY.groupName} (${sY.groupCode})"),
-                                        trailing: FutureBuilder(
-                                            key: ValueKey(sY.id.toString()),
-                                            future: Future.wait([
-                                              magister.refreshSchoolYear(
-                                                  account.profiles.firstWhere(
-                                                      (profile) => profile
-                                                          .schoolYears
-                                                          .map((e) => e.id)
-                                                          .contains(sY.id)),
-                                                  sY, (completed, total) {
-                                                precentDone
-                                                    .value[sY.id.toString()] = [
-                                                  completed,
-                                                  total
-                                                ];
-                                                // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
-                                                precentDone.notifyListeners();
-                                              })
-                                            ]),
-                                            builder: (context, snapshot) {
-                                              if (snapshot.hasData) {
-                                                WidgetsBinding.instance
-                                                    .addPostFrameCallback((_) {
-                                                  futures.value++;
-                                                });
-                                                return const Icon(Icons.done);
-                                              }
-                                              if (snapshot.hasError) {
-                                                return const Icon(
-                                                    Icons.warning);
-                                              } else {
-                                                return ValueListenableBuilder<
-                                                        Map<String, List<int>>>(
-                                                    valueListenable:
-                                                        precentDone,
-                                                    builder: (context, _, __) =>
-                                                        CircularProgressIndicator(
-                                                          value: precentDone.value[sY
-                                                                      .id
-                                                                      .toString()] ==
-                                                                  null
-                                                              ? null
-                                                              : precentDone
-                                                                      .value[sY
-                                                                          .id
-                                                                          .toString()]!
-                                                                      .first /
-                                                                  precentDone
-                                                                      .value[sY
-                                                                          .id
-                                                                          .toString()]!
-                                                                      .last,
-                                                        ));
-                                              }
-                                            }),
-                                      ))
-                            ])),
-                      ),
-                    ),
-                  ],
-                )),
-          );
+          return NavigationDecision.navigate;
         },
       ),
     );
+
+  Future<void> loginWithBrowser() async {
+    if (await WebviewWindow.isWebviewAvailable() &&
+        !Platform.isIOS &&
+        !Platform.isAndroid) {
+      final webview = await WebviewWindow.create(
+        configuration: CreateConfiguration(
+            windowWidth: 400,
+            windowHeight: 640,
+            title: 'Login met Magister',
+            titleBarTopPadding: Platform.isMacOS ? 30 : 0,
+            titleBarHeight: 0,
+            useWindowPositionAndSize: true),
+      );
+      webview
+        ..launch(generateLoginURL())
+        ..addOnUrlRequestCallback((requestUrl) {
+          final uri = Uri.parse(requestUrl);
+          if (uri.scheme == "m6loapp") {
+            redirectUrl.value = uri;
+            webview.close();
+          }
+        });
+    } else {
+      await launchUrl(Uri.parse(generateLoginURL()),
+          mode: LaunchMode.externalNonBrowserApplication,
+          webViewConfiguration:
+              const WebViewConfiguration(enableDomStorage: false));
+      AppLinks().allUriLinkStream.listen((uri) => redirectUrl.value = uri);
+    }
   }
+
+  if (!Platform.isAndroid && !Platform.isIOS) loginWithBrowser();
+
+  Future<void> returnWithTokenSet(Uri redirectURL) async =>
+      Navigator.of(context)
+          .pop(await getTokenSet(redirectUrl.value.toString()));
+
+  return await showDialog<Map<dynamic, dynamic>?>(
+    context: context,
+    useSafeArea: false,
+    builder: (BuildContext context) {
+      return Dialog.fullscreen(
+          backgroundColor: Colors.transparent,
+          child: Scaffold(
+            appBar: AppBar(
+              title: const Text("Inloggen"),
+              actions: (Platform.isAndroid ||
+                      Platform
+                          .isIOS) //Only iOS & Android are supported for logging in with a webview
+                  ? [
+                      IconButton(
+                          onPressed: () => webViewController
+                              .loadRequest(Uri.parse(generateLoginURL())),
+                          icon: const Icon(Icons.refresh)),
+                      IconButton(
+                          onPressed: () => loginWithBrowser(),
+                          icon: const Icon(Icons.open_in_browser))
+                    ]
+                  : [],
+            ),
+            body: SafeArea(
+              child: ValueListenableBuilder(
+                valueListenable: redirectUrl,
+                builder: (context, value, child) {
+                  if (value != null) {
+                    //Redirect value has been set!
+                    returnWithTokenSet(value);
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  //Waiting for redirectUrl
+                  if (Platform.isAndroid || Platform.isIOS) {
+                    WebViewCookieManager().clearCookies();
+                    return WebViewWidget(
+                        controller: webViewController
+                          ..loadRequest(Uri.parse(generateLoginURL())));
+                  } else {
+                    return AlertDialog(
+                      title: Text("Browser-login"),
+                      content:
+                          Text("Please login with the opened browser instance"),
+                      actions: [
+                        FilledButton.icon(
+                            onPressed: () => loginWithBrowser(),
+                            icon: Icon(Icons.open_in_browser),
+                            label: Text("Openen"))
+                      ],
+                    );
+                  }
+                },
+              ),
+            ),
+          ));
+    },
+  );
 }

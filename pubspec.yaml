@@ -57,6 +57,8 @@ dependencies:
   firebase_core: ^2.24.2
   firebase_remote_config: ^4.3.8
   firebase_analytics: ^10.7.4
+  app_links: ^3.5.0
+  desktop_webview_window: ^0.2.3
 
 dev_dependencies:
   flutter_test:

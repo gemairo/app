@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:desktop_webview_window/desktop_webview_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gemairo/firebase_options.dart';
@@ -56,7 +59,7 @@ Future<void> initHive() async {
   if (!Hive.isAdapterRegistered(8)) Hive.registerAdapter(GradeTypeAdapter());
 }
 
-void main() async {
+void main(args) async {
   await initHive();
 
   await Hive.openBox<Config>('config');
@@ -80,6 +83,11 @@ void main() async {
     minimumFetchInterval: kDebugMode ? Duration.zero : const Duration(hours: 1),
   ));
   await FirebaseRemoteConfig.instance.fetchAndActivate();
+
+  //Desktop webview
+  if (runWebViewTitleBarWidget(args)) {
+    return;
+  }
 
   await AppTrackingTransparency.requestTrackingAuthorization();
   MobileAds.instance.initialize();
@@ -275,15 +283,7 @@ class _Start extends State<Start> {
                     child: Scaffold(
                         appBar: const GemairoAppBar(),
                         body: BottomBanner(
-                            child: RefreshIndicator(
-                                onRefresh: () async {
-                                  AccountProvider acP =
-                                      Provider.of<AccountProvider>(context,
-                                          listen: false);
-                                  await acP.account.api.refreshAll(acP.person);
-                                  acP.changeAccount(null);
-                                },
-                                child: ScreensSwitch(index: screenIndex))))),
+                            child: ScreensSwitch(index: screenIndex)))),
               ],
             ),
           ),

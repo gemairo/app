@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:app_links/app_links.dart';
 import 'package:collection/collection.dart';
+import 'package:desktop_webview_window/desktop_webview_window.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -17,6 +19,7 @@ import 'package:gemairo/widgets/facts_header.dart';
 import 'package:mobile_scanner/mobile_scanner.dart' hide CalendarEvent;
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:uni_links/uni_links.dart';
+import 'package:gemairo/widgets/global/skeletons.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:pointycastle/export.dart' as castle;
@@ -51,7 +54,7 @@ class Magister implements Api {
   @override
   Future<void> refreshAll(Person person) async {
     await Future.wait([
-      Future.wait(person.schoolYears.map(
+      Future.wait(person.schoolYears.where((g) => g.grades.isNotEmpty).map(
           (SchoolYear sY) => api.refreshSchoolYear(person, sY, (i, t) {}))),
       api.refreshCalendarEvents(person),
       api.setSchoolYears(person)

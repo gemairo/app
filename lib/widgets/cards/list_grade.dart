@@ -51,79 +51,19 @@ class _GradeList extends State<GradeList> {
             // } else {
 
             Grade grade = grades[index]; //grades[index - (index ~/ 11)];
-            List<Grade> subjectGrades = config.activeBadges
-                    .contains(GradeListBadges.changeInAverageSubject)
-                ? grades
-                    .where((lgrade) => lgrade.subject.id == grade.subject.id)
-                    .toList()
-                : [];
 
-            return Opacity(
-                opacity: grade.isEnabled ? 1 : .5,
-                child: ListTile(
-                    title: Text(
-                      grade.subject.name,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    subtitle: grade.description != ""
-                        ? Text(
-                            grade.description,
-                            maxLines: 3,
-                            overflow: TextOverflow.ellipsis,
-                          )
-                        : null,
-                    onTap: () => showGemairoModalBottomSheet(children: [
-                          GradeInformation(
-                            context: context,
-                            grade: grade,
-                            grades: widget.grades,
-                            warnings: widget.warnings,
-                            showGradeCalculate: widget.showGradeCalculate,
-                          )
-                        ], context: context),
-                    leading: Column(children: [
-                      GradeAvatar(
-                        gradeString: grade.gradeString,
-                        isSufficient: grade.isSufficient,
-                      )
-                    ]),
-                    trailing: config.activeBadges.isNotEmpty
-                        ? Wrap(
-                            direction: Axis.vertical,
-                            spacing: 4,
-                            crossAxisAlignment: WrapCrossAlignment.end,
-                            children: [
-                                if (config.activeBadges
-                                    .contains(GradeListBadges.date))
-                                  Badge(
-                                      label: Text(DateFormat.yMd()
-                                          .format(grade.addedDate))),
-                                if (config.activeBadges
-                                    .contains(GradeListBadges.weight))
-                                  Badge(
-                                      label: Text(
-                                          "${grade.weight.displayNumber()}x")),
-                                if (config.activeBadges
-                                        .contains(GradeListBadges.pta) &&
-                                    grade.isPTA == true)
-                                  const Badge(
-                                    label: Text(
-                                      "PTA",
-                                    ),
-                                  ),
-                                if (config.activeBadges.contains(
-                                        GradeListBadges.changeInAverage) &&
-                                    grades.isNotEmpty &&
-                                    !grade.changeInAverage(grades).isNaN)
-                                  changeInAverageBadge(
-                                      context, grade.changeInAverage(grades)),
-                                if (subjectGrades.isNotEmpty &&
-                                    !grade.changeInAverage(subjectGrades).isNaN)
-                                  changeInAverageBadge(context,
-                                      grade.changeInAverage(subjectGrades))
-                              ])
-                        : null));
+            return GradeTile(
+              grade: grade,
+              onTap: () => showGemairoModalBottomSheet(children: [
+                GradeInformation(
+                  context: context,
+                  grade: grade,
+                  grades: widget.grades,
+                  warnings: widget.warnings,
+                  showGradeCalculate: widget.showGradeCalculate,
+                )
+              ], context: context),
+            );
           },
         ),
         if (widget.grades.useable.length > loadedAmount)
@@ -139,6 +79,80 @@ class _GradeList extends State<GradeList> {
           ))
       ],
     );
+  }
+}
+
+class GradeTile extends StatelessWidget {
+  const GradeTile(
+      {super.key, required this.grade, this.onTap, this.grades = const []});
+
+  final Grade grade;
+  final List<Grade> grades;
+  final void Function()? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    List<Grade> subjectGrades =
+        config.activeBadges.contains(GradeListBadges.changeInAverageSubject)
+            ? grades
+                .where((lgrade) => lgrade.subject.id == grade.subject.id)
+                .toList()
+            : [];
+    return Opacity(
+        opacity: grade.isEnabled ? 1 : .5,
+        child: ListTile(
+            title: Text(
+              grade.subject.name,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            subtitle: grade.description != ""
+                ? Text(
+                    grade.description,
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                  )
+                : null,
+            onTap: onTap,
+            leading: Column(children: [
+              GradeAvatar(
+                gradeString: grade.gradeString,
+                isSufficient: grade.isSufficient,
+              )
+            ]),
+            trailing: config.activeBadges.isNotEmpty
+                ? Wrap(
+                    direction: Axis.vertical,
+                    spacing: 4,
+                    crossAxisAlignment: WrapCrossAlignment.end,
+                    children: [
+                        if (config.activeBadges.contains(GradeListBadges.date))
+                          Badge(
+                              label: Text(
+                                  DateFormat.yMd().format(grade.addedDate))),
+                        if (config.activeBadges
+                            .contains(GradeListBadges.weight))
+                          Badge(
+                              label: Text("${grade.weight.displayNumber()}x")),
+                        if (config.activeBadges.contains(GradeListBadges.pta) &&
+                            grade.isPTA == true)
+                          const Badge(
+                            label: Text(
+                              "PTA",
+                            ),
+                          ),
+                        if (config.activeBadges
+                                .contains(GradeListBadges.changeInAverage) &&
+                            grades.isNotEmpty &&
+                            !grade.changeInAverage(grades).isNaN)
+                          changeInAverageBadge(
+                              context, grade.changeInAverage(grades)),
+                        if (subjectGrades.isNotEmpty &&
+                            !grade.changeInAverage(subjectGrades).isNaN)
+                          changeInAverageBadge(
+                              context, grade.changeInAverage(subjectGrades))
+                      ])
+                : null));
   }
 }
 

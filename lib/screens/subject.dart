@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:gemairo/widgets/bottom_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -111,17 +112,6 @@ class _SubjectStatisticsView extends State<SubjectStatisticsView> {
                   child: BarChartFrequency(grades: grades),
                 ))),
       ],
-      StaggeredGridTile.fit(
-          crossAxisCellCount: 4,
-          child: GemairoCard(
-              title: Text(AppLocalizations.of(context)!.grades),
-              trailing: GradeListOptions(
-                addOrRemoveBadge: addOrRemoveBadge,
-              ),
-              child: GradeList(
-                grades: grades,
-                showGradeCalculate: true,
-              )))
     ];
 
     return Scaffold(
@@ -143,7 +133,50 @@ class _SubjectStatisticsView extends State<SubjectStatisticsView> {
             GemairoCardList(
               maxCrossAxisExtent: 250,
               children: widgets,
-            )
+            ),
+            if (grades.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                child: ListTile(
+                  title: Text(AppLocalizations.of(context)!.grades),
+                  leading: Icon(Icons.numbers),
+                  trailing: GradeListOptions(
+                    addOrRemoveBadge: addOrRemoveBadge,
+                  ),
+                ),
+              ),
+            ...grades
+                .sortByDate((e) => e.addedDate, doNotSort: true)
+                .entries
+                .map(
+                  (e) => Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Column(children: [
+                      ListTile(
+                        title: Text(e.key,
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium
+                                ?.copyWith(
+                                    color:
+                                        Theme.of(context).colorScheme.primary)),
+                        dense: true,
+                      ),
+                      ...e.value.map((e) => GradeTile(
+                            grade: e,
+                            grades: grades,
+                            onTap: () => showGemairoModalBottomSheet(children: [
+                              GradeInformation(
+                                context: context,
+                                grade: e,
+                                grades: grades,
+                                showGradeCalculate: true,
+                              )
+                            ], context: context),
+                          ))
+                    ]),
+                  ),
+                )
           ]),
         ));
   }

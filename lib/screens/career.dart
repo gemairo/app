@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:gemairo/widgets/bottom_sheet.dart';
+import 'package:gemairo/widgets/global/skeletons.dart';
 import 'package:intl/intl.dart';
 import 'package:gemairo/widgets/ads.dart';
 import 'package:gemairo/widgets/appbar.dart';
@@ -101,34 +103,70 @@ class _CareerOverview extends State<CareerOverview> {
       ],
     ];
 
-    return Scaffold(
-      appBar: GemairoAppBar(
-          enableYearSwitcher: false,
-          title: AppLocalizations.of(context)!.searchStatistics),
-      body: RefreshIndicator(
-          onRefresh: () async {
-            await acP.account.api.refreshAll(acP.person);
-            acP.changeAccount(null);
-          },
-          child: BottomBanner(
-            child: ListView(children: [
-              Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: FactsHeader(
-                    grades: grades.useable,
-                  )),
-              Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: FilterChips(
-                    isGlobal: true,
-                    grades: allGrades,
-                  )),
-              GemairoCardList(
-                maxCrossAxisExtent: 250,
-                children: widgets,
+    return ScaffoldSkeleton(
+        appBar: GemairoAppBar(
+            enableYearSwitcher: false,
+            title: AppLocalizations.of(context)!.searchStatistics),
+        onRefresh: () async {
+          await acP.account.api.refreshAll(acP.person);
+          acP.changeAccount(null);
+        },
+        children: [
+          Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: FactsHeader(
+                grades: grades.useable,
+              )),
+          Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: FilterChips(
+                isGlobal: true,
+                grades: allGrades,
+              )),
+          GemairoCardList(
+            maxCrossAxisExtent: 250,
+            children: widgets,
+          ),
+          if (grades.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: ListTile(
+                title: Text(AppLocalizations.of(context)!.grades),
+                leading: Icon(Icons.numbers),
+                trailing: GradeListOptions(
+                  addOrRemoveBadge: addOrRemoveBadge,
+                ),
+              ),
+            ),
+          ...grades.sortByDate((e) => e.addedDate, doNotSort: true).entries.map(
+                (e) => Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Column(children: [
+                    ListTile(
+                      title: Text(e.key,
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleMedium
+                              ?.copyWith(
+                                  color:
+                                      Theme.of(context).colorScheme.primary)),
+                      dense: true,
+                    ),
+                    ...e.value.map((e) => GradeTile(
+                          grade: e,
+                          grades: grades,
+                          onTap: () => showGemairoModalBottomSheet(children: [
+                            GradeInformation(
+                              context: context,
+                              grade: e,
+                              grades: grades,
+                              showGradeCalculate: true,
+                            )
+                          ], context: context),
+                        ))
+                  ]),
+                ),
               )
-            ]),
-          )),
-    );
+        ]);
   }
 }

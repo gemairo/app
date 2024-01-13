@@ -207,5 +207,8 @@
   "teacher": "Teacher",
   "dateOfTest": "Date of the test",
   "typeTest": "Type test",
-  "description": "Description"
+  "description": "Description",
+  "unknownWeights": "Unknown weights",
+  "unknownWeightsDesc": "Select the schoolyears where you want to fetch the weights from. This can also be done at a later date.",
+  "getGrades": "Fetch" 
 }
