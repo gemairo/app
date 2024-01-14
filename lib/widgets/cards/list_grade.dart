@@ -277,7 +277,7 @@ class _GradeInformation extends State<GradeInformation> {
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         child: GemairoCard(
-            isFilled: true,
+            elevation: 0,
             title: Text(AppLocalizations.of(context)!.information),
             child: Column(
               children: [
@@ -326,7 +326,7 @@ class _GradeInformation extends State<GradeInformation> {
           Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
               child: GemairoCard(
-                isFilled: true,
+                elevation: 0,
                 child: ListTile(
                   leading: const Icon(Icons.auto_awesome_outlined),
                   title: Text(AppLocalizations.of(context)!.gradeForPass),
@@ -338,7 +338,7 @@ class _GradeInformation extends State<GradeInformation> {
         Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
             child: GemairoCard(
-                isFilled: true,
+                elevation: 0,
                 trailing: warnings.isNotEmpty
                     ? Padding(
                         padding: const EdgeInsets.only(right: 16.0),
@@ -368,7 +368,7 @@ class _GradeInformation extends State<GradeInformation> {
         Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
             child: GemairoCard(
-                isFilled: true,
+                elevation: 0,
                 trailing: warnings.isNotEmpty
                     ? Padding(
                         padding: const EdgeInsets.only(right: 16.0),
@@ -409,7 +409,7 @@ class _GradeInformation extends State<GradeInformation> {
       Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
           child: GemairoCard(
-              isFilled: true,
+              elevation: 0,
               child: Column(children: [
                 if (differentSubjects)
                   SwitchListTile(

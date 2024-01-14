@@ -200,19 +200,6 @@ void changeSchoolYear(BuildContext context, {required int newid}) {
             )));
   }
 
-  if (acP.person.activeSchoolYear.grades.isEmpty) {
-    //No grades, show message
-    Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => FetchWeightsScreen(
-              account: acP.account,
-              customContinue: () {
-                Navigator.of(context).pop();
-                acP.changeSchoolYear(acP.person.activeSchoolYear.id);
-              },
-              forcedEnabledId: acP.person.activeSchoolYear.id,
-            )));
-  }
-
   //If the user is viewing a subject that also exists in the new school year Gemairo opens the page on that subject
   if (ModalRoute.of(context)!.settings.name != null &&
       ModalRoute.of(context)!.settings.name!.contains("SubjectStatistics")) {

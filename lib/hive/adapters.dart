@@ -420,7 +420,7 @@ class Config extends HiveObject {
   @HiveField(3)
   bool useMaterialYou = false;
   @HiveField(4)
-  int activeMaterialYouColorInt = const Color(0xff6750a4).value;
+  int activeMaterialYouColorInt = const Color(0xff4f46e5).value;
   @HiveField(5)
   double sufficientFrom = 5.5;
   @HiveField(6)

@@ -40,7 +40,7 @@ class _SettingsView extends State<SettingsView> {
   bool hasMaterialYou = false;
   final Map<String, Color> material3Colors = {
     'M3 Baseline': const Color(0xff6750a4),
-    'Gemairo Violet': const Color(0xff713DCD),
+    'Gemairo Purple': const Color(0xff4f46e5),
     'Indigo': Colors.indigo,
     'Blue': Colors.blue,
     'Teal': Colors.teal,

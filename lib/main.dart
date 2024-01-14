@@ -247,15 +247,7 @@ class _Start extends State<Start> {
                 ? AppLocalizations.of(context)?.searchView
                 : null,
           ),
-          body: BottomBanner(
-              child: RefreshIndicator(
-                  onRefresh: () async {
-                    AccountProvider acP =
-                        Provider.of<AccountProvider>(context, listen: false);
-                    await acP.account.api.refreshAll(acP.person);
-                    acP.changeAccount(null);
-                  },
-                  child: ScreensSwitch(index: screenIndex))),
+          body: BottomBanner(child: ScreensSwitch(index: screenIndex)),
           bottomNavigationBar: GemairoNavigationBar(
             onSelectItem: handleScreenChanged,
             screenIndex: screenIndex,
