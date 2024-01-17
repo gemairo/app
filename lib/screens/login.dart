@@ -90,7 +90,7 @@ class _LoginView extends State<LoginView> {
                                       .textTheme
                                       .headlineLarge!
                                       .fontSize! *
-                                  1.20,
+                                  1.50,
                             ),
                           ),
                           Text(
@@ -100,6 +100,7 @@ class _LoginView extends State<LoginView> {
                                 .headlineLarge
                                 ?.copyWith(
                                   fontWeight: FontWeight.bold,
+                                  fontSize: 40,
                                 ),
                           )
                         ],
