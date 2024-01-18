@@ -290,7 +290,9 @@ class _SettingsView extends State<SettingsView> {
           dense: true,
         ),
         ListTile(
-          onTap: () async => await loadGDPRForm(),
+          onTap: () async {
+            await checkGDPRConsent();
+          },
           title: Text("GDPR"),
           leading: const Icon(Icons.ads_click),
           trailing: const CircleAvatar(child: Icon(Icons.navigate_next)),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:gemairo/widgets/ads.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:gemairo/hive/adapters.dart' hide PersonConfig;
 import 'package:gemairo/main.dart';
@@ -16,6 +17,12 @@ class SettingsReminder extends StatefulWidget {
 }
 
 class _SettingsReminder extends State<SettingsReminder> {
+  @override
+  void dispose() {
+    super.dispose();
+    checkGDPRConsent();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

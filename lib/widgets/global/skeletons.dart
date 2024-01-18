@@ -92,7 +92,7 @@ class ScaffoldSkeleton extends StatelessWidget {
   final List<Widget> children;
   final Future<void> Function()? onRefresh;
   final Color? backgroundColor;
-  final bool showAds = false;
+  // final bool showAds = false;
   final Widget? bottomNavigationBar;
 
   @override
@@ -103,7 +103,7 @@ class ScaffoldSkeleton extends StatelessWidget {
         bottomNavigationBar: bottomNavigationBar,
         backgroundColor: backgroundColor,
         body: BottomBanner(
-          isEnabled: showAds,
+          isEnabled: false,
           child: CustomScrollView(
             physics: onRefresh != null
                 ? BouncingScrollPhysics(

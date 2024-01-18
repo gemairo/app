@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -69,19 +70,19 @@ class _Advertisement extends State<Advertisement> {
 
     if (unitId.isEmpty) return;
 
-    final AccountProvider acP =
-        Provider.of<AccountProvider>(context, listen: false);
+    // final AccountProvider acP =
+    //     Provider.of<AccountProvider>(context, listen: false);
 
-    if ((await MobileAds.instance.getRequestConfiguration())
-            .tagForUnderAgeOfConsent !=
-        (acP.account.underAgeOfConsent
-            ? TagForUnderAgeOfConsent.yes
-            : TagForUnderAgeOfConsent.no)) {
-      MobileAds.instance.updateRequestConfiguration(RequestConfiguration(
-          tagForUnderAgeOfConsent: (acP.account.underAgeOfConsent
-              ? TagForUnderAgeOfConsent.yes
-              : TagForUnderAgeOfConsent.no)));
-    }
+    // if ((await MobileAds.instance.getRequestConfiguration())
+    //         .tagForUnderAgeOfConsent !=
+    //     (acP.account.underAgeOfConsent
+    //         ? TagForUnderAgeOfConsent.yes
+    //         : TagForUnderAgeOfConsent.no)) {
+    //   MobileAds.instance.updateRequestConfiguration(RequestConfiguration(
+    //       tagForUnderAgeOfConsent: (acP.account.underAgeOfConsent
+    //           ? TagForUnderAgeOfConsent.yes
+    //           : TagForUnderAgeOfConsent.no)));
+    // }
     bannerAd = BannerAd(
       size: size,
       adUnitId: unitId,
@@ -97,7 +98,9 @@ class _Advertisement extends State<Advertisement> {
           ad.dispose();
         },
       ),
-      request: const AdRequest(),
+      request: const AdRequest(
+        nonPersonalizedAds: false,
+      ),
     )..load();
   }
 
@@ -125,14 +128,44 @@ class _Advertisement extends State<Advertisement> {
   }
 }
 
+Future checkGDPRConsent() async {
+  // gma.ConsentDebugSettings debugSettings = gma.ConsentDebugSettings(
+  //   debugGeography: gma.DebugGeography.debugGeographyEea,
+  //   testIdentifiers: ['00DC80A9-B62B-4236-A021-BE52621EDFBC'],
+  // );
+  // gma.ConsentRequestParameters params =
+  //     gma.ConsentRequestParameters(consentDebugSettings: debugSettings);
+
+  try {
+    await AppTrackingTransparency.requestTrackingAuthorization();
+  } catch (e) {
+    print(e.toString());
+  }
+
+  ConsentRequestParameters params = ConsentRequestParameters();
+
+  ConsentInformation.instance.requestConsentInfoUpdate(
+    params,
+    () async {
+      if (await ConsentInformation.instance.isConsentFormAvailable()) {
+        loadGDPRForm();
+      }
+    },
+    (error) {},
+  );
+}
+
 Future loadGDPRForm() async {
-  var status = await ConsentInformation.instance.getConsentStatus();
   ConsentForm.loadConsentForm(
     (ConsentForm consentForm) async {
+      var status = await ConsentInformation.instance.getConsentStatus();
       if (status == ConsentStatus.required) {
-        consentForm.show((formError) {
-          loadGDPRForm();
-        });
+        consentForm.show(
+          (FormError? formError) {
+            // Handle dismissal by reloading form
+            loadGDPRForm();
+          },
+        );
       }
     },
     (formError) {
@@ -142,23 +175,29 @@ Future loadGDPRForm() async {
 }
 
 class BottomBanner extends StatelessWidget {
-  const BottomBanner({super.key, required this.child, this.isEnabled = true});
+  const BottomBanner({super.key, required this.child, this.isEnabled});
 
   final Widget child;
-  final bool isEnabled;
+  final bool? isEnabled;
 
   @override
-  Widget build(BuildContext context) => Column(children: <Widget>[
-        Expanded(child: child),
-        if (isEnabled)
-          SafeArea(
-            child: Container(
-                decoration: BoxDecoration(
-                    color:
-                        Theme.of(context).navigationBarTheme.backgroundColor),
-                child: const Advertisement(
-                  size: AdSize.fullBanner,
-                )),
-          ),
-      ]);
+  Widget build(BuildContext context) {
+    bool showAd = FirebaseRemoteConfig.instance.getBool('ads_enabled');
+    if (isEnabled != null) {
+      showAd = isEnabled!;
+    }
+
+    return Column(children: <Widget>[
+      Expanded(child: child),
+      if (showAd)
+        SafeArea(
+          child: Container(
+              decoration: BoxDecoration(
+                  color: Theme.of(context).navigationBarTheme.backgroundColor),
+              child: const Advertisement(
+                size: AdSize.fullBanner,
+              )),
+        ),
+    ]);
+  }
 }
