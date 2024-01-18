@@ -14,8 +14,8 @@ class MagisterApi extends Magister {
           if (e.response?.data != null && e.response?.statusCode == 429) {
             debugPrint(
                 "Limit reached... Please wait ${e.response?.data["secondsLeft"]} seconds.");
-            await Future.delayed(
-                Duration(seconds: e.response?.data["secondsLeft"]));
+            await RateLimitOverlay.of(navigatorKey.currentContext!)
+                .during(Duration(seconds: e.response?.data["secondsLeft"] + 1));
             //redo request
             await dio.fetch(e.requestOptions).then(
               (r) => handler.resolve(r),

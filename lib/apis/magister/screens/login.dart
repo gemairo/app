@@ -137,19 +137,22 @@ class _FetchWeightsScreenState extends State<FetchWeightsScreen> {
                     setState(() {
                       isLoading = true;
                     });
-                    await Future.wait([
-                      ...selected.entries
-                          .map((e) => widget.account.api.refreshSchoolYear(
-                                widget.account.profiles.firstWhere((p) => p
-                                    .schoolYears
-                                    .map((e) => e.id)
-                                    .contains(e.key.id)),
-                                e.key,
-                                (completed, total) {
-                                  e.value.value = {completed: total};
-                                },
-                              ))
-                    ]);
+
+                    // run one by one for smoother rate limiting
+                    for (var entry in selected.entries) {
+                      await widget.account.api.refreshSchoolYear(
+                        widget.account.profiles.firstWhere(
+                          (p) => p.schoolYears
+                              .map((e) => e.id)
+                              .contains(entry.key.id),
+                        ),
+                        entry.key,
+                        (completed, total) {
+                          entry.value.value = {completed: total};
+                        },
+                      );
+                    }
+
                     setState(() {
                       isLoading = false;
                       selected.removeWhere((key, value) =>
@@ -195,9 +198,11 @@ class _FetchWeightsScreenState extends State<FetchWeightsScreen> {
                       valueListenable: e.value,
                       builder: (context, value, widget) {
                         return SwitchListTile(
-                            value: value.keys.first / value.values.first == 1
-                                ? false
-                                : selected.keys.contains(e.key),
+                            value: e.key.grades.isNotEmpty
+                                ? true
+                                : (value.keys.first / value.values.first == 1
+                                    ? false
+                                    : selected.keys.contains(e.key)),
                             title: Text(e.key.groupName),
                             subtitle: value.keys.first != 0
                                 ? Text(
