@@ -85,11 +85,11 @@ void main(args) async {
     ));
     await FirebaseRemoteConfig.instance.fetchAndActivate();
 
-    await AppTrackingTransparency.requestTrackingAuthorization();
-    MobileAds.instance.initialize();
-    final RequestConfiguration requestConfiguration = RequestConfiguration(
-        tagForUnderAgeOfConsent: TagForUnderAgeOfConsent.yes);
-    MobileAds.instance.updateRequestConfiguration(requestConfiguration);
+    // await AppTrackingTransparency.requestTrackingAuthorization();
+    // MobileAds.instance.initialize();
+    // final RequestConfiguration requestConfiguration = RequestConfiguration(
+    //     tagForUnderAgeOfConsent: TagForUnderAgeOfConsent.yes);
+    // MobileAds.instance.updateRequestConfiguration(requestConfiguration);
   }
 
   //Desktop webview

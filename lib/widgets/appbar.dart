@@ -212,7 +212,7 @@ class AccountSwitcher extends StatelessWidget {
               ),
               const Padding(
                 padding: EdgeInsets.all(8.0),
-                child: Center(child: Text("Sjoerd Bolten • HarryDeKat")),
+                child: Center(child: Text("© Gemairo Group • HarryDeKat")),
               ),
             ],
           ),
