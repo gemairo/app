@@ -147,8 +147,8 @@ class PersonConfig {
   late int activeSchoolYearId;
   @HiveField(1)
   bool useForGradeCheck = true;
-  @HiveField(2, defaultValue: false)
-  bool useForTestCheck = false;
+  @HiveField(2, defaultValue: true)
+  bool useForTestCheck = true;
   @HiveField(3, defaultValue: true)
   bool supportsAssignments = true;
 }
@@ -412,7 +412,7 @@ Config get config {
 @HiveType(typeId: 14)
 class Config extends HiveObject {
   @HiveField(0)
-  bool enableNotifications = false;
+  bool enableNotifications = true;
   @HiveField(1)
   bool darkMode = false;
   @HiveField(2)

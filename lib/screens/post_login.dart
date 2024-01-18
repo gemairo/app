@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -45,33 +46,6 @@ class _SettingsReminder extends State<SettingsReminder> {
                     onChanged: (bool value) async {
                       config.enableNotifications = value;
                       config.save();
-                      FlutterLocalNotificationsPlugin
-                          flutterLocalNotificationsPlugin =
-                          FlutterLocalNotificationsPlugin();
-                      final bool? androidResult =
-                          await flutterLocalNotificationsPlugin
-                              .resolvePlatformSpecificImplementation<
-                                  AndroidFlutterLocalNotificationsPlugin>()
-                              ?.requestPermission();
-                      final bool? iOSResult =
-                          await flutterLocalNotificationsPlugin
-                              .resolvePlatformSpecificImplementation<
-                                  IOSFlutterLocalNotificationsPlugin>()
-                              ?.requestPermissions(
-                                alert: true,
-                                badge: true,
-                                sound: true,
-                              );
-                      if (androidResult == true || iOSResult == true) {
-                        if (!(await Permission
-                            .ignoreBatteryOptimizations.isGranted)) {
-                          Permission.ignoreBatteryOptimizations.request();
-                        }
-                        setState(() {});
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                          Gemairo.of(context).update();
-                        });
-                      }
                     },
                   ),
                   PersonConfigCarousel(
@@ -80,11 +54,57 @@ class _SettingsReminder extends State<SettingsReminder> {
                     widgetsNextToIndicator: [
                       FilledButton.icon(
                           icon: const Icon(Icons.navigate_next),
-                          onPressed: () => Navigator.pushReplacement(
+                          onPressed: () async {
+                            FlutterLocalNotificationsPlugin
+                                flutterLocalNotificationsPlugin =
+                                FlutterLocalNotificationsPlugin();
+                            final bool? androidResult =
+                                await flutterLocalNotificationsPlugin
+                                    .resolvePlatformSpecificImplementation<
+                                        AndroidFlutterLocalNotificationsPlugin>()
+                                    ?.requestPermission();
+                            final bool? iOSResult =
+                                await flutterLocalNotificationsPlugin
+                                    .resolvePlatformSpecificImplementation<
+                                        IOSFlutterLocalNotificationsPlugin>()
+                                    ?.requestPermissions(
+                                      alert: true,
+                                      badge: true,
+                                      sound: true,
+                                    );
+                            if (androidResult == true || iOSResult == true) {
+                              if (!(await Permission
+                                  .ignoreBatteryOptimizations.isGranted)) {
+                                try {
+                                  Permission.ignoreBatteryOptimizations
+                                      .request();
+                                } catch (e) {
+                                  print(e);
+                                }
+                              }
+                              setState(() {});
+                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                                Gemairo.of(context).update();
+                              });
+                            }
+
+                            await FirebaseMessaging.instance.requestPermission(
+                              alert: true,
+                              announcement: false,
+                              badge: true,
+                              carPlay: false,
+                              criticalAlert: false,
+                              provisional: false,
+                              sound: true,
+                            );
+
+                            Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => const Start(),
-                              )),
+                              ),
+                            );
+                          },
                           label: Text(AppLocalizations.of(context)!.gContinue)),
                     ],
                   ),
