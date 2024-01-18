@@ -30,9 +30,11 @@ class SchoolYearStatisticsView extends StatefulWidget {
 class _SchoolYearStatisticsView extends State<SchoolYearStatisticsView> {
   List<Announcement> announcements = [];
 
-  loadAnnoucements() async {
-    announcements = await getAnnouncements();
-    setState(() {});
+  loadAnnoucements() {
+    announcements = getAnnouncements();
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   void addOrRemoveBadge(bool value, GradeListBadges badge) {
@@ -58,9 +60,6 @@ class _SchoolYearStatisticsView extends State<SchoolYearStatisticsView> {
     List<Grade> grades = allGrades.useable;
 
     List<Widget> widgets = [
-      ...announcements.map((announcement) => StaggeredGridTile.fit(
-          crossAxisCellCount: 2,
-          child: AnnouncementCard(announcement: announcement))),
       if (grades.isNotEmpty) ...[
         if (grades.numericalGrades.length > 1)
           StaggeredGridTile.fit(
@@ -136,6 +135,12 @@ class _SchoolYearStatisticsView extends State<SchoolYearStatisticsView> {
           acP.changeAccount(null);
         },
         children: [
+          ...announcements.map((announcement) => StaggeredGridTile.fit(
+              crossAxisCellCount: 2,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 15, right: 15, bottom: 10),
+                child: AnnouncementCard(announcement: announcement),
+              ))),
           Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: FactsHeader(

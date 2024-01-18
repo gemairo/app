@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:gemairo/widgets/card.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -5,26 +8,29 @@ import 'package:url_launcher/url_launcher.dart';
 class Announcement {
   String title;
   String body;
+  bool urgent;
   List<Map<String, Uri>> buttons;
 
   Announcement(
-      {required this.title, required this.body, this.buttons = const []});
+      {required this.title,
+      required this.body,
+      required this.urgent,
+      this.buttons = const []});
 }
 
-Future<List<Announcement>> getAnnouncements() async {
-  return Future.value([]);
-  // var data =
-  //     (await Dio().get('https://silvio.harrydekat.dev/announcements.json'))
-  //         .data;
-  // return data
-  //     .map<Announcement>((data) => Announcement(
-  //         title: data["title"],
-  //         body: data["body"],
-  //         buttons: data["buttons"]
-  //             .map<Map<String, Uri>>(
-  //                 (e) => {e["title"].toString(): Uri.parse(e["url"])})
-  //             .toList()))
-  //     .toList();
+List<Announcement> getAnnouncements() {
+  var data =
+      jsonDecode(FirebaseRemoteConfig.instance.getString('announcements'));
+  return data
+      .map<Announcement>((data) => Announcement(
+          title: data["title"],
+          body: data["body"],
+          urgent: data["urgent"],
+          buttons: data["buttons"]
+              .map<Map<String, Uri>>(
+                  (e) => {e["title"].toString(): Uri.parse(e["url"])})
+              .toList()))
+      .toList();
 }
 
 class AnnouncementCard extends StatelessWidget {
@@ -35,7 +41,7 @@ class AnnouncementCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GemairoCard(
-        elevation: 2,
+        isFilled: announcement.urgent,
         title: Text(announcement.title),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
@@ -46,11 +52,18 @@ class AnnouncementCard extends StatelessWidget {
               Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: announcement.buttons
-                      .map((e) => FilledButton(
-                          onPressed: () => launchUrl(
+                      .map(
+                        (e) => Padding(
+                          padding: const EdgeInsets.only(left: 5.0),
+                          child: FilledButton(
+                            onPressed: () => launchUrl(
                               e.entries.toList().first.value,
-                              mode: LaunchMode.externalApplication),
-                          child: Text(e.entries.toList().first.key)))
+                              mode: LaunchMode.inAppWebView,
+                            ),
+                            child: Text(e.entries.toList().first.key),
+                          ),
+                        ),
+                      )
                       .toList()),
             ],
           ),
