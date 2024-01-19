@@ -60,6 +60,10 @@ dependencies:
   firebase_messaging: ^14.7.10
   app_links: ^3.5.0
   desktop_webview_window: ^0.2.3
+  saaf:
+    # path: /Users/sjoerdbolten/Documents/Projects/gemairo/saaf-dart-gemairo
+    git:
+      url: https://github.com/saaf-ads/saaf-dart.git
 
 dev_dependencies:
   flutter_test:

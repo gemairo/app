@@ -182,7 +182,7 @@ class BottomBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool showAd = FirebaseRemoteConfig.instance.getBool('ads_enabled');
+    bool showAd = FirebaseRemoteConfig.instance.getBool('ads_bottom_enabled');
     if (isEnabled != null) {
       showAd = isEnabled!;
     }

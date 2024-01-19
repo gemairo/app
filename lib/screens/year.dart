@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:gemairo/apis/saaf.dart';
 import 'package:gemairo/widgets/global/skeletons.dart';
 import 'package:intl/intl.dart';
 import 'package:gemairo/widgets/announcements.dart';
@@ -90,6 +91,10 @@ class _SchoolYearStatisticsView extends State<SchoolYearStatisticsView> {
               child: UpcomingTestsCard(
                 calendarEvents: acP.person.calendarEvents,
               )),
+        ),
+        StaggeredGridTile.fit(
+          crossAxisCellCount: 2,
+          child: Saaf.instance.bannerAd(context),
         ),
         if (grades.numericalGrades.isNotEmpty)
           StaggeredGridTile.fit(

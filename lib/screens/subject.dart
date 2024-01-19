@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:gemairo/apis/saaf.dart';
 import 'package:gemairo/widgets/bottom_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -41,6 +42,12 @@ class _SubjectStatisticsView extends State<SubjectStatisticsView> {
       config.activeBadges.remove(badge);
     }
     setState(() {});
+  }
+
+  @override
+  void initState() {
+    Saaf.instance.handleNavigate(widget.subject.name);
+    super.initState();
   }
 
   @override

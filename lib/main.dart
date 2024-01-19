@@ -6,6 +6,7 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:desktop_webview_window/desktop_webview_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gemairo/apis/saaf.dart';
 import 'package:gemairo/firebase_options.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
@@ -229,6 +230,13 @@ class _Start extends State<Start> {
     //   name: 'api_provider',
     //   value: acP.account.apiType.toString(),
     // );
+
+    if (AccountManager().personList.isNotEmpty &&
+        AccountManager().getActive().profiles.isNotEmpty) {
+      Saaf.instance
+          .initialize()
+          .then((_) => Saaf.instance.handleTakeover(context));
+    }
   }
 
   @override

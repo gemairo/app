@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gemairo/apis/saaf.dart';
 import 'package:gemairo/hive/adapters.dart';
 import 'package:gemairo/hive/extentions.dart';
 import 'package:hive/hive.dart';
@@ -61,6 +62,7 @@ class AccountProvider extends ChangeNotifier {
   void changeAccount(int? newid) {
     config.activeProfileId = newid ?? config.activeProfileId;
     config.save();
+    Saaf.instance.setAdRequest(force: true);
     notifyListeners();
   }
 
