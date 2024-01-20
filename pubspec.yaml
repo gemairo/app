@@ -63,7 +63,7 @@ dependencies:
   saaf:
     # path: /Users/sjoerdbolten/Documents/Projects/gemairo/saaf-dart-gemairo
     git:
-      url: https://github.com/saaf-ads/saaf-dart.git
+      url: https://github.com/saaf-ads/saaf-dart-gemairo.git
 
 dev_dependencies:
   flutter_test:
