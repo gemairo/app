@@ -86,6 +86,17 @@ class _LineChartGradesState extends State<LineChartGrades> {
                                   .primary
                                   .withOpacity(0.20),
                             ),
+                            dotData: FlDotData(
+                              // show: false,
+                              getDotPainter: (FlSpot spot, double xPercentage,
+                                  LineChartBarData bar, int index) {
+                                return FlDotCirclePainter(
+                                  radius: 2,
+                                  color: bar.color,
+                                  strokeColor: bar.color,
+                                );
+                              },
+                            ),
                           ),
                           if (widget.showAverage)
                             LineChartBarData(
