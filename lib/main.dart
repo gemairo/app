@@ -1,7 +1,9 @@
 import 'dart:io';
 
 import 'package:app_tracking_transparency/app_tracking_transparency.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:desktop_webview_window/desktop_webview_window.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:gemairo/apis/saaf.dart';
 import 'package:gemairo/firebase_options.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:provider/provider.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:gemairo/widgets/ads.dart';
@@ -97,6 +100,10 @@ void main(args) async {
   if (runWebViewTitleBarWidget(args)) {
     return;
   }
+
+  Box gemairoBox = await Hive.openBox('gemairo');
+  int launches = gemairoBox.get('launches', defaultValue: 0);
+  gemairoBox.put('launches', launches + 1);
 
   runApp(const Gemairo());
   BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
@@ -236,6 +243,67 @@ class _Start extends State<Start> {
       Saaf.instance
           .initialize()
           .then((_) => Saaf.instance.handleTakeover(context));
+    }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      checkReview();
+    });
+  }
+
+  checkReview() {
+    Box gemairoBox = Hive.box('gemairo');
+    int launches = gemairoBox.get('launches', defaultValue: 0);
+    bool reviewed = gemairoBox.get('reviewed', defaultValue: false);
+    if (launches > 0 &&
+        (launches %
+                FirebaseRemoteConfig.instance
+                    .getInt('ask_review_every_x_launches') ==
+            0) &&
+        !reviewed) {
+      final InAppReview inAppReview = InAppReview.instance;
+      inAppReview.isAvailable().then(
+        (bool available) async {
+          int i = 0;
+          while (i < 5 && !mounted) {
+            await Future.delayed(const Duration(seconds: 1));
+            i++;
+          }
+          if (available) {
+            return showDialog<void>(
+              context: navigatorKey.currentContext!,
+              barrierDismissible: false,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  actionsAlignment: MainAxisAlignment.start,
+                  title: const Text("Blij met Gemairo?"), // TODO: l10n
+                  actions: [
+                    FilledButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        gemairoBox.put("reviewed", true);
+                      },
+                      // style: ButtonStyle(
+                      //   backgroundColor: MaterialStateProperty.all(
+                      //     Colors.transparent,
+                      //   ),
+                      // ),
+                      child: const Text("Nee :("),
+                    ),
+                    FilledButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        gemairoBox.put("reviewed", true);
+                        inAppReview.requestReview();
+                      },
+                      child: const Text("Ja!"),
+                    )
+                  ],
+                );
+              },
+            );
+          }
+        },
+      );
     }
   }
 
