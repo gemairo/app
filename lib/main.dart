@@ -1,37 +1,31 @@
 import 'dart:io';
 
-import 'package:app_tracking_transparency/app_tracking_transparency.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:background_fetch/background_fetch.dart';
 import 'package:desktop_webview_window/desktop_webview_window.dart';
+import 'package:dynamic_color/dynamic_color.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:gemairo/apis/saaf.dart';
-import 'package:gemairo/firebase_options.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:in_app_review/in_app_review.dart';
-import 'package:provider/provider.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:gemairo/widgets/ads.dart';
-import 'hive/adapters.dart';
-import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
-import 'package:gemairo/apis/account_manager.dart';
-import 'package:gemairo/apis/abstact_api.dart';
-import 'package:gemairo/hive/extentions.dart';
-
-import 'package:gemairo/screens/login.dart';
-import 'package:gemairo/widgets/appbar.dart';
-import 'package:gemairo/widgets/navigation.dart';
-
-import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     hide Person;
+import 'package:gemairo/apis/abstact_api.dart';
+import 'package:gemairo/apis/account_manager.dart';
+import 'package:gemairo/apis/saaf.dart';
+import 'package:gemairo/firebase_options.dart';
+import 'package:gemairo/hive/extentions.dart';
+import 'package:gemairo/screens/login.dart';
+import 'package:gemairo/widgets/ads.dart';
+import 'package:gemairo/widgets/appbar.dart';
+import 'package:gemairo/widgets/navigation.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:in_app_review/in_app_review.dart';
+import 'package:provider/provider.dart';
 
-import 'package:background_fetch/background_fetch.dart';
+import 'hive/adapters.dart';
+
 part 'background_tasks.dart';
 
 Future<void> initHive() async {

@@ -2,17 +2,12 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:gemairo/apis/account_manager.dart';
 import 'package:gemairo/hive/adapters.dart';
 import 'package:gemairo/hive/extentions.dart';
-import 'package:gemairo/main.dart';
-import 'package:gemairo/widgets/ads.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:provider/provider.dart';
 import 'package:saaf/saaf.dart' as saaf;
 
 class Saaf {
@@ -55,12 +50,6 @@ class Saaf {
     initialized = true;
     await setAdRequest();
     // } catch (e) {}
-  }
-
-  Future<void> handleNavigate(String screenName) async {
-    String unifiedName = mapClass(screenName);
-
-    await FirebaseAnalytics.instance.logScreenView(screenName: unifiedName);
   }
 
   Future<saaf.AdRequest> setAdRequest({bool force = false}) async {
@@ -180,22 +169,7 @@ class Saaf {
     return pool[0] == 'saaf' ? true : false;
   }
 
-  Widget bannerAd(context) {
-    Widget googleAd = Container(
-      constraints: const BoxConstraints(
-        minHeight: 70.0 + 7.0 + 7.0,
-      ),
-      width: double.infinity,
-      color: Theme.of(context).colorScheme.surfaceVariant,
-      child: const Advertisement(
-        size: AdSize.largeBanner,
-      ),
-    );
-
-    if (shouldShowSaaf() == false) {
-      return googleAd;
-    }
-
+  Widget bannerAd(BuildContext context, Widget fallback) {
     return Container(
       constraints: const BoxConstraints(minHeight: 70.0 + 7.0 + 7.0),
       width: double.infinity,
@@ -209,7 +183,7 @@ class Saaf {
             parameters: {'format': 'banner'},
           );
         },
-        errorWidget: googleAd,
+        errorWidget: fallback,
         baseUrl: baseUrl,
         style: saaf.BannerAdStyle(
           backgroundColor: Theme.of(context).colorScheme.surfaceVariant,

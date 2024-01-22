@@ -1,26 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:gemairo/apis/saaf.dart';
-import 'package:gemairo/widgets/bottom_sheet.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:gemairo/apis/account_manager.dart';
+import 'package:gemairo/apis/ads.dart';
 import 'package:gemairo/hive/adapters.dart';
 import 'package:gemairo/hive/extentions.dart';
 import 'package:gemairo/widgets/ads.dart';
-
-import 'package:gemairo/widgets/card.dart';
 import 'package:gemairo/widgets/appbar.dart';
-import 'package:gemairo/widgets/facts_header.dart';
-import 'package:gemairo/widgets/filter.dart';
-import 'package:gemairo/widgets/charts/barchart_frequency.dart';
-import 'package:gemairo/widgets/charts/linechart_grades.dart';
+import 'package:gemairo/widgets/bottom_sheet.dart';
+import 'package:gemairo/widgets/card.dart';
 import 'package:gemairo/widgets/cards/grade_calculations.dart';
 import 'package:gemairo/widgets/cards/list_grade.dart';
 import 'package:gemairo/widgets/cards/list_schoolyear.dart';
 import 'package:gemairo/widgets/cards/list_test.dart';
+import 'package:gemairo/widgets/charts/barchart_frequency.dart';
+import 'package:gemairo/widgets/charts/linechart_grades.dart';
+import 'package:gemairo/widgets/facts_header.dart';
+import 'package:gemairo/widgets/filter.dart';
+import 'package:provider/provider.dart';
 
 class SubjectStatisticsView extends StatefulWidget {
   const SubjectStatisticsView({super.key, required this.subject});
@@ -47,7 +44,7 @@ class _SubjectStatisticsView extends State<SubjectStatisticsView> {
 
   @override
   void initState() {
-    Saaf.instance.handleNavigate(widget.subject.name);
+    Ads.instance.handleNavigate(widget.subject.name);
     super.initState();
   }
 
@@ -99,7 +96,7 @@ class _SubjectStatisticsView extends State<SubjectStatisticsView> {
                     ))))),
         StaggeredGridTile.fit(
           crossAxisCellCount: 2,
-          child: Saaf.instance.bannerAd(context),
+          child: Ads.instance.bannerAd(context),
         ),
         StaggeredGridTile.fit(
             crossAxisCellCount: 2,

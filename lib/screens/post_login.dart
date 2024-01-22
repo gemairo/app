@@ -2,6 +2,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:gemairo/apis/ads.dart';
 import 'package:gemairo/widgets/ads.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:gemairo/hive/adapters.dart' hide PersonConfig;
@@ -21,7 +22,7 @@ class _SettingsReminder extends State<SettingsReminder> {
   @override
   void dispose() {
     super.dispose();
-    checkGDPRConsent();
+    Ads.instance.checkGDPRConsent();
   }
 
   @override

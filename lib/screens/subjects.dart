@@ -1,27 +1,23 @@
 import 'dart:math';
 
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:gemairo/apis/saaf.dart';
-import 'package:gemairo/widgets/ads.dart';
-import 'package:gemairo/widgets/global/skeletons.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:provider/provider.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 import 'package:gemairo/apis/account_manager.dart';
+import 'package:gemairo/apis/ads.dart';
 import 'package:gemairo/hive/adapters.dart';
 import 'package:gemairo/hive/extentions.dart';
-
 import 'package:gemairo/screens/subject.dart';
+import 'package:gemairo/widgets/avatars.dart';
 import 'package:gemairo/widgets/card.dart';
-import 'package:gemairo/widgets/charts/barchart_subjects_min_max.dart';
 import 'package:gemairo/widgets/charts/barchart_subjects_average.dart';
+import 'package:gemairo/widgets/charts/barchart_subjects_min_max.dart';
 import 'package:gemairo/widgets/charts/barchart_subjects_weight.dart';
 import 'package:gemairo/widgets/filter.dart';
-import 'package:gemairo/widgets/avatars.dart';
+import 'package:gemairo/widgets/global/skeletons.dart';
 import 'package:gemairo/widgets/navigation.dart';
+import 'package:provider/provider.dart';
 
 class SubjectsListView extends StatefulWidget {
   const SubjectsListView({super.key});
@@ -130,7 +126,7 @@ class _SubjectsListView extends State<SubjectsListView> {
     ];
 
     if (widgets.length >= 8) {
-      widgets.insert(5, Saaf.instance.bannerAd(context));
+      widgets.insert(5, Ads.instance.bannerAd(context));
     }
 
     return ScaffoldSkeleton(

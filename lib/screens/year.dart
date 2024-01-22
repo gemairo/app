@@ -1,25 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:gemairo/apis/saaf.dart';
-import 'package:gemairo/widgets/global/skeletons.dart';
-import 'package:intl/intl.dart';
-import 'package:gemairo/widgets/announcements.dart';
-import 'package:gemairo/widgets/bottom_sheet.dart';
-import 'package:gemairo/widgets/cards/list_test.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:gemairo/apis/account_manager.dart';
+import 'package:gemairo/apis/ads.dart';
 import 'package:gemairo/hive/adapters.dart';
 import 'package:gemairo/hive/extentions.dart';
-
+import 'package:gemairo/widgets/announcements.dart';
+import 'package:gemairo/widgets/bottom_sheet.dart';
 import 'package:gemairo/widgets/card.dart';
+import 'package:gemairo/widgets/cards/list_grade.dart';
+import 'package:gemairo/widgets/cards/list_test.dart';
+import 'package:gemairo/widgets/charts/barchart_frequency.dart';
+import 'package:gemairo/widgets/charts/linechart_grades.dart';
 import 'package:gemairo/widgets/charts/linechart_monthly_average.dart';
 import 'package:gemairo/widgets/facts_header.dart';
 import 'package:gemairo/widgets/filter.dart';
-import 'package:gemairo/widgets/charts/barchart_frequency.dart';
-import 'package:gemairo/widgets/charts/linechart_grades.dart';
-import 'package:gemairo/widgets/cards/list_grade.dart';
+import 'package:gemairo/widgets/global/skeletons.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class SchoolYearStatisticsView extends StatefulWidget {
   const SchoolYearStatisticsView({super.key});
@@ -86,7 +84,7 @@ class _SchoolYearStatisticsView extends State<SchoolYearStatisticsView> {
         ),
         StaggeredGridTile.fit(
           crossAxisCellCount: 2,
-          child: Saaf.instance.bannerAd(context),
+          child: Ads.instance.bannerAd(context),
         ),
         if (grades.numericalGrades.isNotEmpty)
           StaggeredGridTile.fit(

@@ -3,6 +3,7 @@ import 'package:collection/collection.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:expandable_page_view/expandable_page_view.dart';
 import 'package:flutter/material.dart';
+import 'package:gemairo/apis/ads.dart';
 import 'package:gemairo/widgets/ads.dart';
 import 'package:gemairo/widgets/global/skeletons.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -291,7 +292,7 @@ class _SettingsView extends State<SettingsView> {
         ),
         ListTile(
           onTap: () async {
-            await checkGDPRConsent();
+            await Ads.instance.checkGDPRConsent();
           },
           title: Text("GDPR"),
           leading: const Icon(Icons.ads_click),
