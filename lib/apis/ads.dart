@@ -22,6 +22,7 @@ class Ads {
 
   static const AdRequest request = AdRequest(
     contentUrl: 'https://gemairo.app/index.html',
+    nonPersonalizedAds: false,
     keywords: [
       'school',
       'grades',

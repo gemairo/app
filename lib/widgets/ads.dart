@@ -50,9 +50,7 @@ class _Advertisement extends State<Advertisement> {
           ad.dispose();
         },
       ),
-      request: const AdRequest(
-        nonPersonalizedAds: false,
-      ),
+      request: Ads.request,
     )..load();
   }
 
@@ -89,6 +87,9 @@ class BottomBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool showAd = FirebaseRemoteConfig.instance.getBool('ads_bottom_enabled');
+    String bannerSize =
+        FirebaseRemoteConfig.instance.getString('ads_bottom_size');
+
     if (isEnabled != null) {
       showAd = isEnabled!;
     }
@@ -100,8 +101,8 @@ class BottomBanner extends StatelessWidget {
           child: Container(
               decoration: BoxDecoration(
                   color: Theme.of(context).navigationBarTheme.backgroundColor),
-              child: const Advertisement(
-                size: AdSize.fullBanner,
+              child: Advertisement(
+                size: bannerSize == 'large' ? AdSize.fullBanner : AdSize.banner,
                 type: 'static_banner',
               )),
         ),
