@@ -145,7 +145,7 @@ class Magister implements Api {
       ),
     ));
 
-    late String image;
+    String? image;
     if (img.statusCode == 200) {
       image = base64Encode(img.data);
     }
