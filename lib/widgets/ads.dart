@@ -13,9 +13,11 @@ import 'package:gemairo/apis/account_manager.dart';
 import 'package:gemairo/hive/adapters.dart';
 
 class Advertisement extends StatefulWidget {
-  const Advertisement({super.key, this.size = AdSize.fluid});
+  const Advertisement(
+      {super.key, this.size = AdSize.fluid, this.type = 'banner'});
 
   final AdSize size;
+  final String type;
 
   @override
   State<StatefulWidget> createState() => _Advertisement();
@@ -31,6 +33,7 @@ class _Advertisement extends State<Advertisement> {
       if (Platform.isAndroid) {
         return {
           'banner': 'ca-app-pub-3940256099942544/6300978111',
+          'static_banner': 'ca-app-pub-3940256099942544/6300978111',
           'native': 'ca-app-pub-3940256099942544/2247696110',
           'interstitial': 'ca-app-pub-3940256099942544/1033173712',
           'app_open': 'ca-app-pub-3940256099942544/9257395921',
@@ -38,6 +41,7 @@ class _Advertisement extends State<Advertisement> {
       } else {
         return {
           'banner': 'ca-app-pub-3940256099942544/2934735716',
+          'static_banner': 'ca-app-pub-3940256099942544/2934735716',
           'native': 'ca-app-pub-3940256099942544/3986624511',
           'interstitial': 'ca-app-pub-3940256099942544/4411468910',
           'app_open': 'ca-app-pub-3940256099942544/5575463023',
@@ -65,24 +69,11 @@ class _Advertisement extends State<Advertisement> {
   }
 
   /// Loads a native ad.
-  void loadAd({AdSize size = AdSize.fluid}) async {
-    final String unitId = getAdmobUnitId('banner');
+  void loadAd({AdSize size = AdSize.fluid, String type = 'banner'}) async {
+    final String unitId = getAdmobUnitId(type);
 
     if (unitId.isEmpty) return;
 
-    // final AccountProvider acP =
-    //     Provider.of<AccountProvider>(context, listen: false);
-
-    // if ((await MobileAds.instance.getRequestConfiguration())
-    //         .tagForUnderAgeOfConsent !=
-    //     (acP.account.underAgeOfConsent
-    //         ? TagForUnderAgeOfConsent.yes
-    //         : TagForUnderAgeOfConsent.no)) {
-    //   MobileAds.instance.updateRequestConfiguration(RequestConfiguration(
-    //       tagForUnderAgeOfConsent: (acP.account.underAgeOfConsent
-    //           ? TagForUnderAgeOfConsent.yes
-    //           : TagForUnderAgeOfConsent.no)));
-    // }
     bannerAd = BannerAd(
       size: size,
       adUnitId: unitId,
@@ -108,7 +99,7 @@ class _Advertisement extends State<Advertisement> {
   void initState() {
     super.initState();
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      loadAd(size: widget.size);
+      loadAd(size: widget.size, type: widget.type);
     });
   }
 
@@ -196,6 +187,7 @@ class BottomBanner extends StatelessWidget {
                   color: Theme.of(context).navigationBarTheme.backgroundColor),
               child: const Advertisement(
                 size: AdSize.fullBanner,
+                type: 'static_banner',
               )),
         ),
     ]);

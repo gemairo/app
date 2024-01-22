@@ -167,7 +167,35 @@ class Saaf {
     setAdRequest(force: true);
   }
 
+  bool shouldShowSaaf() {
+    Map<String, int> chances = Map<String, int>.from(
+        jsonDecode(FirebaseRemoteConfig.instance.getString("ads_provider")));
+    List<String> pool = [];
+    chances.forEach((key, value) {
+      for (int i = 0; i < value; i++) {
+        pool.add(key);
+      }
+    });
+    pool.shuffle();
+    return pool[0] == 'saaf' ? true : false;
+  }
+
   Widget bannerAd(context) {
+    Widget googleAd = Container(
+      constraints: const BoxConstraints(
+        minHeight: 70.0 + 7.0 + 7.0,
+      ),
+      width: double.infinity,
+      color: Theme.of(context).colorScheme.surfaceVariant,
+      child: const Advertisement(
+        size: AdSize.largeBanner,
+      ),
+    );
+
+    if (shouldShowSaaf() == false) {
+      return googleAd;
+    }
+
     return Container(
       constraints: const BoxConstraints(minHeight: 70.0 + 7.0 + 7.0),
       width: double.infinity,
@@ -181,16 +209,7 @@ class Saaf {
             parameters: {'format': 'banner'},
           );
         },
-        errorWidget: Container(
-          constraints: const BoxConstraints(
-            minHeight: 70.0 + 7.0 + 7.0,
-          ),
-          // height: 100,
-          color: Theme.of(context).colorScheme.surfaceVariant,
-          child: const Advertisement(
-            size: AdSize.largeBanner,
-          ),
-        ),
+        errorWidget: googleAd,
         baseUrl: baseUrl,
         style: saaf.BannerAdStyle(
           backgroundColor: Theme.of(context).colorScheme.surfaceVariant,

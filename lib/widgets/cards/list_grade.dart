@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:gemairo/apis/saaf.dart';
+import 'package:gemairo/widgets/ads.dart';
 import 'package:gemairo/widgets/avatars.dart';
 import 'package:gemairo/widgets/card.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
@@ -365,6 +368,10 @@ class _GradeInformation extends State<GradeInformation> {
                       preFillWeight: widget.grade.weight,
                       calcNewAverage: false),
                 ))),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          child: Saaf.instance.bannerAd(context),
+        ),
         Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
             child: GemairoCard(

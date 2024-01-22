@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:gemairo/apis/saaf.dart';
 import 'package:gemairo/widgets/bottom_sheet.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -96,6 +97,10 @@ class _SubjectStatisticsView extends State<SubjectStatisticsView> {
                           grades: grades,
                           calcNewAverage: false),
                     ))))),
+        StaggeredGridTile.fit(
+          crossAxisCellCount: 2,
+          child: Saaf.instance.bannerAd(context),
+        ),
         StaggeredGridTile.fit(
             crossAxisCellCount: 2,
             child: SizedBox(

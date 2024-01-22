@@ -2,7 +2,10 @@ import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:gemairo/apis/saaf.dart';
+import 'package:gemairo/widgets/ads.dart';
 import 'package:gemairo/widgets/global/skeletons.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -125,6 +128,10 @@ class _SubjectsListView extends State<SubjectsListView> {
             },
           ))
     ];
+
+    if (widgets.length >= 8) {
+      widgets.insert(5, Saaf.instance.bannerAd(context));
+    }
 
     return ScaffoldSkeleton(
         onRefresh: () async {
