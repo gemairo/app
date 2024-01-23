@@ -11,11 +11,11 @@ showGemairoModalBottomSheet(
     constraints: const BoxConstraints(maxWidth: 640),
     shape: Theme.of(context).bottomSheetTheme.shape,
     builder: (context) => DraggableScrollableSheet(
-      initialChildSize: 0.4,
+      initialChildSize: 0.6,
       minChildSize: 0.2,
       maxChildSize: 1,
       snap: true,
-      snapSizes: const [.4, 1],
+      snapSizes: const [.6, 1],
       expand: false,
       builder: (_, controller) => ListView(
         controller: controller,
