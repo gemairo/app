@@ -21,6 +21,7 @@ import 'package:gemairo/screens/login.dart';
 import 'package:gemairo/widgets/ads.dart';
 import 'package:gemairo/widgets/appbar.dart';
 import 'package:gemairo/widgets/navigation.dart';
+import 'package:gemairo/widgets/ratelimit.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:provider/provider.dart';
@@ -218,6 +219,7 @@ class _Start extends State<Start> {
   int screenIndex = 0;
 
   void handleScreenChanged(int selectedScreen) {
+    RateLimitOverlay.of(context).during(const Duration(seconds: 10));
     setState(() {
       screenIndex = selectedScreen;
     });

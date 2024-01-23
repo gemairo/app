@@ -86,6 +86,7 @@ class Ads {
         return {
           'banner': 'ca-app-pub-3940256099942544/6300978111',
           'static_banner': 'ca-app-pub-3940256099942544/6300978111',
+          'leaderboard': 'ca-app-pub-3940256099942544/6300978111',
           'native': 'ca-app-pub-3940256099942544/2247696110',
           'interstitial': 'ca-app-pub-3940256099942544/1033173712',
           'app_open': 'ca-app-pub-3940256099942544/9257395921',
@@ -94,6 +95,7 @@ class Ads {
         return {
           'banner': 'ca-app-pub-3940256099942544/2934735716',
           'static_banner': 'ca-app-pub-3940256099942544/2934735716',
+          'leaderboard': 'ca-app-pub-3940256099942544/2934735716',
           'native': 'ca-app-pub-3940256099942544/3986624511',
           'interstitial': 'ca-app-pub-3940256099942544/4411468910',
           'app_open': 'ca-app-pub-3940256099942544/5575463023',
