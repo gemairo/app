@@ -49,62 +49,120 @@ class _FactsHeader extends State<FactsHeader> {
                         : widget.grades.average.displayNumber()),
               )),
         ),
-        StaggeredGridTile.count(
-            crossAxisCellCount: 4,
+        ...List.generate(facts.length, (index) {
+          // return StaggeredGridTile.count(
+          //   crossAxisCellCount: 2,
+          //   mainAxisCellCount: 1,
+          //   child: Text('peop$index'),
+          // );
+          // List<Widget> cards = facts
+          //     .map((fact) => SizedBox(
+          //           height: 100,
+          //           child: FactCard(
+          //             title: fact.title,
+          //             value: fact.value.getGradeString,
+          //             onTap: fact.onTap,
+          //           ),
+          //         ))
+          //     .toList();
+          // if (index == (facts.length / 2).ceil()) {
+          //   return FactCard(
+          //       title: AppLocalizations.of(context)!.precentSufficient,
+          //       value:
+          //           "${widget.grades.where((grade) => grade.isSufficient).length}/${widget.grades.length}",
+          //       extra: FactCardProgress(
+          //         value: widget.grades.getPresentageSufficient() / 100,
+          //       ));
+          // }
+          // return StaggeredGrid.count(
+          //     crossAxisSpacing: 8,
+          //     crossAxisCount: 2,
+          //     children: [
+          //       ...cards.getRange(index * 2,
+          //           index * 2 + 2 > facts.length ? facts.length : index * 2 + 2)
+          //     ]);
+          var fact = facts.elementAt(index);
+          return StaggeredGridTile.count(
+            crossAxisCellCount: 2,
             mainAxisCellCount: 1,
-            child: LayoutBuilder(
-                builder: (context, constraints) => AspectRatio(
-                      aspectRatio: 4 / 1,
-                      child: Column(
-                        children: [
-                          CarouselSlider.builder(
-                              itemCount: (facts.length / 2).ceil() + 1,
-                              itemBuilder: (context, index, realIndex) {
-                                List<Widget> cards = facts
-                                    .map((fact) => SizedBox(
-                                          height: constraints.maxHeight,
-                                          child: FactCard(
-                                            title: fact.title,
-                                            value: fact.value.getGradeString,
-                                            onTap: fact.onTap,
-                                          ),
-                                        ))
-                                    .toList();
-                                if (index == (facts.length / 2).ceil()) {
-                                  return FactCard(
-                                      title: AppLocalizations.of(context)!
-                                          .precentSufficient,
-                                      value:
-                                          "${widget.grades.where((grade) => grade.isSufficient).length}/${widget.grades.length}",
-                                      extra: FactCardProgress(
-                                        value: widget.grades
-                                                .getPresentageSufficient() /
-                                            100,
-                                      ));
-                                }
-                                return StaggeredGrid.count(
-                                    crossAxisSpacing: 8,
-                                    crossAxisCount: 2,
-                                    children: [
-                                      ...cards.getRange(
-                                          index * 2,
-                                          index * 2 + 2 > facts.length
-                                              ? facts.length
-                                              : index * 2 + 2)
-                                    ]);
-                              },
-                              options: CarouselOptions(
-                                enlargeCenterPage: true,
-                                height: constraints.maxHeight,
-                                scrollDirection: Axis.vertical,
-                                autoPlay: false,
-                                autoPlayInterval: const Duration(seconds: 10),
-                                viewportFraction: 1,
-                                enlargeFactor: .4,
-                              ))
-                        ],
-                      ),
-                    )))
+            child: SizedBox(
+              height: 100,
+              child: FactCard(
+                title: fact.title,
+                value: fact.value.getGradeString,
+                onTap: fact.onTap,
+              ),
+            ),
+          );
+          // },
+          // options: CarouselOptions(
+          //   enlargeCenterPage: true,
+          //   height: constraints.maxHeight,
+          //   scrollDirection: Axis.vertical,
+          //   autoPlay: false,
+          //   autoPlayInterval: const Duration(seconds: 10),
+          //   viewportFraction: 1,
+          //   enlargeFactor: .4,
+          // ))
+          // ],
+        }),
+        // StaggeredGridTile.count(
+        //   crossAxisCellCount: 4,
+        //   mainAxisCellCount: 1,
+        //   // child: LayoutBuilder(
+        //   //     builder: (context, constraints) => AspectRatio(
+        //   //           aspectRatio: 4 / 1,
+        //   child: Column(
+        //     // children: [
+        //     //   CarouselSlider.builder(
+        //     //       itemCount: (facts.length / 2).ceil() + 1,
+        //     //       itemBuilder: (context, index, realIndex) {
+        //     children: List.generate((facts.length / 2).ceil() + 1, (index) {
+        //       return Text('test');
+        //       List<Widget> cards = facts
+        //           .map((fact) => SizedBox(
+        //                 height: 100,
+        //                 child: FactCard(
+        //                   title: fact.title,
+        //                   value: fact.value.getGradeString,
+        //                   onTap: fact.onTap,
+        //                 ),
+        //               ))
+        //           .toList();
+        //       if (index == (facts.length / 2).ceil()) {
+        //         return FactCard(
+        //             title: AppLocalizations.of(context)!.precentSufficient,
+        //             value:
+        //                 "${widget.grades.where((grade) => grade.isSufficient).length}/${widget.grades.length}",
+        //             extra: FactCardProgress(
+        //               value: widget.grades.getPresentageSufficient() / 100,
+        //             ));
+        //       }
+        //       return StaggeredGrid.count(
+        //           crossAxisSpacing: 8,
+        //           crossAxisCount: 2,
+        //           children: [
+        //             ...cards.getRange(
+        //                 index * 2,
+        //                 index * 2 + 2 > facts.length
+        //                     ? facts.length
+        //                     : index * 2 + 2)
+        //           ]);
+        //       // },
+        //       // options: CarouselOptions(
+        //       //   enlargeCenterPage: true,
+        //       //   height: constraints.maxHeight,
+        //       //   scrollDirection: Axis.vertical,
+        //       //   autoPlay: false,
+        //       //   autoPlayInterval: const Duration(seconds: 10),
+        //       //   viewportFraction: 1,
+        //       //   enlargeFactor: .4,
+        //       // ))
+        //       // ],
+        //     }),
+        //   ),
+        //   // )),
+        // )
       ],
     );
   }

@@ -1,8 +1,12 @@
+import 'dart:math';
+
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:gemairo/apis/account_manager.dart';
 import 'package:gemairo/apis/ads.dart';
+import 'package:gemairo/apis/saaf.dart';
 import 'package:gemairo/hive/adapters.dart';
 import 'package:gemairo/hive/extentions.dart';
 import 'package:gemairo/widgets/announcements.dart';
@@ -16,6 +20,7 @@ import 'package:gemairo/widgets/charts/linechart_monthly_average.dart';
 import 'package:gemairo/widgets/facts_header.dart';
 import 'package:gemairo/widgets/filter.dart';
 import 'package:gemairo/widgets/global/skeletons.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -122,6 +127,71 @@ class _SchoolYearStatisticsView extends State<SchoolYearStatisticsView> {
     List<Grade> useable =
         allGrades.where((grade) => grade.type == GradeType.grade).toList();
 
+    List<Widget> gradesList = List<Widget>.from(useable
+        .sortByDate((e) => e.addedDate, doNotSort: true)
+        .entries
+        .map((e) {
+      List<Widget> children = List<Widget>.from(e.value.map(
+        (e) => GradeTile(
+          grade: e,
+          grades: useable,
+          onTap: () => showGemairoModalBottomSheet(children: [
+            GradeInformation(
+              context: context,
+              grade: e,
+              grades: useable,
+              showGradeCalculate: true,
+            )
+          ], context: context),
+        ),
+      ));
+
+      int bannerEveryXGrades =
+          FirebaseRemoteConfig.instance.getInt('ads_grades_every_x_banner');
+      if (bannerEveryXGrades > 0) {
+        int bannerCount = children.length ~/ bannerEveryXGrades;
+        if (children.length == bannerEveryXGrades) {
+          bannerCount = 1;
+        }
+
+        if (bannerCount > 0) {
+          AdSize size =
+              FirebaseRemoteConfig.instance.getString('ads_grades_size') ==
+                      'large'
+                  ? AdSize.largeBanner
+                  : AdSize.banner;
+          for (int index = 0; index < bannerCount; index++) {
+            children.insert(
+              (index * bannerEveryXGrades) + bannerEveryXGrades + index,
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 8.0,
+                ),
+                child: Ads.instance.bannerAd(context, size: size),
+              ),
+            );
+          }
+        }
+      }
+
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: Column(
+          children: [
+            ListTile(
+              title: Text(e.key,
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleMedium
+                      ?.copyWith(color: Theme.of(context).colorScheme.primary)),
+              dense: true,
+            ),
+            ...children,
+          ],
+        ),
+      );
+    }));
+
     return ScaffoldSkeleton(
         onRefresh: () async {
           AccountProvider acP =
@@ -161,38 +231,7 @@ class _SchoolYearStatisticsView extends State<SchoolYearStatisticsView> {
                 ),
               ),
             ),
-          ...useable
-              .sortByDate((e) => e.addedDate, doNotSort: true)
-              .entries
-              .map(
-                (e) => Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Column(children: [
-                    ListTile(
-                      title: Text(e.key,
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleMedium
-                              ?.copyWith(
-                                  color:
-                                      Theme.of(context).colorScheme.primary)),
-                      dense: true,
-                    ),
-                    ...e.value.map((e) => GradeTile(
-                          grade: e,
-                          grades: useable,
-                          onTap: () => showGemairoModalBottomSheet(children: [
-                            GradeInformation(
-                              context: context,
-                              grade: e,
-                              grades: useable,
-                              showGradeCalculate: true,
-                            )
-                          ], context: context),
-                        ))
-                  ]),
-                ),
-              )
+          ...gradesList
         ]);
   }
 }

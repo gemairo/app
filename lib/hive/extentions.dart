@@ -225,27 +225,27 @@ extension GradeCalculations on List<Grade> {
                           .toList()
                           .first)
                 ], context: context)),
+      if (where((grade) => !grade.sufficient).isNotEmpty)
+        Fact(
+            title: AppLocalizations.of(context)!.precentInsufficient,
+            value: "${(100 - getPresentageSufficient()).displayNumber()}%"),
       Fact(
           title: AppLocalizations.of(context)!.precentSufficient,
           value: "${getPresentageSufficient().displayNumber()}%"),
-      if (getHighest() != null)
-        Fact(
-            title: AppLocalizations.of(context)!.highest,
-            value: getHighest()!.gradeString,
-            onTap: displayGrade(getHighest()!)),
       if (getLowest() != null)
         Fact(
             title: AppLocalizations.of(context)!.lowest,
             value: getLowest()!.gradeString,
             onTap: displayGrade(getLowest()!)),
+      if (getHighest() != null)
+        Fact(
+            title: AppLocalizations.of(context)!.highest,
+            value: getHighest()!.gradeString,
+            onTap: displayGrade(getHighest()!)),
       Fact(
           title:
               AppLocalizations.of(context)!.amountOfInsufficient.capitalize(),
           value: where((grade) => !grade.sufficient).length.toString()),
-      if (where((grade) => !grade.sufficient).isNotEmpty)
-        Fact(
-            title: AppLocalizations.of(context)!.precentInsufficient,
-            value: "${(100 - getPresentageSufficient()).displayNumber()}%"),
       if (isNotEmpty)
         Fact(
             title: AppLocalizations.of(context)!.averageWeight,
