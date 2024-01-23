@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gemairo/apis/ads.dart';
 import 'package:gemairo/screens/career.dart';
 import 'package:gemairo/widgets/bottom_sheet.dart';
 import 'package:gemairo/widgets/card.dart';
@@ -22,6 +23,12 @@ class SearchView extends StatefulWidget {
 
 class _SearchView extends State<SearchView> {
   final controller = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    Ads.instance.handleNavigate('search');
+  }
 
   void addOrRemoveBadge(bool value, GradeListBadges badge) {
     if (value == true) {

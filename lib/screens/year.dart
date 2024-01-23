@@ -46,6 +46,7 @@ class _SchoolYearStatisticsView extends State<SchoolYearStatisticsView> {
   @override
   void initState() {
     super.initState();
+    Ads.instance.handleNavigate('year');
   }
 
   @override

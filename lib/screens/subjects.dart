@@ -31,6 +31,13 @@ class SubjectsListView extends StatefulWidget {
 
 class _SubjectsListView extends State<SubjectsListView> {
   bool rounded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    Ads.instance.handleNavigate('subjects');
+  }
+
   @override
   Widget build(BuildContext context) {
     final AccountProvider acP = Provider.of<AccountProvider>(context);
