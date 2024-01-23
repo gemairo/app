@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:background_fetch/background_fetch.dart';
 import 'package:desktop_webview_window/desktop_webview_window.dart';
 import 'package:dynamic_color/dynamic_color.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
@@ -257,12 +258,15 @@ class _Start extends State<Start> {
       final InAppReview inAppReview = InAppReview.instance;
       inAppReview.isAvailable().then(
         (bool available) async {
-          int i = 0;
-          while (i < 5 && !mounted) {
-            await Future.delayed(const Duration(seconds: 1));
-            i++;
-          }
           if (available) {
+            int i = 0;
+            while (i < 5 && !mounted) {
+              await Future.delayed(const Duration(seconds: 1));
+              i++;
+            }
+            FirebaseAnalytics.instance.logEvent(
+              name: 'REVIEW_popup_ask',
+            );
             return showDialog<void>(
               context: navigatorKey.currentContext!,
               barrierDismissible: false,
@@ -274,6 +278,9 @@ class _Start extends State<Start> {
                     FilledButton(
                       onPressed: () {
                         Navigator.pop(context);
+                        FirebaseAnalytics.instance.logEvent(
+                          name: 'REVIEW_popup_dismiss',
+                        );
                         gemairoBox.put("reviewed", true);
                       },
                       // style: ButtonStyle(
@@ -287,6 +294,9 @@ class _Start extends State<Start> {
                       onPressed: () {
                         Navigator.pop(context);
                         gemairoBox.put("reviewed", true);
+                        FirebaseAnalytics.instance.logEvent(
+                          name: 'REVIEW_popup_review',
+                        );
                         inAppReview.requestReview();
                       },
                       child: const Text("Ja!"),
@@ -294,6 +304,10 @@ class _Start extends State<Start> {
                   ],
                 );
               },
+            );
+          } else {
+            FirebaseAnalytics.instance.logEvent(
+              name: 'REVIEW_popup_unavailable',
             );
           }
         },
