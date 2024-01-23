@@ -219,7 +219,6 @@ class _Start extends State<Start> {
   int screenIndex = 0;
 
   void handleScreenChanged(int selectedScreen) {
-    RateLimitOverlay.of(context).during(const Duration(seconds: 10));
     setState(() {
       screenIndex = selectedScreen;
     });
