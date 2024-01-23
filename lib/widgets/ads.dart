@@ -86,7 +86,7 @@ class BottomBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool showAd = FirebaseRemoteConfig.instance.getBool('ads_bottom_enabled');
+    bool showAd = FirebaseRemoteConfig.instance.getBool('ads_bottom');
     String bannerSize =
         FirebaseRemoteConfig.instance.getString('ads_bottom_size');
 
@@ -102,7 +102,8 @@ class BottomBanner extends StatelessWidget {
               decoration: BoxDecoration(
                   color: Theme.of(context).navigationBarTheme.backgroundColor),
               child: Advertisement(
-                size: bannerSize == 'large' ? AdSize.fullBanner : AdSize.banner,
+                size:
+                    bannerSize == 'large' ? AdSize.largeBanner : AdSize.banner,
                 type: 'static_banner',
               )),
         ),

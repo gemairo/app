@@ -133,15 +133,15 @@ class Ads {
     return pool[0] == 'saaf' ? true : false;
   }
 
-  Widget bannerAd(context) {
+  Widget bannerAd(BuildContext context, {AdSize size = AdSize.largeBanner}) {
     Widget googleAd = Container(
-      constraints: const BoxConstraints(
-        minHeight: 70.0 + 7.0 + 7.0,
+      constraints: BoxConstraints(
+        minHeight: size == AdSize.banner ? 10 : 70.0 + 7.0 + 7.0,
       ),
       width: double.infinity,
       color: Theme.of(context).colorScheme.surfaceVariant,
-      child: const Advertisement(
-        size: AdSize.largeBanner,
+      child: Advertisement(
+        size: size,
       ),
     );
 
