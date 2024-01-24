@@ -293,6 +293,25 @@ class _GradeInformation extends State<GradeInformation> {
                   subtitle: Text(widget.grade.weight.displayNumber()),
                   leading: const Icon(Icons.balance),
                 ),
+                if (grades.isNotEmpty &&
+                    !widget.grade.changeInAverage(grades).isNaN)
+                  Builder(builder: (context) {
+                    double averageBefore = widget.grade.averageBefore(grades);
+                    double averageAfter = widget.grade.averageAfter(grades);
+                    double change = averageAfter - averageBefore;
+                    return ListTile(
+                      title: const Text("Impact op gemiddelde"), // TODO: l10n
+                      subtitle: Text(
+                          "${change.isFinite ? '+' : ''}${change.displayNumber()} naar een ${averageAfter.displayNumber()}"), // TODO: l10n
+                      leading: RotatedBox(
+                        quarterTurns:
+                            (averageAfter - averageBefore).isNegative ? 1 : 0,
+                        child: const Icon(
+                          Icons.arrow_outward,
+                        ),
+                      ),
+                    );
+                  }),
                 ListTile(
                   title: Text(AppLocalizations.of(context)!.period),
                   subtitle: Text(
