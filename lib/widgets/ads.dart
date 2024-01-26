@@ -31,7 +31,7 @@ class _Advertisement extends State<Advertisement> {
 
   /// Loads a native ad.
   void loadAd({AdSize size = AdSize.fluid, String type = 'banner'}) async {
-    final String unitId = Ads.instance.getAdmobUnitId(type);
+    final String unitId = Ads.instance?.getAdmobUnitId(type) ?? "";
 
     if (unitId.isEmpty) return;
 
@@ -58,7 +58,7 @@ class _Advertisement extends State<Advertisement> {
   void initState() {
     super.initState();
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      loadAd(size: widget.size, type: widget.type);
+      if (Ads.instance != null) loadAd(size: widget.size, type: widget.type);
     });
   }
 
@@ -86,9 +86,12 @@ class BottomBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool showAd = FirebaseRemoteConfig.instance.getBool('ads_bottom');
-    String bannerSize =
-        FirebaseRemoteConfig.instance.getString('ads_bottom_size');
+    bool showAd = !(Platform.isIOS || Platform.isAndroid)
+        ? false
+        : FirebaseRemoteConfig.instance.getBool('ads_bottom_enabled');
+    String bannerSize = !(Platform.isIOS || Platform.isAndroid)
+        ? ""
+        : FirebaseRemoteConfig.instance.getString('ads_bottom_size');
 
     if (isEnabled != null) {
       showAd = isEnabled!;

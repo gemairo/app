@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -22,7 +24,7 @@ class _SettingsReminder extends State<SettingsReminder> {
   @override
   void dispose() {
     super.dispose();
-    Ads.instance.checkGDPRConsent();
+    Ads.instance?.checkGDPRConsent();
   }
 
   @override
@@ -89,15 +91,18 @@ class _SettingsReminder extends State<SettingsReminder> {
                               });
                             }
 
-                            await FirebaseMessaging.instance.requestPermission(
-                              alert: true,
-                              announcement: false,
-                              badge: true,
-                              carPlay: false,
-                              criticalAlert: false,
-                              provisional: false,
-                              sound: true,
-                            );
+                            if (Platform.isAndroid || Platform.isIOS) {
+                              await FirebaseMessaging.instance
+                                  .requestPermission(
+                                alert: true,
+                                announcement: false,
+                                badge: true,
+                                carPlay: false,
+                                criticalAlert: false,
+                                provisional: false,
+                                sound: true,
+                              );
+                            }
 
                             Navigator.pushReplacement(
                               context,

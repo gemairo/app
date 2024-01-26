@@ -63,7 +63,7 @@ class AccountProvider extends ChangeNotifier {
     config.activeProfileId = newid ?? config.activeProfileId;
     config.save();
     notifyListeners();
-    Saaf.instance.setAdRequest(force: true);
+    Saaf.instance?.setAdRequest(force: true);
   }
 
   void changeSchoolYear(int newid) {

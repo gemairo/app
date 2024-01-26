@@ -252,8 +252,9 @@ Future<Map<dynamic, dynamic>?> showMagisterLoginDialog(
       ),
     );
 
-  Future<void> loginWithBrowser() async {
+  Future<void> loginWithBrowser({bool useWebview = true}) async {
     if (await WebviewWindow.isWebviewAvailable() &&
+        useWebview &&
         !Platform.isIOS &&
         !Platform.isAndroid) {
       final webview = await WebviewWindow.create(
@@ -261,8 +262,7 @@ Future<Map<dynamic, dynamic>?> showMagisterLoginDialog(
             windowWidth: 400,
             windowHeight: 640,
             title: 'Login met Magister',
-            titleBarTopPadding: Platform.isMacOS ? 30 : 0,
-            titleBarHeight: 0,
+            titleBarTopPadding: Platform.isMacOS ? 20 : 0,
             useWindowPositionAndSize: true),
       );
       webview
@@ -333,9 +333,14 @@ Future<Map<dynamic, dynamic>?> showMagisterLoginDialog(
                       content:
                           Text("Please login with the opened browser instance"),
                       actions: [
+                        FilledButton.tonalIcon(
+                            onPressed: () =>
+                                loginWithBrowser(useWebview: false),
+                            icon: Icon(Icons.open_in_browser),
+                            label: Text("Open in browser")),
                         FilledButton.icon(
                             onPressed: () => loginWithBrowser(),
-                            icon: Icon(Icons.open_in_browser),
+                            icon: Icon(Icons.open_in_new),
                             label: Text("Openen"))
                       ],
                     );

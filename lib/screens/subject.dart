@@ -44,7 +44,7 @@ class _SubjectStatisticsView extends State<SubjectStatisticsView> {
 
   @override
   void initState() {
-    Ads.instance.handleNavigate(widget.subject.name);
+    Ads.instance?.handleNavigate(widget.subject.name);
     super.initState();
   }
 
@@ -94,10 +94,11 @@ class _SubjectStatisticsView extends State<SubjectStatisticsView> {
                           grades: grades,
                           calcNewAverage: false),
                     ))))),
-        StaggeredGridTile.fit(
-          crossAxisCellCount: 2,
-          child: Ads.instance.bannerAd(context),
-        ),
+        if (Ads.instance != null)
+          StaggeredGridTile.fit(
+            crossAxisCellCount: 2,
+            child: Ads.instance!.bannerAd(context),
+          ),
         StaggeredGridTile.fit(
             crossAxisCellCount: 2,
             child: SizedBox(

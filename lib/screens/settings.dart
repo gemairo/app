@@ -292,7 +292,7 @@ class _SettingsView extends State<SettingsView> {
         ),
         ListTile(
           onTap: () async {
-            await Ads.instance.checkGDPRConsent();
+            await Ads.instance?.checkGDPRConsent();
           },
           title: Text("GDPR"),
           leading: const Icon(Icons.ads_click),
@@ -305,6 +305,14 @@ class _SettingsView extends State<SettingsView> {
             title: const Text("Email"),
             subtitle: Text(AppLocalizations.of(context)!.discordExpl),
             leading: const Icon(Icons.mail),
+            trailing: const CircleAvatar(child: Icon(Icons.open_in_new))),
+        ListTile(
+            onTap: () => launchUrl(Uri.parse("https://discord.gg/uZ7whYj"),
+                mode: LaunchMode.externalApplication),
+            title: Text("Discord"),
+            subtitle: Text(
+                "Praat mee over Gemairo met andere geïnteresseerden"), //TODO: l10n
+            leading: const Icon(Icons.discord),
             trailing: const CircleAvatar(child: Icon(Icons.open_in_new))),
         ListTile(
             onTap: () => launchUrl(

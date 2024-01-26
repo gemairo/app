@@ -26,9 +26,13 @@ class Saaf {
     });
   }
 
-  static Saaf get instance {
-    String defaultAppInstance = 'gemairo';
-    return Saaf._instanceFor(app: defaultAppInstance);
+  static Saaf? get instance {
+    //Saaf does not support the desktop platform
+    if (Platform.isAndroid || Platform.isIOS) {
+      String defaultAppInstance = 'gemairo';
+      return Saaf._instanceFor(app: defaultAppInstance);
+    }
+    return null;
   }
 
   saaf.AdRequest _adRequest = saaf.AdRequest(

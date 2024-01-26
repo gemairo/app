@@ -27,7 +27,7 @@ class _SearchView extends State<SearchView> {
   @override
   void initState() {
     super.initState();
-    Ads.instance.handleNavigate('search');
+    Ads.instance?.handleNavigate('search');
   }
 
   void addOrRemoveBadge(bool value, GradeListBadges badge) {

@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:firebase_remote_config/firebase_remote_config.dart';
@@ -46,7 +47,7 @@ class _SchoolYearStatisticsView extends State<SchoolYearStatisticsView> {
   @override
   void initState() {
     super.initState();
-    Ads.instance.handleNavigate('year');
+    Ads.instance?.handleNavigate('year');
   }
 
   @override
@@ -88,10 +89,11 @@ class _SchoolYearStatisticsView extends State<SchoolYearStatisticsView> {
                 calendarEvents: acP.person.calendarEvents,
               )),
         ),
-        StaggeredGridTile.fit(
-          crossAxisCellCount: 2,
-          child: Ads.instance.bannerAd(context),
-        ),
+        if (Ads.instance != null)
+          StaggeredGridTile.fit(
+            crossAxisCellCount: 2,
+            child: Ads.instance!.bannerAd(context),
+          ),
         if (grades.numericalGrades.isNotEmpty)
           StaggeredGridTile.fit(
               crossAxisCellCount: 2,
@@ -147,15 +149,16 @@ class _SchoolYearStatisticsView extends State<SchoolYearStatisticsView> {
         ),
       ));
 
-      int bannerEveryXGrades =
-          FirebaseRemoteConfig.instance.getInt('ads_grades_every_x_banner');
+      int bannerEveryXGrades = !(Platform.isAndroid || Platform.isIOS)
+          ? 0
+          : FirebaseRemoteConfig.instance.getInt('ads_grades_every_x_banner');
       if (bannerEveryXGrades > 0) {
         int bannerCount = children.length ~/ bannerEveryXGrades;
         if (children.length == bannerEveryXGrades) {
           bannerCount = 1;
         }
 
-        if (bannerCount > 0) {
+        if (bannerCount > 0 && Ads.instance != null) {
           AdSize size =
               FirebaseRemoteConfig.instance.getString('ads_grades_size') ==
                       'large'
@@ -168,7 +171,7 @@ class _SchoolYearStatisticsView extends State<SchoolYearStatisticsView> {
                 padding: const EdgeInsets.symmetric(
                   horizontal: 8.0,
                 ),
-                child: Ads.instance.bannerAd(context, size: size),
+                child: Ads.instance!.bannerAd(context, size: size),
               ),
             );
           }

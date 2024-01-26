@@ -59,6 +59,13 @@ Future<void> initHive() async {
 }
 
 void main(args) async {
+  //Desktop webview
+  if (runWebViewTitleBarWidget(args)) {
+    return;
+  }
+
+  WidgetsFlutterBinding.ensureInitialized();
+
   await initHive();
 
   await Hive.openBox<Config>('config');
@@ -72,9 +79,7 @@ void main(args) async {
     SystemUiMode.edgeToEdge,
   );
 
-  WidgetsFlutterBinding.ensureInitialized();
-
-  if (!Platform.isLinux) {
+  if (Platform.isIOS || Platform.isAndroid) {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
@@ -84,17 +89,6 @@ void main(args) async {
           kDebugMode ? Duration.zero : const Duration(hours: 1),
     ));
     await FirebaseRemoteConfig.instance.fetchAndActivate();
-
-    // await AppTrackingTransparency.requestTrackingAuthorization();
-    // MobileAds.instance.initialize();
-    // final RequestConfiguration requestConfiguration = RequestConfiguration(
-    //     tagForUnderAgeOfConsent: TagForUnderAgeOfConsent.yes);
-    // MobileAds.instance.updateRequestConfiguration(requestConfiguration);
-  }
-
-  //Desktop webview
-  if (runWebViewTitleBarWidget(args)) {
-    return;
   }
 
   Box gemairoBox = await Hive.openBox('gemairo');
@@ -102,7 +96,11 @@ void main(args) async {
   gemairoBox.put('launches', launches + 1);
 
   runApp(const Gemairo());
-  BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
+
+  //Backgound fetch is only supported on mobile platforms
+  if (Platform.isIOS || Platform.isAndroid) {
+    BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
+  }
 }
 
 final GlobalKey<ScaffoldMessengerState> rootScaffoldMessengerKey =
@@ -122,7 +120,7 @@ class GemairoState extends State<Gemairo> {
   @override
   void initState() {
     super.initState();
-    if (!kIsWeb) initPlatformState();
+    if (Platform.isIOS || Platform.isAndroid) initPlatformState();
   }
 
   void update() {
@@ -160,6 +158,7 @@ class GemairoState extends State<Gemairo> {
         return ThemeData(
             brightness: useDarkMode ? Brightness.dark : Brightness.light,
             colorScheme: colorScheme,
+            visualDensity: VisualDensity.standard,
             platform: Platform.isLinux ? TargetPlatform.android : null,
             useMaterial3: true,
             tooltipTheme: TooltipThemeData(
@@ -237,8 +236,8 @@ class _Start extends State<Start> {
     if (AccountManager().personList.isNotEmpty &&
         AccountManager().getActive().profiles.isNotEmpty) {
       Saaf.instance
-          .initialize()
-          .then((_) => Saaf.instance.handleTakeover(context));
+          ?.initialize()
+          .then((_) => Saaf.instance?.handleTakeover(context));
     }
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -247,6 +246,7 @@ class _Start extends State<Start> {
   }
 
   checkReview() {
+    if (!(Platform.isAndroid || Platform.isIOS)) return;
     Box gemairoBox = Hive.box('gemairo');
     int launches = gemairoBox.get('launches', defaultValue: 0);
     bool reviewed = gemairoBox.get('reviewed', defaultValue: false);

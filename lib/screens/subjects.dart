@@ -35,7 +35,7 @@ class _SubjectsListView extends State<SubjectsListView> {
   @override
   void initState() {
     super.initState();
-    Ads.instance.handleNavigate('subjects');
+    Ads.instance?.handleNavigate('subjects');
   }
 
   @override
@@ -135,11 +135,11 @@ class _SubjectsListView extends State<SubjectsListView> {
           ))
     ];
 
-    bool showLeaderboard =
+    bool showLeaderboard = Ads.instance != null &&
         FirebaseRemoteConfig.instance.getBool('ads_subjects_leaderboard');
     if (widgets.length >= 8) {
-      if (!showLeaderboard) {
-        widgets.insert(6, Ads.instance.bannerAd(context));
+      if (!showLeaderboard && Ads.instance != null) {
+        widgets.insert(6, Ads.instance!.bannerAd(context));
       } else {
         showLeaderboard = true;
       }
@@ -182,7 +182,7 @@ class _SubjectsListView extends State<SubjectsListView> {
           const SizedBox(height: 10),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Ads.instance.bannerAd(context),
+            child: Ads.instance?.bannerAd(context),
           ),
           const SizedBox(height: 10),
           Padding(

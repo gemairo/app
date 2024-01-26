@@ -67,7 +67,7 @@ class _FactsHeader extends State<FactsHeader> {
           //     .toList();
           // if (index == (facts.length / 2).ceil()) {
           //   return FactCard(
-          //       title: AppLocalizations.of(context)!.precentSufficient,
+          //       title: AppLocalizations.of(context)!.percentSufficient,
           //       value:
           //           "${widget.grades.where((grade) => grade.isSufficient).length}/${widget.grades.length}",
           //       extra: FactCardProgress(
@@ -131,7 +131,7 @@ class _FactsHeader extends State<FactsHeader> {
         //           .toList();
         //       if (index == (facts.length / 2).ceil()) {
         //         return FactCard(
-        //             title: AppLocalizations.of(context)!.precentSufficient,
+        //             title: AppLocalizations.of(context)!.percentSufficient,
         //             value:
         //                 "${widget.grades.where((grade) => grade.isSufficient).length}/${widget.grades.length}",
         //             extra: FactCardProgress(

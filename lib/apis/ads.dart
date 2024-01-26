@@ -48,9 +48,12 @@ class Ads {
     });
   }
 
-  static Ads get instance {
-    String defaultAppInstance = 'gemairo';
-    return Ads._instanceFor(app: defaultAppInstance);
+  static Ads? get instance {
+    if (Platform.isAndroid || Platform.isIOS) {
+      String defaultAppInstance = 'gemairo';
+      return Ads._instanceFor(app: defaultAppInstance);
+    }
+    return null;
   }
 
   Future<void> initialize() async {
@@ -151,7 +154,7 @@ class Ads {
       return googleAd;
     }
 
-    return Saaf.instance.bannerAd(context, googleAd);
+    return Saaf.instance?.bannerAd(context, googleAd) ?? const SizedBox();
   }
 
   Future<void> showInterstitial() async {

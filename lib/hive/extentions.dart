@@ -75,11 +75,11 @@ extension GradeCalculations on List<Grade> {
   }
 
   double getPresentageSufficient() {
-    double precentage = (useable.where((grade) => grade.isSufficient).length /
+    double percentage = (useable.where((grade) => grade.isSufficient).length /
             useable.length *
             100)
         .roundToDouble();
-    return precentage.isNaN ? 0 : precentage;
+    return percentage.isNaN ? 0 : percentage;
   }
 
   Grade? getHighest() {
@@ -227,10 +227,10 @@ extension GradeCalculations on List<Grade> {
                 ], context: context)),
       if (where((grade) => !grade.sufficient).isNotEmpty)
         Fact(
-            title: AppLocalizations.of(context)!.precentInsufficient,
+            title: AppLocalizations.of(context)!.percentInsufficient,
             value: "${(100 - getPresentageSufficient()).displayNumber()}%"),
       Fact(
-          title: AppLocalizations.of(context)!.precentSufficient,
+          title: AppLocalizations.of(context)!.percentSufficient,
           value: "${getPresentageSufficient().displayNumber()}%"),
       if (getLowest() != null)
         Fact(

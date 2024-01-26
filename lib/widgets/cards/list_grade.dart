@@ -266,19 +266,47 @@ class _GradeInformation extends State<GradeInformation> {
                 style: Theme.of(context).textTheme.labelSmall,
               ),
             ),
-          if (grades.isNotEmpty && !widget.grade.changeInAverage(grades).isNaN)
-            changeInAverageBadge(context, widget.grade.changeInAverage(grades)),
         ]),
         leading: GradeAvatar(
           gradeString: widget.grade.gradeString,
           isSufficient: widget.grade.isSufficient,
         ),
       ),
+      if (grades.isNotEmpty && !widget.grade.changeInAverage(grades).isNaN)
+        Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            child: GemairoCard(
+                elevation: 0,
+                child: Builder(builder: (context) {
+                  double averageBefore = widget.grade.averageBefore(grades);
+                  double averageAfter = widget.grade.averageAfter(grades);
+                  double change = averageBefore - averageAfter;
+                  return ListTile(
+                    title: const Text("Impact op gemiddelde"), // TODO: l10n
+                    subtitle: Text(
+                        "${change.isNegative ? '' : '+'}${change.displayNumber()} naar een ${averageAfter.displayNumber()}"), // TODO: l10n
+                    leading: RotatedBox(
+                      quarterTurns:
+                          (averageAfter - averageBefore).isNegative ? 0 : 1,
+                      child: const Icon(
+                        Icons.arrow_outward,
+                      ),
+                    ),
+                  );
+                }))),
+      Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          child: GemairoCard(
+            isFilled: false,
+            child: ListTile(
+              leading: const Icon(Icons.info_outline),
+              title: Text(AppLocalizations.of(context)!.information),
+            ),
+          )),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         child: GemairoCard(
             elevation: 0,
-            title: Text(AppLocalizations.of(context)!.information),
             child: Column(
               children: [
                 ListTile(
@@ -293,25 +321,6 @@ class _GradeInformation extends State<GradeInformation> {
                   subtitle: Text(widget.grade.weight.displayNumber()),
                   leading: const Icon(Icons.balance),
                 ),
-                if (grades.isNotEmpty &&
-                    !widget.grade.changeInAverage(grades).isNaN)
-                  Builder(builder: (context) {
-                    double averageBefore = widget.grade.averageBefore(grades);
-                    double averageAfter = widget.grade.averageAfter(grades);
-                    double change = averageAfter - averageBefore;
-                    return ListTile(
-                      title: const Text("Impact op gemiddelde"), // TODO: l10n
-                      subtitle: Text(
-                          "${change.isFinite ? '+' : ''}${change.displayNumber()} naar een ${averageAfter.displayNumber()}"), // TODO: l10n
-                      leading: RotatedBox(
-                        quarterTurns:
-                            (averageAfter - averageBefore).isNegative ? 1 : 0,
-                        child: const Icon(
-                          Icons.arrow_outward,
-                        ),
-                      ),
-                    );
-                  }),
                 ListTile(
                   title: Text(AppLocalizations.of(context)!.period),
                   subtitle: Text(
@@ -384,10 +393,11 @@ class _GradeInformation extends State<GradeInformation> {
                       preFillWeight: widget.grade.weight,
                       calcNewAverage: false),
                 ))),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          child: Ads.instance.bannerAd(context),
-        ),
+        if (Ads.instance != null)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            child: Ads.instance!.bannerAd(context),
+          ),
         Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
             child: GemairoCard(
