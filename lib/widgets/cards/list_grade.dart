@@ -282,9 +282,10 @@ class _GradeInformation extends State<GradeInformation> {
                   double averageAfter = widget.grade.averageAfter(grades);
                   double change = averageBefore - averageAfter;
                   return ListTile(
-                    title: const Text("Impact op gemiddelde"), // TODO: l10n
-                    subtitle: Text(
-                        "${change.isNegative ? '' : '+'}${change.displayNumber()} naar een ${averageAfter.displayNumber()}"), // TODO: l10n
+                    title: Text(AppLocalizations.of(context)!.impactOnAverage),
+                    subtitle: Text(AppLocalizations.of(context)!.changeInAverage(
+                        "${change.isNegative ? '' : '+'}${change.displayNumber()}",
+                        averageAfter.displayNumber())),
                     leading: RotatedBox(
                       quarterTurns:
                           (averageAfter - averageBefore).isNegative ? 0 : 1,

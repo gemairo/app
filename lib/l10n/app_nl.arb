@@ -48,6 +48,16 @@
       }
     }
   },
+  "@changeInAverage": {
+    "placeholders": {
+      "change": {
+        "type": "String"
+      },
+      "newAverage": {
+        "type": "String"
+      }
+    }
+  },
   "accountExistExpl": "Scan de QR code, om dit account te delen met anderen.\nHij is maar een keer geldig.",
   "accountExistWarning": "Dit account bestaat al!",
   "activeSchoolyears": "Active schooljaren",
@@ -210,5 +220,12 @@
   "description": "Beschrijving",
   "unknownWeights": "Onbekende wegingen",
   "unknownWeightsDesc": "Selecteer de schooljaren waarvoor je de wegingen wilt ophalen. Dit kan later ook nog.",
-  "getGrades": "Ophalen" 
+  "getGrades": "Ophalen",
+  "feedbackTitle": "Blij met Gemairo?",
+  "feedbackYes": "Ja!",
+  "feedbackNo": "Nee :(",
+  "settingsDiscordExpl": "Geïnteresseerd hoe het er achter de schermen aan toe gaat?",
+  "subjectGraphs": "Grafieken",
+  "impactOnAverage": "Impact op gemiddelde",
+  "changeInAverage": "{change} naar een {newAverage}"
 }

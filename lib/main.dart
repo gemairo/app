@@ -275,7 +275,7 @@ class _Start extends State<Start> {
               builder: (BuildContext context) {
                 return AlertDialog(
                   actionsAlignment: MainAxisAlignment.start,
-                  title: const Text("Blij met Gemairo?"), // TODO: l10n
+                  title: Text(AppLocalizations.of(context)!.feedbackTitle),
                   actions: [
                     FilledButton(
                       onPressed: () {
@@ -285,12 +285,7 @@ class _Start extends State<Start> {
                         );
                         gemairoBox.put("reviewed", true);
                       },
-                      // style: ButtonStyle(
-                      //   backgroundColor: MaterialStateProperty.all(
-                      //     Colors.transparent,
-                      //   ),
-                      // ),
-                      child: const Text("Nee :("),
+                      child: Text(AppLocalizations.of(context)!.feedbackNo),
                     ),
                     FilledButton(
                       onPressed: () {
@@ -301,7 +296,7 @@ class _Start extends State<Start> {
                         );
                         inAppReview.requestReview();
                       },
-                      child: const Text("Ja!"),
+                      child: Text(AppLocalizations.of(context)!.feedbackYes),
                     )
                   ],
                 );

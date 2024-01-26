@@ -88,7 +88,7 @@ class BottomBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     bool showAd = !(Platform.isIOS || Platform.isAndroid)
         ? false
-        : FirebaseRemoteConfig.instance.getBool('ads_bottom_enabled');
+        : FirebaseRemoteConfig.instance.getBool('ads_bottom');
     String bannerSize = !(Platform.isIOS || Platform.isAndroid)
         ? ""
         : FirebaseRemoteConfig.instance.getString('ads_bottom_size');

@@ -310,8 +310,7 @@ class _SettingsView extends State<SettingsView> {
             onTap: () => launchUrl(Uri.parse("https://discord.gg/uZ7whYj"),
                 mode: LaunchMode.externalApplication),
             title: Text("Discord"),
-            subtitle: Text(
-                "Praat mee over Gemairo met andere geïnteresseerden"), //TODO: l10n
+            subtitle: Text(AppLocalizations.of(context)!.settingsDiscordExpl),
             leading: const Icon(Icons.discord),
             trailing: const CircleAvatar(child: Icon(Icons.open_in_new))),
         ListTile(

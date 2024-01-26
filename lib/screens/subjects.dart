@@ -178,10 +178,10 @@ class _SubjectsListView extends State<SubjectsListView> {
                 grades: acP.schoolYear.grades,
               )),
           GemairoCardList(children: widgets),
-          const Padding(
+          Padding(
             padding: const EdgeInsets.symmetric(vertical: 4),
             child: ListTile(
-              title: Text("Grafieken"), //TODO: l10n
+              title: Text(AppLocalizations.of(context)!.subjectGraphs),
               leading: const Icon(Icons.analytics_outlined),
             ),
           ),

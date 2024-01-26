@@ -48,6 +48,16 @@
       }
     }
   },
+  "@changeInAverage": {
+    "placeholders": {
+      "change": {
+        "type": "String"
+      },
+      "newAverage": {
+        "type": "String"
+      }
+    }
+  },
   "accountExistExpl": "Scan the QR-code to share this account with others.\nIt is only valid once.",
   "accountExistWarning": "This account already exists!",
   "activeSchoolyears": "Active schoolyears",
@@ -210,5 +220,12 @@
   "description": "Description",
   "unknownWeights": "Unknown weights",
   "unknownWeightsDesc": "Select the schoolyears where you want to fetch the weights from. This can also be done at a later date.",
-  "getGrades": "Fetch" 
+  "getGrades": "Fetch",
+  "feedbackTitle": "Enjoying Gemairo?",
+  "feedbackYes": "Yup!",
+  "feedbackNo": "No :(",
+  "settingsDiscordExpl": "Interested in what goes on behind the scenes?",
+  "subjectGraphs": "Graphs",
+  "impactOnAverage": "Impact on average",
+  "changeInAverage": "{change} to a {newAverage}"
 }
