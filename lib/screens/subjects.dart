@@ -166,37 +166,6 @@ class _SubjectsListView extends State<SubjectsListView> {
               ),
             ),
           ),
-          const SizedBox(height: 10),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: GemairoCard(
-              title: Text(AppLocalizations.of(context)!.minMax),
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 8, top: 0),
-                child: BarChartSubjectsMinMax(
-                  subjects: grades.numericalGrades.subjects,
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(height: 10),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Ads.instance?.bannerAd(context),
-          ),
-          const SizedBox(height: 10),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: GemairoCard(
-              title: Text(AppLocalizations.of(context)!.averageWeight),
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 8, top: 0),
-                child: BarChartSubjectsWeight(
-                  subjects: grades.numericalGrades.subjects,
-                ),
-              ),
-            ),
-          ),
           Padding(
               padding: const EdgeInsets.symmetric(vertical: 8),
               child: FilterChips(
@@ -209,7 +178,46 @@ class _SubjectsListView extends State<SubjectsListView> {
                 grades: acP.schoolYear.grades,
               )),
           GemairoCardList(children: widgets),
-          if (showLeaderboard)
+          const Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            child: ListTile(
+              title: Text("Grafieken"), //TODO: l10n
+              leading: const Icon(Icons.analytics_outlined),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: GemairoCard(
+              title: Text(AppLocalizations.of(context)!.minMax),
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 8, top: 0),
+                child: BarChartSubjectsMinMax(
+                  subjects: grades.numericalGrades.subjects,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
+          if (Ads.instance != null) ...[
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Ads.instance?.bannerAd(context),
+            ),
+            const SizedBox(height: 8),
+          ],
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: GemairoCard(
+              title: Text(AppLocalizations.of(context)!.averageWeight),
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 8, top: 0),
+                child: BarChartSubjectsWeight(
+                  subjects: grades.numericalGrades.subjects,
+                ),
+              ),
+            ),
+          ),
+          if (showLeaderboard && Ads.instance != null)
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8),
               margin: EdgeInsets.only(top: 10),
