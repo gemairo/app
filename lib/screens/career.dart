@@ -68,6 +68,29 @@ class _CareerOverview extends State<CareerOverview> {
                       grades: grades,
                     ),
                   ))),
+        StaggeredGridTile.extent(
+            mainAxisExtent: 100,
+            crossAxisCellCount: 2,
+            child: FactCard(
+                title: AppLocalizations.of(context)!
+                    .percentSufficient
+                    .capitalize(),
+                value:
+                    "${grades.where((grade) => grade.isSufficient).length}/${grades.length}",
+                extra: FactCardProgress(
+                  value: grades.getPresentageSufficient() / 100,
+                ))),
+        ...grades.useable
+            .generateFactsList(context,
+                Provider.of<AccountProvider>(context, listen: false).person)
+            .skip(2)
+            .map((e) => StaggeredGridTile.extent(
+                mainAxisExtent: 100,
+                crossAxisCellCount: 1,
+                child: FactCard(
+                    title: e.title.capitalize(),
+                    value: e.value,
+                    onTap: e.onTap))),
         if (grades.numericalGrades.isNotEmpty &&
             grades
                     .map((g) => DateTime.parse(
@@ -87,18 +110,6 @@ class _CareerOverview extends State<CareerOverview> {
                       showAverage: true,
                     ),
                   ))),
-        StaggeredGridTile.fit(
-            crossAxisCellCount: 4,
-            child: GemairoCard(
-                title: Text(AppLocalizations.of(context)!.grades),
-                trailing: GradeListOptions(
-                  addOrRemoveBadge: addOrRemoveBadge,
-                ),
-                child: GradeList(
-                    showGradeCalculate: true,
-                    grades: grades
-                        .where((grade) => grade.type == GradeType.grade)
-                        .toList())))
       ],
     ];
 
@@ -126,17 +137,6 @@ class _CareerOverview extends State<CareerOverview> {
             maxCrossAxisExtent: 250,
             children: widgets,
           ),
-          if (grades.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4),
-              child: ListTile(
-                title: Text(AppLocalizations.of(context)!.grades),
-                leading: Icon(Icons.numbers),
-                trailing: GradeListOptions(
-                  addOrRemoveBadge: addOrRemoveBadge,
-                ),
-              ),
-            ),
           ...grades.sortByDate((e) => e.addedDate, doNotSort: true).entries.map(
                 (e) => Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),

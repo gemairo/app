@@ -105,6 +105,29 @@ class _SchoolYearStatisticsView extends State<SchoolYearStatisticsView> {
                       grades: grades,
                     ),
                   ))),
+        StaggeredGridTile.extent(
+            mainAxisExtent: 100,
+            crossAxisCellCount: 2,
+            child: FactCard(
+                title: AppLocalizations.of(context)!
+                    .percentSufficient
+                    .capitalize(),
+                value:
+                    "${grades.where((grade) => grade.isSufficient).length}/${grades.length}",
+                extra: FactCardProgress(
+                  value: grades.getPresentageSufficient() / 100,
+                ))),
+        ...grades.useable
+            .generateFactsList(context,
+                Provider.of<AccountProvider>(context, listen: false).person)
+            .skip(2)
+            .map((e) => StaggeredGridTile.extent(
+                mainAxisExtent: 100,
+                crossAxisCellCount: 1,
+                child: FactCard(
+                    title: e.title.capitalize(),
+                    value: e.value,
+                    onTap: e.onTap))),
         if (grades.numericalGrades.isNotEmpty &&
             grades
                     .map((g) => DateTime.parse(
@@ -224,17 +247,6 @@ class _SchoolYearStatisticsView extends State<SchoolYearStatisticsView> {
             maxCrossAxisExtent: 250,
             children: widgets,
           ),
-          if (useable.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4),
-              child: ListTile(
-                title: Text(AppLocalizations.of(context)!.grades),
-                leading: const Icon(Icons.numbers),
-                trailing: GradeListOptions(
-                  addOrRemoveBadge: addOrRemoveBadge,
-                ),
-              ),
-            ),
           ...gradesList
         ]);
   }

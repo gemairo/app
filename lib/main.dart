@@ -158,8 +158,9 @@ class GemairoState extends State<Gemairo> {
         return ThemeData(
             brightness: useDarkMode ? Brightness.dark : Brightness.light,
             colorScheme: colorScheme,
-            visualDensity: VisualDensity.standard,
-            platform: Platform.isLinux ? TargetPlatform.android : null,
+            platform: (Platform.isLinux || Platform.isMacOS)
+                ? TargetPlatform.android
+                : null,
             useMaterial3: true,
             tooltipTheme: TooltipThemeData(
               textStyle: TextStyle(color: colorScheme.onBackground),

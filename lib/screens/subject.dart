@@ -113,6 +113,29 @@ class _SubjectStatisticsView extends State<SubjectStatisticsView> {
                         context: context, grades: grades, calcNewAverage: true),
                   )),
                 ))),
+        StaggeredGridTile.extent(
+            mainAxisExtent: 100,
+            crossAxisCellCount: 2,
+            child: FactCard(
+                title: AppLocalizations.of(context)!
+                    .percentSufficient
+                    .capitalize(),
+                value:
+                    "${grades.where((grade) => grade.isSufficient).length}/${grades.length}",
+                extra: FactCardProgress(
+                  value: grades.getPresentageSufficient() / 100,
+                ))),
+        ...grades.useable
+            .generateFactsList(context,
+                Provider.of<AccountProvider>(context, listen: false).person)
+            .skip(2)
+            .map((e) => StaggeredGridTile.extent(
+                mainAxisExtent: 100,
+                crossAxisCellCount: 1,
+                child: FactCard(
+                    title: e.title.capitalize(),
+                    value: e.value,
+                    onTap: e.onTap))),
         StaggeredGridTile.fit(
             crossAxisCellCount: 2,
             child: GemairoCard(
@@ -144,17 +167,6 @@ class _SubjectStatisticsView extends State<SubjectStatisticsView> {
               maxCrossAxisExtent: 250,
               children: widgets,
             ),
-            if (grades.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4),
-                child: ListTile(
-                  title: Text(AppLocalizations.of(context)!.grades),
-                  leading: Icon(Icons.numbers),
-                  trailing: GradeListOptions(
-                    addOrRemoveBadge: addOrRemoveBadge,
-                  ),
-                ),
-              ),
             ...grades
                 .sortByDate((e) => e.addedDate, doNotSort: true)
                 .entries
