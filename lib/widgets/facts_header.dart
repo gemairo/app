@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:gemairo/apis/ads.dart';
+import 'package:gemairo/widgets/ads.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -49,6 +52,27 @@ class _FactsHeader extends State<FactsHeader> {
                         : widget.grades.average.displayNumber()),
               )),
         ),
+        if (Ads.instance != null)
+          StaggeredGridTile.count(
+            crossAxisCellCount: 2,
+            mainAxisCellCount: 1,
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: (((MediaQuery.of(context).size.width - 38) / 2)
+                          .isNegative)
+                      ? 0
+                      : (MediaQuery.of(context).size.width - 38) / 2,
+                  minHeight: double.infinity,
+                  maxHeight: double.infinity,
+                ),
+                child: const Advertisement(
+                  size: AdSize.fluid,
+                ),
+              ),
+            ),
+          ),
         StaggeredGridTile.count(
             crossAxisCellCount: 4,
             mainAxisCellCount: 1,

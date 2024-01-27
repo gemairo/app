@@ -17,6 +17,7 @@ import 'package:gemairo/widgets/charts/barchart_frequency.dart';
 import 'package:gemairo/widgets/charts/linechart_grades.dart';
 import 'package:gemairo/widgets/facts_header.dart';
 import 'package:gemairo/widgets/filter.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 
 class SubjectStatisticsView extends StatefulWidget {
@@ -136,6 +137,20 @@ class _SubjectStatisticsView extends State<SubjectStatisticsView> {
                     title: e.title.capitalize(),
                     value: e.value,
                     onTap: e.onTap))),
+        if (grades.useable
+            .generateFactsList(context,
+                Provider.of<AccountProvider>(context, listen: false).person)
+            .length
+            .isOdd)
+          const StaggeredGridTile.extent(
+            mainAxisExtent: 100,
+            crossAxisCellCount: 1,
+            child: SizedBox.expand(
+              child: Advertisement(
+                size: AdSize.fluid,
+              ),
+            ),
+          ),
         StaggeredGridTile.fit(
             crossAxisCellCount: 2,
             child: GemairoCard(

@@ -166,6 +166,13 @@ class _SubjectsListView extends State<SubjectsListView> {
               ),
             ),
           ),
+          if (Ads.instance != null) ...[
+            const SizedBox(height: 8),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Ads.instance?.bannerAd(context),
+            ),
+          ],
           Padding(
               padding: const EdgeInsets.symmetric(vertical: 8),
               child: FilterChips(

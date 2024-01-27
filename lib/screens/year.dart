@@ -10,6 +10,7 @@ import 'package:gemairo/apis/ads.dart';
 import 'package:gemairo/apis/saaf.dart';
 import 'package:gemairo/hive/adapters.dart';
 import 'package:gemairo/hive/extentions.dart';
+import 'package:gemairo/widgets/ads.dart';
 import 'package:gemairo/widgets/announcements.dart';
 import 'package:gemairo/widgets/bottom_sheet.dart';
 import 'package:gemairo/widgets/card.dart';
@@ -128,6 +129,20 @@ class _SchoolYearStatisticsView extends State<SchoolYearStatisticsView> {
                     title: e.title.capitalize(),
                     value: e.value,
                     onTap: e.onTap))),
+        if (grades.useable
+            .generateFactsList(context,
+                Provider.of<AccountProvider>(context, listen: false).person)
+            .length
+            .isOdd)
+          const StaggeredGridTile.extent(
+            mainAxisExtent: 100,
+            crossAxisCellCount: 1,
+            child: SizedBox.expand(
+              child: Advertisement(
+                size: AdSize.fluid,
+              ),
+            ),
+          ),
         if (grades.numericalGrades.isNotEmpty &&
             grades
                     .map((g) => DateTime.parse(
