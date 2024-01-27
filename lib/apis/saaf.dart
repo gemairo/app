@@ -68,7 +68,8 @@ class Saaf {
 
     List<String> exclude = [...bannerExclude, ...takeoverExclude];
 
-    Person? person = AccountManager().getActive().activeProfile;
+    Account account = AccountManager().getActive();
+    Person? person = account.activeProfile;
 
     //If there is no user info
     if (person == null) {
@@ -81,6 +82,17 @@ class Saaf {
       );
 
       return _adRequest;
+    }
+
+    // Analytics
+    FirebaseAnalytics.instance.setUserId(id: person.uuid.toString());
+    FirebaseAnalytics.instance
+        .setUserProperty(name: 'service', value: account.apiType.toString());
+    if (account.apiType == AccountAPITypes.magister) {
+      FirebaseAnalytics.instance.setUserProperty(
+          name: 'school', value: Uri.parse(account.apiStorage!.baseUrl).host);
+      FirebaseAnalytics.instance
+          .setUserProperty(name: 'type', value: account.accountType.toString());
     }
 
     List<Grade> grades = person.activeSchoolYear.grades.useable;

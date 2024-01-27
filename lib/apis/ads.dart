@@ -80,7 +80,8 @@ class Ads {
     }
 
     String unifiedName = mapClass(screenName);
-    await FirebaseAnalytics.instance.logScreenView(screenName: unifiedName);
+    await FirebaseAnalytics.instance
+        .logScreenView(screenName: unifiedName, screenClass: unifiedName);
   }
 
   String getAdmobUnitId(String type) {
