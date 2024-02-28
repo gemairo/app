@@ -115,7 +115,7 @@ Subject randomSubject() {
 Grade randomGrade(Subject subject) {
   return Grade(
       gradeString: ((random.nextInt(90) + 10) / 10).toString(),
-      weight: random.nextInt(3).toDouble() + 1,
+      weight: random.nextInt(20).toDouble() + 1,
       subject: subject,
       description: "Description for a ${subject.name} grade",
       addedDate: DateTime.now().subtract(Duration(days: random.nextInt(250))),

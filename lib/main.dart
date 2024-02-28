@@ -31,7 +31,11 @@ import 'hive/adapters.dart';
 part 'background_tasks.dart';
 
 Future<void> initHive() async {
-  await Hive.initFlutter();
+  if (Platform.isLinux) {
+    Hive.init("./tmp/");
+  } else {
+    await Hive.initFlutter();
+  }
 
   if (!Hive.isAdapterRegistered(14)) Hive.registerAdapter(ConfigAdapter());
 

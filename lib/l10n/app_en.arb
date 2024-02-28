@@ -227,5 +227,9 @@
   "settingsDiscordExpl": "Interested in what goes on behind the scenes?",
   "subjectGraphs": "Graphs",
   "impactOnAverage": "Impact on average",
-  "changeInAverage": "{change} to a {newAverage}"
+  "changeInAverage": "{change} to a {newAverage}",
+  "carouselAutoscroll": "Automatic carousel scroll",
+  "carouselAutoscrollExpl": "Carousels such as the recent grades and future tests scroll on their own",
+  "gradeBagdes": "Grade badges",
+  "gradeBagdesExpl": "Information about a grade at a glance"
 }

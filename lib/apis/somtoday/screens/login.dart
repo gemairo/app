@@ -58,7 +58,7 @@ class _SignIn extends StatelessWidget {
                             mode: LaunchMode.externalNonBrowserApplication,
                             webViewConfiguration: const WebViewConfiguration(
                                 enableDomStorage: false));
-                        redirectUrl.value = (await linkStream.first)!;
+                        // redirectUrl.value = (await linkStream.first)!;
                         break;
                     }
                   },

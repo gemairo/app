@@ -86,14 +86,15 @@ class _SearchView extends State<SearchView> {
                 decoration: InputDecoration(
                     prefixIcon: const Icon(Icons.search),
                     suffixIcon: Wrap(children: [
-                      IconButton(
-                        onPressed: () {
-                          setState(() {
-                            controller.clear();
-                          });
-                        },
-                        icon: const Icon(Icons.clear),
-                      ),
+                      if (controller.text.isNotEmpty)
+                        IconButton(
+                          onPressed: () {
+                            setState(() {
+                              controller.clear();
+                            });
+                          },
+                          icon: const Icon(Icons.clear),
+                        ),
                       GradeListOptions(
                         addOrRemoveBadge: addOrRemoveBadge,
                       )

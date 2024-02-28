@@ -98,7 +98,7 @@ class ScaffoldSkeleton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        primary: false,
+        primary: appBar != null,
         appBar: appBar,
         bottomNavigationBar: bottomNavigationBar,
         backgroundColor: backgroundColor,

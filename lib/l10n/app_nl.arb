@@ -146,10 +146,10 @@
   "resetTurnedOffGradesExpl": "Reset {number} uitgeschakelde cijfers",
   "rounded": "Afgerond",
   "searchExpl": "Zoek naar cijfers",
-  "searchForGradesdescriptionsAndTeachers": "Zoek voor waardes, beschrijvingen en docenten",
+  "searchForGradesdescriptionsAndTeachers": "Zoek naar waardes, beschrijvingen en docenten",
   "searchStatistics": "Zoek statistieken",
   "searchView": "Zoeken",
-  "searchaSchool": "Zoek voor scholen",
+  "searchaSchool": "Zoek naar scholen",
   "seeStatistics": "Zie statistieken",
   "settings": "Instellingen",
   "somethingWentWrong": "Oeps, er ging wat fout!",
@@ -227,5 +227,9 @@
   "settingsDiscordExpl": "Geïnteresseerd hoe het er achter de schermen aan toe gaat?",
   "subjectGraphs": "Grafieken",
   "impactOnAverage": "Impact op gemiddelde",
-  "changeInAverage": "{change} naar een {newAverage}"
+  "changeInAverage": "{change} naar een {newAverage}",
+  "carouselAutoscroll": "Automatische carousel scroll",
+  "carouselAutoscrollExpl": "Carousels zoals de recente cijfers en toekomstige toetsen gaan uit zichzelf heen en weer",
+  "gradeBagdes": "Grade badges",
+  "gradeBagdesExpl": "Informatie over een cijfer in een oogopslag"
 }

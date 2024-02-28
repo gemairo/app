@@ -233,6 +233,7 @@ class MagisterApi extends Magister {
                 .get("api/personen/${account.id}/kinderen?openData=%27%27"))
             .data;
         for (var child in children["Items"]) {
+          //TODO: Check if parent is allowed to see child
           await initPerson(Person(
               id: child["Id"],
               firstName: child["Roepnaam"] ?? child["Voorletters"],

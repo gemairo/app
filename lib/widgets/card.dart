@@ -3,6 +3,7 @@ import 'dart:math' as math;
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:gemairo/hive/adapters.dart';
 
 class GemairoCard extends StatelessWidget {
   const GemairoCard(
@@ -107,7 +108,9 @@ class _CarouselCard extends State<CarouselCard> {
                       enableInfiniteScroll: false,
                       viewportFraction: 1,
                       scrollPhysics: const BouncingScrollPhysics(),
-                      autoPlay: (widget.children.length > 1),
+                      autoPlay: config.autoScrollCarousel
+                          ? (widget.children.length > 1)
+                          : false,
                       autoPlayInterval: Duration(
                         seconds: (math.Random().nextInt(4) + 6),
                       ),

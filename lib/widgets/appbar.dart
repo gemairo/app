@@ -46,43 +46,48 @@ class GemairoAppBar extends StatelessWidget implements PreferredSizeWidget {
                     changeSchoolYear(context, newid: value!);
                   })),
         Dismissible(
-            key: dismissibleKey,
-            dismissThresholds: const {DismissDirection.vertical: 0.25},
-            direction: AccountManager().personList.length == 1
-                ? DismissDirection.none
-                : DismissDirection.vertical,
-            resizeDuration: null,
-            confirmDismiss: (DismissDirection direction) {
-              navigateUpOrDownPersonList(context,
-                  AccountManager().personList.indexOf(acP.person), direction);
-              return Future.value(false);
-            },
-            child: IconButton(
-              key: ValueKey<int>(acP.person.uuid),
-              icon: CircleAvatar(
-                  radius: 25,
-                  child: ClipOval(
-                      child: AspectRatio(
-                          aspectRatio: 1,
-                          child: acP.person.profilePicture != null
-                              ? Image.memory(
-                                  base64Decode(acP.person.profilePicture!),
-                                  gaplessPlayback: true,
-                                  fit: BoxFit.cover,
-                                )
-                              : const Icon(Icons.person)))),
-              onPressed: () => showDialog<String>(
-                  builder: (BuildContext context) {
-                    return AccountSwitcher(context: context);
-                  },
-                  context: context),
-            ))
+          key: dismissibleKey,
+          dismissThresholds: const {DismissDirection.vertical: 0.25},
+          direction: AccountManager().personList.length == 1
+              ? DismissDirection.none
+              : DismissDirection.vertical,
+          resizeDuration: null,
+          confirmDismiss: (DismissDirection direction) {
+            navigateUpOrDownPersonList(context,
+                AccountManager().personList.indexOf(acP.person), direction);
+            return Future.value(false);
+          },
+          child: IconButton(
+            key: ValueKey<int>(acP.person.uuid),
+            icon: CircleAvatar(
+                radius: 25,
+                child: ClipOval(
+                    child: AspectRatio(
+                        aspectRatio: 1,
+                        child: SizedBox(
+                            height: 40,
+                            child: acP.person.profilePicture != null
+                                ? Image.memory(
+                                    base64Decode(acP.person.profilePicture!),
+                                    gaplessPlayback: true,
+                                    fit: BoxFit.cover,
+                                  )
+                                : const Icon(Icons.person))))),
+            onPressed: () => showDialog<String>(
+                builder: (BuildContext context) {
+                  return AccountSwitcher(context: context);
+                },
+                context: context),
+          ),
+        )
       ],
     );
   }
 
   @override
-  Size get preferredSize => AppBar().preferredSize;
+  Size get preferredSize => AppBar(
+        toolbarHeight: 56,
+      ).preferredSize;
 }
 
 navigateUpOrDownPersonList(

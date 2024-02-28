@@ -429,8 +429,10 @@ class Config extends HiveObject {
   String? usedLocaleCode;
   @HiveField(8)
   bool noAds = false;
-  @HiveField(9, defaultValue: [])
+  @HiveField(9, defaultValue: [GradeListBadges.weight])
   List<GradeListBadges> activeBadges = [];
+  @HiveField(10, defaultValue: true)
+  bool autoScrollCarousel = true;
 }
 
 @HiveType(typeId: 15)

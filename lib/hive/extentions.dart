@@ -287,16 +287,16 @@ class Fact {
 
 extension GradeCalculation on Grade {
   double changeInAverage(List<Grade> grades) {
-    return averageBefore(grades) - averageAfter(grades);
+    return averageAfter(grades) - averageBefore(grades);
   }
 
-  double averageBefore(List<Grade> grades) {
+  double averageAfter(List<Grade> grades) {
     List<Grade> gradesBeforeGrade =
         grades.where((grade) => !addedDate.isBefore(grade.addedDate)).toList();
     return gradesBeforeGrade.average;
   }
 
-  double averageAfter(List<Grade> grades) {
+  double averageBefore(List<Grade> grades) {
     List<Grade> gradesBeforeGrade =
         grades.where((grade) => !addedDate.isBefore(grade.addedDate)).toList();
     return gradesBeforeGrade.where((grade) => grade != this).toList().average;

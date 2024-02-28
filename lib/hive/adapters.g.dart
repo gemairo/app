@@ -167,7 +167,7 @@ class PersonConfigAdapter extends TypeAdapter<PersonConfig> {
     return PersonConfig()
       ..activeSchoolYearId = fields[0] as int
       ..useForGradeCheck = fields[1] as bool
-      ..useForTestCheck = fields[2] == null ? false : fields[2] as bool
+      ..useForTestCheck = fields[2] == null ? true : fields[2] as bool
       ..supportsAssignments = fields[3] == null ? true : fields[3] as bool;
   }
 
@@ -509,14 +509,16 @@ class ConfigAdapter extends TypeAdapter<Config> {
       ..activeProfileId = fields[6] as int?
       ..usedLocaleCode = fields[7] as String?
       ..noAds = fields[8] as bool
-      ..activeBadges =
-          fields[9] == null ? [] : (fields[9] as List).cast<GradeListBadges>();
+      ..activeBadges = fields[9] == null
+          ? [GradeListBadges.weight]
+          : (fields[9] as List).cast<GradeListBadges>()
+      ..autoScrollCarousel = fields[10] == null ? true : fields[10] as bool;
   }
 
   @override
   void write(BinaryWriter writer, Config obj) {
     writer
-      ..writeByte(10)
+      ..writeByte(11)
       ..writeByte(0)
       ..write(obj.enableNotifications)
       ..writeByte(1)
@@ -536,7 +538,9 @@ class ConfigAdapter extends TypeAdapter<Config> {
       ..writeByte(8)
       ..write(obj.noAds)
       ..writeByte(9)
-      ..write(obj.activeBadges);
+      ..write(obj.activeBadges)
+      ..writeByte(10)
+      ..write(obj.autoScrollCarousel);
   }
 
   @override

@@ -115,9 +115,16 @@ class GradeTile extends StatelessWidget {
                 : null,
             onTap: onTap,
             leading: Column(children: [
-              GradeAvatar(
-                gradeString: grade.gradeString,
-                isSufficient: grade.isSufficient,
+              Badge(
+                isLabelVisible:
+                    config.activeBadges.contains(GradeListBadges.weight),
+                label: Text(
+                    "${grade.weight.displayNumber(decimalDigits: 0)}x"), //Zo beter Zielhuis?
+                alignment: Alignment.bottomRight,
+                child: GradeAvatar(
+                  gradeString: grade.gradeString,
+                  isSufficient: grade.isSufficient,
+                ),
               )
             ]),
             trailing: config.activeBadges.isNotEmpty
@@ -130,10 +137,6 @@ class GradeTile extends StatelessWidget {
                           Badge(
                               label: Text(
                                   DateFormat.yMd().format(grade.addedDate))),
-                        if (config.activeBadges
-                            .contains(GradeListBadges.weight))
-                          Badge(
-                              label: Text("${grade.weight.displayNumber()}x")),
                         if (config.activeBadges.contains(GradeListBadges.pta) &&
                             grade.isPTA == true)
                           const Badge(
@@ -280,18 +283,21 @@ class _GradeInformation extends State<GradeInformation> {
                 child: Builder(builder: (context) {
                   double averageBefore = widget.grade.averageBefore(grades);
                   double averageAfter = widget.grade.averageAfter(grades);
-                  double change = averageBefore - averageAfter;
+                  double change = averageAfter - averageBefore;
                   return ListTile(
                     title: Text(AppLocalizations.of(context)!.impactOnAverage),
                     subtitle: Text(AppLocalizations.of(context)!.changeInAverage(
                         "${change.isNegative ? '' : '+'}${change.displayNumber()}",
                         averageAfter.displayNumber())),
                     leading: RotatedBox(
-                      quarterTurns:
-                          (averageAfter - averageBefore).isNegative ? 0 : 1,
-                      child: const Icon(
-                        Icons.arrow_outward,
-                      ),
+                      quarterTurns: change.isNegative ? 1 : 0,
+                      child: (change * 100).round() == 0
+                          ? const Icon(
+                              Icons.trending_neutral,
+                            )
+                          : const Icon(
+                              Icons.arrow_outward,
+                            ),
                     ),
                   );
                 }))),
@@ -521,6 +527,9 @@ class _GradeInformation extends State<GradeInformation> {
                               : const Icon(Icons.refresh)),
                     )
                   ]),
+                ),
+                SizedBox(
+                  height: 16 + MediaQuery.of(context).padding.bottom,
                 )
               ]))),
     ]);

@@ -158,6 +158,18 @@ class _SettingsView extends State<SettingsView> {
               ),
           ],
         ),
+        SwitchListTile(
+            value: config.autoScrollCarousel,
+            title: Text(AppLocalizations.of(context)!.carouselAutoscroll),
+            secondary: const Icon(Icons.swipe_right_alt_rounded),
+            subtitle:
+                Text(AppLocalizations.of(context)!.carouselAutoscrollExpl),
+            onChanged: ((value) {
+              config.autoScrollCarousel = value;
+              config.save();
+              setState(() {});
+              Gemairo.of(context).update();
+            })),
         ListTile(
           title: Text(AppLocalizations.of(context)!.sufficientBorder),
           leading: const Icon(Icons.grading),
@@ -203,6 +215,21 @@ class _SettingsView extends State<SettingsView> {
             ),
           ),
         ),
+        ListTile(
+            title: Text(AppLocalizations.of(context)!.gradeBagdes),
+            leading: const Icon(Icons.info),
+            subtitle: Text(AppLocalizations.of(context)!.gradeBagdesExpl),
+            trailing: CircleAvatar(child: GradeListOptions(
+              addOrRemoveBadge: (value, badge) async {
+                if (value == true) {
+                  config.activeBadges.add(badge);
+                } else {
+                  config.activeBadges.remove(badge);
+                }
+                setState(() {});
+                config.save().then((value) => Gemairo.of(context).update());
+              },
+            ))),
         ListTile(
             title: Text(AppLocalizations.of(context)!.usedLanguage),
             leading: const Icon(Icons.language),
