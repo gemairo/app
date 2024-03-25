@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:collection/collection.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
@@ -227,7 +226,7 @@ class _SubjectsListView extends State<SubjectsListView> {
           if (showLeaderboard && Ads.instance != null)
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8),
-              margin: EdgeInsets.only(top: 10),
+              margin: const EdgeInsets.only(top: 10),
               height: 300,
               child: const Advertisement(size: AdSize.mediumRectangle),
             ),

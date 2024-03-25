@@ -4,7 +4,6 @@ import 'package:dynamic_color/dynamic_color.dart';
 import 'package:expandable_page_view/expandable_page_view.dart';
 import 'package:flutter/material.dart';
 import 'package:gemairo/apis/ads.dart';
-import 'package:gemairo/widgets/ads.dart';
 import 'package:gemairo/widgets/global/skeletons.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:gemairo/apis/magister.dart';
@@ -321,7 +320,7 @@ class _SettingsView extends State<SettingsView> {
           onTap: () async {
             await Ads.instance?.checkGDPRConsent();
           },
-          title: Text("GDPR"),
+          title: const Text("GDPR"),
           leading: const Icon(Icons.ads_click),
           trailing: const CircleAvatar(child: Icon(Icons.navigate_next)),
         ),
@@ -336,7 +335,7 @@ class _SettingsView extends State<SettingsView> {
         ListTile(
             onTap: () => launchUrl(Uri.parse("https://discord.gg/uZ7whYj"),
                 mode: LaunchMode.externalApplication),
-            title: Text("Discord"),
+            title: const Text("Discord"),
             subtitle: Text(AppLocalizations.of(context)!.settingsDiscordExpl),
             leading: const Icon(Icons.discord),
             trailing: const CircleAvatar(child: Icon(Icons.open_in_new))),

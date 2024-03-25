@@ -13,7 +13,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 extension Unique<E, Id> on List<E> {
   List<E> unique([Id Function(E element)? id, bool inplace = false]) {
-    final ids = Set();
+    final ids = <dynamic>{};
     var list = inplace ? this : List<E>.from(this);
     list.retainWhere((x) => ids.add(id != null ? id(x) : x as Id));
     return list;
@@ -430,7 +430,7 @@ extension DateList<E> on List<E> {
     final groupedByTime = <String, List<E>>{};
     final seenMessages = <int, bool>{};
 
-    void _addToMap(Map<String, List<E>> groupedByTime, String key, E element) {
+    void addToMap(Map<String, List<E>> groupedByTime, String key, E element) {
       if (!groupedByTime.containsKey(key)) {
         groupedByTime[key] = [];
       }
@@ -448,21 +448,21 @@ extension DateList<E> on List<E> {
         .take(take ?? length)) {
       if (dateTime!(bericht) == null) {
         if (!seenMessages.containsKey(dateTime(bericht).toString())) {
-          _addToMap(groupedByTime, 'Overige data', bericht);
+          addToMap(groupedByTime, 'Overige data', bericht);
         }
       } else if (dateTime(bericht)!.isToday) {
         if (!seenMessages.containsKey(dateTime(bericht).toString())) {
-          _addToMap(groupedByTime, 'Vandaag', bericht);
+          addToMap(groupedByTime, 'Vandaag', bericht);
           seenMessages[bericht.hashCode] = true;
         }
       } else if (dateTime(bericht)!.add(const Duration(days: 1)).isToday) {
         if (!seenMessages.containsKey(dateTime(bericht).toString())) {
-          _addToMap(groupedByTime, 'Gisteren', bericht);
+          addToMap(groupedByTime, 'Gisteren', bericht);
           seenMessages[bericht.hashCode] = true;
         }
       } else if (dateTime(bericht)!.isAfter(lastSevenDays)) {
         if (!seenMessages.containsKey(dateTime(bericht).toString())) {
-          _addToMap(groupedByTime, 'Afgelopen 7 dagen', bericht);
+          addToMap(groupedByTime, 'Afgelopen 7 dagen', bericht);
           seenMessages[bericht.hashCode] = true;
         }
       } else {
