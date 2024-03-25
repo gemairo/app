@@ -316,23 +316,6 @@ class _Start extends State<Start> {
 
   @override
   Widget build(BuildContext context) {
-    final controller = PageController(
-      initialPage: screenIndex,
-    );
-
-    void handleScreenChanged(int selectedScreen) {
-      setState(() {
-        controller.animateToPage(selectedScreen,
-            duration: const Duration(milliseconds: 500), curve: Curves.easeOut);
-      });
-    }
-
-    controller.addListener(() {
-      setState(() {
-        screenIndex = controller.page?.round() ?? screenIndex;
-      });
-    });
-
     return LayoutBuilder(builder: (context, constraints) {
       if (AccountManager().personList.isEmpty ||
           (AccountManager().personList.isNotEmpty &&
@@ -354,6 +337,22 @@ class _Start extends State<Start> {
       }
 
       if (constraints.maxWidth < 450) {
+        final controller = PageController(
+          initialPage: screenIndex,
+        );
+
+        controller.addListener(() {
+          setState(() {
+            screenIndex = controller.page?.round() ?? screenIndex;
+          });
+        });
+
+        void handleScreenChanged(int selectedScreen) {
+          controller.animateToPage(selectedScreen,
+              duration: const Duration(milliseconds: 500),
+              curve: Curves.easeOut);
+        }
+
         return Scaffold(
           appBar: GemairoAppBar(title: getAppBarTitle(screenIndex, context)),
           body: BottomBanner(
@@ -368,6 +367,12 @@ class _Start extends State<Start> {
           ),
         );
       } else {
+        void handleScreenChanged(int selectedScreen) {
+          setState(() {
+            screenIndex = selectedScreen;
+          });
+        }
+
         return Scaffold(
           body: SafeArea(
             bottom: false,
