@@ -153,31 +153,53 @@ class GemairoNavigationBar extends StatelessWidget {
 }
 
 class ScreensSwitch extends StatelessWidget {
-  const ScreensSwitch({super.key, required this.index});
+  const ScreensSwitch(
+      {super.key,
+      required this.index,
+      required this.swipeEnabled,
+      this.controller});
   final int index;
+  final bool swipeEnabled;
+  final PageController? controller;
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedSwitcher(
-        duration: const Duration(milliseconds: 250),
-        transitionBuilder: (Widget child, Animation<double> animation) {
-          return FadeTransition(opacity: animation, child: child);
-        },
-        child: Builder(
-          key: ValueKey<int>(index),
-          builder: (context) {
-            switch (index) {
-              case 0:
-                return const SchoolYearStatisticsView();
-              case 1:
-                return const SubjectsListView();
-              case 2:
-                return const SearchView();
-              default:
-                return const SchoolYearStatisticsView();
-            }
+    if (swipeEnabled && config.swipeNavigation && controller != null) {
+      return AnimatedSwitcher(
+          duration: const Duration(milliseconds: 250),
+          transitionBuilder: (Widget child, Animation<double> animation) {
+            return FadeTransition(opacity: animation, child: child);
           },
-        ));
+          child: PageView(
+            controller: controller,
+            children: const [
+              SchoolYearStatisticsView(),
+              SubjectsListView(),
+              SearchView()
+            ],
+          ));
+    } else {
+      return AnimatedSwitcher(
+          duration: const Duration(milliseconds: 250),
+          transitionBuilder: (Widget child, Animation<double> animation) {
+            return FadeTransition(opacity: animation, child: child);
+          },
+          child: Builder(
+            key: ValueKey<int>(index),
+            builder: (context) {
+              switch (index) {
+                case 0:
+                  return const SchoolYearStatisticsView();
+                case 1:
+                  return const SubjectsListView();
+                case 2:
+                  return const SearchView();
+                default:
+                  return const SchoolYearStatisticsView();
+              }
+            },
+          ));
+    }
   }
 }
 

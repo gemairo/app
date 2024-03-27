@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:gemairo/apis/saaf.dart';
 import 'package:gemairo/widgets/ads.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
 class Ads {
   String app;

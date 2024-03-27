@@ -6,7 +6,7 @@ import 'package:dynamic_color/dynamic_color.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -21,7 +21,6 @@ import 'package:gemairo/screens/login.dart';
 import 'package:gemairo/widgets/ads.dart';
 import 'package:gemairo/widgets/appbar.dart';
 import 'package:gemairo/widgets/navigation.dart';
-import 'package:gemairo/widgets/ratelimit.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:provider/provider.dart';
@@ -40,11 +39,13 @@ Future<void> initHive() async {
   if (!Hive.isAdapterRegistered(14)) Hive.registerAdapter(ConfigAdapter());
 
   if (!Hive.isAdapterRegistered(11)) Hive.registerAdapter(SchoolYearAdapter());
-  if (!Hive.isAdapterRegistered(10))
+  if (!Hive.isAdapterRegistered(10)) {
     Hive.registerAdapter(SchoolQuarterAdapter());
+  }
   if (!Hive.isAdapterRegistered(9)) Hive.registerAdapter(SubjectAdapter());
-  if (!Hive.isAdapterRegistered(12))
+  if (!Hive.isAdapterRegistered(12)) {
     Hive.registerAdapter(CalendarEventAdapter());
+  }
   if (!Hive.isAdapterRegistered(7)) Hive.registerAdapter(GradeAdapter());
 
   if (!Hive.isAdapterRegistered(1)) Hive.registerAdapter(AccountAdapter());
@@ -53,12 +54,15 @@ Future<void> initHive() async {
   if (!Hive.isAdapterRegistered(4)) Hive.registerAdapter(ApiStorageAdapter());
 
   if (!Hive.isAdapterRegistered(2)) Hive.registerAdapter(AccountTypesAdapter());
-  if (!Hive.isAdapterRegistered(3))
+  if (!Hive.isAdapterRegistered(3)) {
     Hive.registerAdapter(AccountAPITypesAdapter());
-  if (!Hive.isAdapterRegistered(15))
+  }
+  if (!Hive.isAdapterRegistered(15)) {
     Hive.registerAdapter(GradeListBadgesAdapter());
-  if (!Hive.isAdapterRegistered(13))
+  }
+  if (!Hive.isAdapterRegistered(13)) {
     Hive.registerAdapter(CalendarEventTypesAdapter());
+  }
   if (!Hive.isAdapterRegistered(8)) Hive.registerAdapter(GradeTypeAdapter());
 }
 
@@ -222,12 +226,6 @@ class Start extends StatefulWidget {
 class _Start extends State<Start> {
   int screenIndex = 0;
 
-  void handleScreenChanged(int selectedScreen) {
-    setState(() {
-      screenIndex = selectedScreen;
-    });
-  }
-
   @override
   void initState() {
     super.initState();
@@ -325,20 +323,60 @@ class _Start extends State<Start> {
         return const LoginView();
       }
 
+      String? getAppBarTitle(int screenIndex, BuildContext context) {
+        switch (screenIndex) {
+          case 0:
+            return AppLocalizations.of(context)?.yearView;
+          case 1:
+            return AppLocalizations.of(context)?.subjectsView;
+          case 2:
+            return AppLocalizations.of(context)?.searchView;
+          default:
+            return null;
+        }
+      }
+
       if (constraints.maxWidth < 450) {
+        final controller = PageController(
+          initialPage: screenIndex,
+        );
+
+        controller.addListener(() {
+          setState(() {
+            screenIndex = controller.page?.round() ?? screenIndex;
+          });
+        });
+
+        void handleScreenChanged(int selectedScreen) {
+          if (config.swipeNavigation) {
+            controller.animateToPage(selectedScreen,
+                duration: const Duration(milliseconds: 500),
+                curve: Curves.easeOut);
+          } else {
+            screenIndex = selectedScreen;
+          }
+        }
+
         return Scaffold(
-          appBar: GemairoAppBar(
-            title: screenIndex == 2
-                ? AppLocalizations.of(context)?.searchView
-                : null,
-          ),
-          body: BottomBanner(child: ScreensSwitch(index: screenIndex)),
+          appBar: GemairoAppBar(title: getAppBarTitle(screenIndex, context)),
+          body: BottomBanner(
+              child: ScreensSwitch(
+            index: screenIndex,
+            swipeEnabled: true,
+            controller: controller,
+          )),
           bottomNavigationBar: GemairoNavigationBar(
             onSelectItem: handleScreenChanged,
             screenIndex: screenIndex,
           ),
         );
       } else {
+        void handleScreenChanged(int selectedScreen) {
+          setState(() {
+            screenIndex = selectedScreen;
+          });
+        }
+
         return Scaffold(
           body: SafeArea(
             bottom: false,
@@ -361,9 +399,13 @@ class _Start extends State<Start> {
                   const VerticalDivider(thickness: 1, width: 1),
                 Expanded(
                     child: Scaffold(
-                        appBar: const GemairoAppBar(),
+                        appBar: GemairoAppBar(
+                            title: getAppBarTitle(screenIndex, context)),
                         body: BottomBanner(
-                            child: ScreensSwitch(index: screenIndex)))),
+                            child: ScreensSwitch(
+                          index: screenIndex,
+                          swipeEnabled: false,
+                        )))),
               ],
             ),
           ),

@@ -1,16 +1,10 @@
-import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
 
-import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:gemairo/apis/ads.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:provider/provider.dart';
-import 'package:gemairo/apis/account_manager.dart';
 import 'package:gemairo/hive/adapters.dart';
 
 class Advertisement extends StatefulWidget {

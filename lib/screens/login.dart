@@ -137,7 +137,7 @@ class _LoginView extends State<LoginView> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Login op een andere manier'),
+          title: const Text('Login op een andere manier'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
