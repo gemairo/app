@@ -164,7 +164,7 @@ class ScreensSwitch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (swipeEnabled && controller != null) {
+    if (swipeEnabled && config.swipeNavigation && controller != null) {
       return AnimatedSwitcher(
           duration: const Duration(milliseconds: 250),
           transitionBuilder: (Widget child, Animation<double> animation) {

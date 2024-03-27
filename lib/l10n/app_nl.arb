@@ -211,7 +211,7 @@
   "avarageWarningExplSubject": "Zie een waarschuwingspictogram in de vakkenlijst wanneer het gemiddelde van dit vak niet stabiel is",
   "decimals": "Decimalen",
   "decimalsExpl": "Stel een bepaald aantal decimalen in voor het gemiddelde van dit vak in de vakkenlijst",
-  "information" : "Informatie",
+  "information": "Informatie",
   "gradeAddedDate": "Datum van toevoeging",
   "period": "Periode",
   "teacher": "Docent",
@@ -231,5 +231,9 @@
   "carouselAutoscroll": "Automatische carousel scroll",
   "carouselAutoscrollExpl": "Carousels zoals de recente cijfers en toekomstige toetsen gaan uit zichzelf heen en weer",
   "gradeBagdes": "Grade badges",
-  "gradeBagdesExpl": "Informatie over een cijfer in een oogopslag"
+  "gradeBagdesExpl": "Informatie over een cijfer in een oogopslag",
+  "swipeNav": "Swipe Navigatie",
+  "swipeNavExpl": "De mogelijkheid om naar links en naar rechts te swipen om van pagina te wisselen",
+  "restartRequired": "Opnieuw Opstarten Vereist",
+  "restartRequiredExpl": "Mogelijk moet u de app opnieuw opstarten om deze instelling toe te passen"
 }

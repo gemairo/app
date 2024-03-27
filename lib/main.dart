@@ -348,9 +348,13 @@ class _Start extends State<Start> {
         });
 
         void handleScreenChanged(int selectedScreen) {
-          controller.animateToPage(selectedScreen,
-              duration: const Duration(milliseconds: 500),
-              curve: Curves.easeOut);
+          if (config.swipeNavigation) {
+            controller.animateToPage(selectedScreen,
+                duration: const Duration(milliseconds: 500),
+                curve: Curves.easeOut);
+          } else {
+            screenIndex = selectedScreen;
+          }
         }
 
         return Scaffold(

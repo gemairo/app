@@ -78,6 +78,23 @@ class _SettingsView extends State<SettingsView> {
       });
     }
 
+    void showRestartDialog() {
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                actionsAlignment: MainAxisAlignment.start,
+                title: Text(AppLocalizations.of(context)!.restartRequired),
+                content:
+                    Text(AppLocalizations.of(context)!.restartRequiredExpl),
+                actions: [
+                  FilledButton.icon(
+                      onPressed: () => Navigator.pop(context),
+                      icon: const Icon(Icons.check),
+                      label: Text(AppLocalizations.of(context)!.gContinue))
+                ],
+              ));
+    }
+
     return ScaffoldSkeleton(
       sliverAppBar: SliverAppBar.large(
         title: Text(AppLocalizations.of(context)!.settings),
@@ -167,6 +184,19 @@ class _SettingsView extends State<SettingsView> {
               config.autoScrollCarousel = value;
               config.save();
               setState(() {});
+              showRestartDialog();
+              Gemairo.of(context).update();
+            })),
+        SwitchListTile(
+            value: config.swipeNavigation,
+            title: Text(AppLocalizations.of(context)!.swipeNav),
+            secondary: const Icon(Icons.swipe),
+            subtitle: Text(AppLocalizations.of(context)!.swipeNavExpl),
+            onChanged: ((value) {
+              config.swipeNavigation = value;
+              config.save();
+              setState(() {});
+              showRestartDialog();
               Gemairo.of(context).update();
             })),
         ListTile(

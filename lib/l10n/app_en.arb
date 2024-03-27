@@ -211,7 +211,7 @@
   "avarageWarningExplSubject": "See a warning icon in the subjects list when this subject's average is not stable",
   "decimals": "Decimals",
   "decimalsExpl": "Set a specific amount of decimals for the average of this subject in the subjects list",
-  "information" : "Information",
+  "information": "Information",
   "gradeAddedDate": "Added date",
   "period": "Period",
   "teacher": "Teacher",
@@ -231,5 +231,9 @@
   "carouselAutoscroll": "Automatic carousel scroll",
   "carouselAutoscrollExpl": "Carousels such as the recent grades and future tests scroll on their own",
   "gradeBagdes": "Grade badges",
-  "gradeBagdesExpl": "Information about a grade at a glance"
+  "gradeBagdesExpl": "Information about a grade at a glance",
+  "swipeNav": "Swipe Navigation",
+  "swipeNavExpl": "The ability to swipe left or right to navigate between pages",
+  "restartRequired": "Restart Required",
+  "restartRequiredExpl": "You may have to restart the app to apply this setting"
 }

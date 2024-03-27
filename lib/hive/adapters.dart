@@ -433,6 +433,8 @@ class Config extends HiveObject {
   List<GradeListBadges> activeBadges = [];
   @HiveField(10, defaultValue: true)
   bool autoScrollCarousel = true;
+  @HiveField(11, defaultValue: true)
+  bool swipeNavigation = true;
 }
 
 @HiveType(typeId: 15)

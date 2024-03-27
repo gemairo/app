@@ -512,13 +512,14 @@ class ConfigAdapter extends TypeAdapter<Config> {
       ..activeBadges = fields[9] == null
           ? [GradeListBadges.weight]
           : (fields[9] as List).cast<GradeListBadges>()
-      ..autoScrollCarousel = fields[10] == null ? true : fields[10] as bool;
+      ..autoScrollCarousel = fields[10] == null ? true : fields[10] as bool
+      ..swipeNavigation = fields[11] == null ? true : fields[11] as bool;
   }
 
   @override
   void write(BinaryWriter writer, Config obj) {
     writer
-      ..writeByte(11)
+      ..writeByte(12)
       ..writeByte(0)
       ..write(obj.enableNotifications)
       ..writeByte(1)
@@ -540,7 +541,9 @@ class ConfigAdapter extends TypeAdapter<Config> {
       ..writeByte(9)
       ..write(obj.activeBadges)
       ..writeByte(10)
-      ..write(obj.autoScrollCarousel);
+      ..write(obj.autoScrollCarousel)
+      ..writeByte(11)
+      ..write(obj.swipeNavigation);
   }
 
   @override
