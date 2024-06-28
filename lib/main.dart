@@ -360,13 +360,13 @@ class _Start extends State<Start> {
         body: Row(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            if (constraints.maxWidth >= 450)
+            if (constraints.maxWidth >= 600)
               Padding(
                 padding: const EdgeInsets.only(right: 5),
                 child: ValueListenableBuilder(
                   valueListenable: screenIndex,
                   builder: (context, value, _) {
-                    return constraints.maxWidth < 900
+                    return constraints.maxWidth < 840
                         ? DecoratedBox(
                             decoration: BoxDecoration(
                               border: Border.all(
@@ -387,7 +387,7 @@ class _Start extends State<Start> {
               ),
             Expanded(
               child: BottomBanner(
-                isEnabled: constraints.maxWidth >= 450,
+                isEnabled: constraints.maxWidth >= 600,
                 child: NestedScrollView(
                   headerSliverBuilder:
                       (BuildContext context, bool innerBoxIsScrolled) {
@@ -414,8 +414,8 @@ class _Start extends State<Start> {
                         key: ValueKey(config.swipeNavigation),
                         controller: controller,
                         index: screenIndex.value,
-                        swipeEnabled: (constraints.maxWidth < 450),
-                        direction: (constraints.maxWidth < 450)
+                        swipeEnabled: (constraints.maxWidth < 600),
+                        direction: (constraints.maxWidth < 600)
                             ? Axis.horizontal
                             : Axis.vertical,
                         onChanged: (index) =>
@@ -428,7 +428,7 @@ class _Start extends State<Start> {
             ),
           ],
         ),
-        bottomNavigationBar: constraints.maxWidth < 450
+        bottomNavigationBar: constraints.maxWidth < 600
             ? ValueListenableBuilder(
                 valueListenable: screenIndex,
                 builder: (context, value, _) {
