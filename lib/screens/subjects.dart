@@ -61,7 +61,7 @@ class _SubjectsListView extends State<SubjectsListView> {
                                   .truncate() /
                               pow(10, subject.roundOnDecimals!))
                           .toString()
-                      : subject.grades.average.toString(),
+                      : subject.grades.average.displayNumber(decimalDigits: 2),
             ),
             contentPadding: const EdgeInsets.symmetric(horizontal: 16),
             trailing: Wrap(
@@ -144,7 +144,8 @@ class _SubjectsListView extends State<SubjectsListView> {
       }
     }
 
-    return ScaffoldSkeleton(injectOverlap: true,
+    return ScaffoldSkeleton(
+        injectOverlap: true,
         onRefresh: () async {
           AccountProvider acP =
               Provider.of<AccountProvider>(context, listen: false);

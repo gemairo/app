@@ -205,20 +205,21 @@ class Grade {
   @HiveField(12)
   bool isEnabled;
 
-  Grade(
-      {required this.gradeString,
-      required this.weight,
-      required this.subject,
-      this.description = "",
-      required this.addedDate,
-      required this.counts,
-      required this.id,
-      this.isEnabled = true,
-      required this.isPTA,
-      this.schoolQuarter,
-      required this.sufficient,
-      this.teacherCode = "Unknown",
-      this.type = GradeType.other});
+  Grade({
+    required this.gradeString,
+    required this.weight,
+    required this.subject,
+    this.description = "",
+    required this.addedDate,
+    required this.counts,
+    required this.id,
+    this.isEnabled = true,
+    required this.isPTA,
+    this.schoolQuarter,
+    required this.sufficient,
+    this.teacherCode = "Unknown",
+    this.type = GradeType.other,
+  });
 }
 
 @HiveType(typeId: 8)

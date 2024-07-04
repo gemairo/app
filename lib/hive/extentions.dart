@@ -37,12 +37,13 @@ extension StringExtension on String {
 }
 
 extension DoubleExtention on double {
-  String displayNumber({decimalDigits}) => NumberFormat.decimalPatternDigits(
-          locale: config.usedLocaleCode ?? Platform.localeName,
-          decimalDigits: decimalDigits)
-      .format(decimalDigits != null
-          ? num.parse(toStringAsFixed(decimalDigits))
-          : this);
+  String displayNumber({int? decimalDigits}) =>
+      NumberFormat.decimalPatternDigits(
+              locale: config.usedLocaleCode ?? Platform.localeName,
+              decimalDigits: decimalDigits)
+          .format(decimalDigits != null
+              ? num.parse(toStringAsFixed(decimalDigits))
+              : this);
 }
 
 extension GradeCalculations on List<Grade> {
@@ -54,13 +55,31 @@ extension GradeCalculations on List<Grade> {
           .toList();
 
   double get average {
+    // The average will be different when multiple subjects are included, so
+    // we will check if the current list of grades contains more than one subject.
+    if (any(
+      (grade) => grade.subject.id != firstOrNull?.subject.id,
+    )) {
+      // Some grade in this list came from a different subject compared to the
+      // first grade in this list, so we need to calculate the average in a
+      // different way.
+      return globalAverage;
+    }
+
     double total = 0;
     double totalgrades = 0;
     for (var grade in numericalGrades) {
       total += grade.grade * grade.weight;
       totalgrades += grade.weight;
     }
-    return (total / totalgrades * 100).roundToDouble() / 100;
+    return total / totalgrades;
+  }
+
+  /// Get the average, based on the averages of subjects in a list of grades.
+  double get globalAverage {
+    return [for (Subject subject in subjects) subject.grades.average]
+        .where((e) => !e.isNaN)
+        .average;
   }
 
   double get median {

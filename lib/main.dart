@@ -141,14 +141,57 @@ class GemairoState extends State<Gemairo> {
   Widget build(BuildContext context) {
     return DynamicColorBuilder(
       builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
+        //
+        // God knows why, but the dynamic_color package has gone haywire in
+        // the latest version of flutter (3.22), so for now a workaround has to
+        // be used to get the correct coloring. When this issue has been
+        // resolved the following code can be removed
+        //
+
+        List<Color> extractAdditionalColours(ColorScheme scheme) => [
+              scheme.surface,
+              scheme.surfaceDim,
+              scheme.surfaceBright,
+              scheme.surfaceContainerLowest,
+              scheme.surfaceContainerLow,
+              scheme.surfaceContainer,
+              scheme.surfaceContainerHigh,
+              scheme.surfaceContainerHighest,
+            ];
+
+        ColorScheme insertAdditionalColours(
+                ColorScheme scheme, List<Color> additionalColours) =>
+            scheme.copyWith(
+              surface: additionalColours[0],
+              surfaceDim: additionalColours[1],
+              surfaceBright: additionalColours[2],
+              surfaceContainerLowest: additionalColours[3],
+              surfaceContainerLow: additionalColours[4],
+              surfaceContainer: additionalColours[5],
+              surfaceContainerHigh: additionalColours[6],
+              surfaceContainerHighest: additionalColours[7],
+            );
+
+        ColorScheme generateDynamicColourSchemes(ColorScheme scheme,
+            [bool isDark = false]) {
+          var base = ColorScheme.fromSeed(
+              seedColor: scheme.primary,
+              brightness: isDark ? Brightness.dark : Brightness.light);
+
+          var additionalColours = extractAdditionalColours(base);
+
+          return scheme =
+              insertAdditionalColours(base, additionalColours).harmonized();
+        }
+
         ColorScheme lightColorScheme;
         ColorScheme darkColorScheme;
         if (lightDynamic != null &&
             darkDynamic != null &&
             config.useMaterialYou) {
           //Using Material You colors set by Android S+ devices
-          lightColorScheme = lightDynamic.harmonized();
-          darkColorScheme = darkDynamic.harmonized();
+          lightColorScheme = generateDynamicColourSchemes(lightDynamic);
+          darkColorScheme = generateDynamicColourSchemes(darkDynamic, true);
         } else {
           //Not using Material You colors set by Android S+ devices
           lightColorScheme = ColorScheme.fromSeed(

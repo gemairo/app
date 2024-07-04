@@ -43,7 +43,8 @@ class RelatedSchoolYearsCard extends StatelessWidget {
                               child: GradeAvatar(
                                   gradeString: useableGrades.average.isNaN
                                       ? "-"
-                                      : useableGrades.average.toString()),
+                                      : useableGrades.average
+                                          .displayNumber(decimalDigits: 2)),
                             )),
                         Text(
                           sY.groupName,

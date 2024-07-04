@@ -192,18 +192,20 @@ void changeSchoolYear(BuildContext context, {required int newid}) {
   //Clear filters and change the active school year.
   final AccountProvider acP =
       Provider.of<AccountProvider>(context, listen: false);
+  int schoolyearIdBefore = acP.person.activeSchoolYear.id;
   acP.changeSchoolYear(newid);
 
   if (acP.person.activeSchoolYear.grades.isEmpty) {
+    acP.changeSchoolYear(schoolyearIdBefore);
     //No grades, show message
     Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => FetchWeightsScreen(
               account: acP.account,
               customContinue: () {
                 Navigator.of(context).pop();
-                acP.changeSchoolYear(acP.person.activeSchoolYear.id);
+                acP.changeSchoolYear(newid);
               },
-              forcedEnabledId: acP.person.activeSchoolYear.id,
+              forcedEnabledId: newid,
             )));
   }
 
