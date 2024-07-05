@@ -61,9 +61,8 @@ dependencies:
   desktop_webview_window: ^0.2.3
   in_app_review: ^2.0.8
   saaf:
-    # path: /Users/sjoerdbolten/Documents/Projects/gemairo/saaf-dart-gemairo
     git:
-      url: https://github.com/saaf-ads/saaf-dart-gemairo.git
+      url: https://github.com/gemairo/gemairo.dart.git
 
 dev_dependencies:
   flutter_test:
