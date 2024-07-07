@@ -53,87 +53,95 @@ class BarChartSubjectsAverage extends StatelessWidget {
       ));
     });
     return SizedBox(
-        height: 175,
-        child: BarChart(
-            swapAnimationDuration: const Duration(milliseconds: 150),
-            swapAnimationCurve: Curves.linear,
-            BarChartData(
-              maxY: 10,
-              extraLinesData: ExtraLinesData(horizontalLines: [
-                HorizontalLine(
-                    y: config.sufficientFrom,
-                    color: Theme.of(context).colorScheme.error,
-                    strokeWidth: 3,
-                    dashArray: [20, 10])
-              ]),
-              barTouchData: BarTouchData(
-                touchCallback: (p0, p1) {},
-                touchTooltipData: BarTouchTooltipData(
-                    tooltipHorizontalAlignment: FLHorizontalAlignment.center,
-                    tooltipMargin: 5,
-                    fitInsideHorizontally: true,
-                    // fitInsideVertically: true,
-                    getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                      return BarTooltipItem(
-                        '${subjects[group.x].name}: ',
-                        TextStyle(
-                          color: Theme.of(context).colorScheme.onBackground,
-                        ),
-                        children: <TextSpan>[
-                          TextSpan(text: rod.toY.displayNumber()),
-                        ],
-                      );
-                    },
-                    tooltipPadding:
-                        const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                    tooltipRoundedRadius: 4,
-                    tooltipBorder: BorderSide(
-                        color: Theme.of(context).colorScheme.outline, width: 1),
-                    tooltipBgColor: Theme.of(context).colorScheme.background),
-              ),
-              titlesData: FlTitlesData(
-                show: true,
-                rightTitles: AxisTitles(
-                  sideTitles: SideTitles(showTitles: false),
-                ),
-                topTitles: AxisTitles(
-                  sideTitles: SideTitles(showTitles: false),
-                ),
-                bottomTitles: AxisTitles(
-                  sideTitles: SideTitles(
-                    showTitles: true,
-                    getTitlesWidget: (double value, TitleMeta meta) {
-                      return SideTitleWidget(
-                        axisSide: meta.axisSide,
-                        space: 4,
-                        child: Text(subjects[value.toInt()].code),
-                      );
-                    },
-                    reservedSize: 24,
+      height: 175,
+      child: BarChart(
+        swapAnimationDuration: const Duration(milliseconds: 150),
+        swapAnimationCurve: Curves.linear,
+        BarChartData(
+          maxY: 10,
+          minY: 1,
+          extraLinesData: ExtraLinesData(horizontalLines: [
+            HorizontalLine(
+                y: config.sufficientFrom,
+                color: Theme.of(context).colorScheme.error,
+                strokeWidth: 3,
+                dashArray: [20, 10])
+          ]),
+          barTouchData: BarTouchData(
+            touchCallback: (p0, p1) {},
+            touchTooltipData: BarTouchTooltipData(
+              tooltipHorizontalAlignment: FLHorizontalAlignment.center,
+              tooltipMargin: 5,
+              fitInsideHorizontally: true,
+              // fitInsideVertically: true,
+              getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                return BarTooltipItem(
+                  '${subjects[group.x].name}: ',
+                  TextStyle(
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
-                ),
-                leftTitles: AxisTitles(
-                  sideTitles: SideTitles(
-                    showTitles: true,
-                    reservedSize: 25,
-                    getTitlesWidget: (value, meta) {
-                      return SideTitleWidget(
-                          axisSide: meta.axisSide,
-                          space: 4,
-                          child: Text(
-                            value.toInt().toString(),
-                            maxLines: 1,
-                          ));
-                    },
-                  ),
-                ),
+                  children: <TextSpan>[
+                    TextSpan(text: rod.toY.displayNumber(decimalDigits: 2)),
+                  ],
+                );
+              },
+              tooltipPadding:
+                  const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+              tooltipRoundedRadius: 4,
+              tooltipBorder: BorderSide(
+                  color: Theme.of(context).colorScheme.outline, width: 1),
+              getTooltipColor: (line) => Theme.of(context).colorScheme.surface,
+            ),
+          ),
+          titlesData: FlTitlesData(
+            show: true,
+            rightTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+            topTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+            bottomTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                getTitlesWidget: (double value, TitleMeta meta) {
+                  return SideTitleWidget(
+                    axisSide: meta.axisSide,
+                    space: 4,
+                    child: Text(subjects[value.toInt()].code),
+                  );
+                },
+                reservedSize: 24,
               ),
-              borderData: FlBorderData(
-                show: false,
+            ),
+            leftTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                reservedSize: 25,
+                getTitlesWidget: (value, meta) {
+                  return SideTitleWidget(
+                    axisSide: meta.axisSide,
+                    space: 4,
+                    child: Text(
+                      value.toInt().toString(),
+                      maxLines: 1,
+                    ),
+                  );
+                },
               ),
-              barGroups: barData,
-              gridData: FlGridData(
-                  show: true, horizontalInterval: 2, verticalInterval: 1),
-            )));
+            ),
+          ),
+          borderData: FlBorderData(
+            show: false,
+          ),
+          barGroups: barData,
+          gridData: const FlGridData(
+            show: true,
+            horizontalInterval: 2,
+            verticalInterval: 1,
+          ),
+        ),
+      ),
+    );
   }
 }

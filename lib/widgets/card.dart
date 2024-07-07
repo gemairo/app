@@ -27,7 +27,9 @@ class GemairoCard extends StatelessWidget {
     return Card(
         elevation: isFilled ? 0 : elevation,
         shadowColor: elevation == 1 ? Colors.transparent : null,
-        color: isFilled ? Theme.of(context).colorScheme.surfaceVariant : null,
+        color: isFilled
+            ? Theme.of(context).colorScheme.surfaceContainerHighest
+            : elevation == 0 ? Theme.of(context).colorScheme.surface : null,
         margin: EdgeInsets.zero,
         child: Column(
             mainAxisSize: MainAxisSize.min,

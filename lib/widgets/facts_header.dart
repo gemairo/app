@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:gemairo/apis/ads.dart';
-import 'package:gemairo/widgets/ads.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -26,6 +23,7 @@ class FactsHeader extends StatefulWidget {
 class _FactsHeader extends State<FactsHeader> {
   @override
   Widget build(BuildContext context) {
+    double average = widget.grades.average;
     List<Fact> facts = widget.grades.useable.generateFactsList(
         context, Provider.of<AccountProvider>(context, listen: false).person);
 
@@ -46,33 +44,40 @@ class _FactsHeader extends State<FactsHeader> {
                         ? 0
                         : (MediaQuery.of(context).size.width - 38) / 2),
                 child: FactCard(
-                    title: AppLocalizations.of(context)!.average,
-                    value: widget.grades.average.isNaN
-                        ? "-"
-                        : widget.grades.average.displayNumber()),
+                  title: AppLocalizations.of(context)!.average,
+                  value: average.isNaN
+                      ? "-"
+                      : average.displayNumber(decimalDigits: 2),
+                ),
               )),
         ),
-        if (Ads.instance != null)
-          StaggeredGridTile.count(
-            crossAxisCellCount: 2,
-            mainAxisCellCount: 1,
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxWidth: (((MediaQuery.of(context).size.width - 38) / 2)
-                          .isNegative)
-                      ? 0
-                      : (MediaQuery.of(context).size.width - 38) / 2,
-                  minHeight: double.infinity,
-                  maxHeight: double.infinity,
-                ),
-                child: const Advertisement(
-                  size: AdSize.fluid,
-                ),
-              ),
-            ),
-          ),
+
+        // Deze advertentie is leuk, maar helaas zorgt het ervoor dat de header
+        // niet meer goed werkt op te kleine of the grote schermen. Ook is de
+        // advertentie zo klein dat het niet bijzonder veel zin heeft. Hij staat
+        // daarom voorlopig uit.
+
+        // if (Ads.instance != null)
+        //   StaggeredGridTile.count(
+        //     crossAxisCellCount: 2,
+        //     mainAxisCellCount: 1,
+        //     child: Align(
+        //       alignment: Alignment.centerRight,
+        //       child: ConstrainedBox(
+        //         constraints: BoxConstraints(
+        //           maxWidth: (((MediaQuery.of(context).size.width - 38) / 2)
+        //                   .isNegative)
+        //               ? 0
+        //               : (MediaQuery.of(context).size.width - 38) / 2,
+        //           minHeight: double.infinity,
+        //           maxHeight: double.infinity,
+        //         ),
+        //         child: const Advertisement(
+        //           size: AdSize.fluid,
+        //         ),
+        //       ),
+        //     ),
+        //   ),
         StaggeredGridTile.count(
             crossAxisCellCount: 4,
             mainAxisCellCount: 1,

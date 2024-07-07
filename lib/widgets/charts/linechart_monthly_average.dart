@@ -60,8 +60,8 @@ class MonthlyLineChartGrades extends StatelessWidget {
     return SizedBox(
         height: 250 - 56,
         child: LineChart(
-          swapAnimationDuration: const Duration(milliseconds: 150),
-          swapAnimationCurve: Curves.linear,
+          duration: const Duration(milliseconds: 150),
+          curve: Curves.linear,
           LineChartData(
             borderData: FlBorderData(
               show: false,
@@ -69,8 +69,8 @@ class MonthlyLineChartGrades extends StatelessWidget {
             ),
             maxY: 10,
             minY: 1,
-            gridData: FlGridData(drawVerticalLine: false),
-            clipData: FlClipData.none(),
+            gridData: const FlGridData(drawVerticalLine: false),
+            clipData: const FlClipData.none(),
             lineBarsData: [
               LineChartBarData(
                 spots: gradeData,
@@ -91,7 +91,7 @@ class MonthlyLineChartGrades extends StatelessWidget {
                   isCurved: true,
                   isStrokeCapRound: true,
                   barWidth: 3,
-                  dotData: FlDotData(
+                  dotData: const FlDotData(
                     show: false,
                   ),
                   color: Theme.of(context).colorScheme.inversePrimary,
@@ -119,7 +119,7 @@ class MonthlyLineChartGrades extends StatelessWidget {
                             "${DateFormat.yMMMM('nl').format(gradesPerMonth.keys.toList()[value.first.x.toInt()].start.toLocal())} (${gradesPerMonth.values.toList()[value.first.x.toInt()].length})",
                             TextStyle(
                                 color:
-                                    Theme.of(context).colorScheme.onBackground,
+                                    Theme.of(context).colorScheme.onSurface,
                                 fontWeight: FontWeight.bold,
                                 height: 1.5),
                             children: value
@@ -131,7 +131,7 @@ class MonthlyLineChartGrades extends StatelessWidget {
                                         height: 1.25)))
                                 .toList()),
                         if (showAverage)
-                          LineTooltipItem("", const TextStyle(height: 0))
+                          const LineTooltipItem("", TextStyle(height: 0))
                       ];
                     },
                     fitInsideHorizontally: true,
@@ -140,9 +140,9 @@ class MonthlyLineChartGrades extends StatelessWidget {
                     tooltipRoundedRadius: 4,
                     tooltipBorder: BorderSide(
                         color: Theme.of(context).colorScheme.outline, width: 1),
-                    tooltipBgColor: Theme.of(context)
+                    getTooltipColor: (line) => Theme.of(context)
                         .colorScheme
-                        .background
+                        .surface
                         .withOpacity(1.00))),
             extraLinesData: ExtraLinesData(
               horizontalLines: [
@@ -156,7 +156,7 @@ class MonthlyLineChartGrades extends StatelessWidget {
             ),
             titlesData: FlTitlesData(
               bottomTitles:
-                  AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                  const AxisTitles(sideTitles: SideTitles(showTitles: false)),
               leftTitles: AxisTitles(
                 sideTitles: SideTitles(
                   showTitles: true,
@@ -169,8 +169,8 @@ class MonthlyLineChartGrades extends StatelessWidget {
                 ),
               ),
               rightTitles:
-                  AxisTitles(sideTitles: SideTitles(showTitles: false)),
-              topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                  const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+              topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
             ),
           ),
         ));

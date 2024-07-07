@@ -144,7 +144,7 @@ class Ads {
         minHeight: size == AdSize.banner ? 10 : 70.0 + 7.0 + 7.0,
       ),
       width: double.infinity,
-      color: Theme.of(context).colorScheme.surfaceVariant,
+      color: Theme.of(context).colorScheme.surfaceContainerHighest,
       child: Advertisement(
         size: size,
       ),

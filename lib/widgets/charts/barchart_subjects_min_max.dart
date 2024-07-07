@@ -61,46 +61,50 @@ class BarChartSubjectsMinMax extends StatelessWidget {
               barTouchData: BarTouchData(
                 touchCallback: (p0, p1) {},
                 touchTooltipData: BarTouchTooltipData(
-                    tooltipHorizontalAlignment: FLHorizontalAlignment.left,
-                    tooltipMargin: 5,
-                    fitInsideHorizontally: true,
-                    fitInsideVertically: true,
-                    getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                      TextStyle itemTextStyle =
-                          const TextStyle(fontWeight: FontWeight.normal);
-                      return BarTooltipItem(
-                        textAlign: TextAlign.left,
-                        '${useableSubjects[group.x].name}\n',
-                        TextStyle(
-                            color: Theme.of(context).colorScheme.onBackground,
-                            fontWeight: FontWeight.bold),
-                        children: <TextSpan>[
-                          TextSpan(
-                              text: "max: ${rod.toY.displayNumber()}\n",
-                              style: itemTextStyle),
-                          TextSpan(
-                              text:
-                                  "med: ${useableSubjects[group.x].grades.median.displayNumber()}\n",
-                              style: itemTextStyle),
-                          TextSpan(
-                              text: "min: ${rod.fromY.displayNumber()}",
-                              style: itemTextStyle),
-                        ],
-                      );
-                    },
-                    tooltipPadding:
-                        const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                    tooltipRoundedRadius: 4,
-                    tooltipBorder: BorderSide(
-                        color: Theme.of(context).colorScheme.outline, width: 1),
-                    tooltipBgColor: Theme.of(context).colorScheme.background),
+                  tooltipHorizontalAlignment: FLHorizontalAlignment.left,
+                  tooltipMargin: 5,
+                  fitInsideHorizontally: true,
+                  fitInsideVertically: true,
+                  getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                    TextStyle itemTextStyle =
+                        const TextStyle(fontWeight: FontWeight.normal);
+                    return BarTooltipItem(
+                      textAlign: TextAlign.left,
+                      '${useableSubjects[group.x].name}\n',
+                      TextStyle(
+                          color: Theme.of(context).colorScheme.onSurface,
+                          fontWeight: FontWeight.bold),
+                      children: <TextSpan>[
+                        TextSpan(
+                            text:
+                                "max: ${rod.toY.displayNumber(decimalDigits: 2)}\n",
+                            style: itemTextStyle),
+                        TextSpan(
+                            text:
+                                "med: ${useableSubjects[group.x].grades.median.displayNumber(decimalDigits: 2)}\n",
+                            style: itemTextStyle),
+                        TextSpan(
+                            text:
+                                "min: ${rod.fromY.displayNumber(decimalDigits: 2)}",
+                            style: itemTextStyle),
+                      ],
+                    );
+                  },
+                  tooltipPadding:
+                      const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                  tooltipRoundedRadius: 4,
+                  tooltipBorder: BorderSide(
+                      color: Theme.of(context).colorScheme.outline, width: 1),
+                  getTooltipColor: (line) =>
+                      Theme.of(context).colorScheme.surface,
+                ),
               ),
               titlesData: FlTitlesData(
                 show: true,
-                rightTitles: AxisTitles(
+                rightTitles: const AxisTitles(
                   sideTitles: SideTitles(showTitles: false),
                 ),
-                topTitles: AxisTitles(
+                topTitles: const AxisTitles(
                   sideTitles: SideTitles(showTitles: false),
                 ),
                 bottomTitles: AxisTitles(
@@ -136,7 +140,7 @@ class BarChartSubjectsMinMax extends StatelessWidget {
                 show: false,
               ),
               barGroups: barData,
-              gridData: FlGridData(
+              gridData: const FlGridData(
                   show: true, horizontalInterval: 1, verticalInterval: 1),
             )));
   }

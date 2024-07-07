@@ -143,7 +143,7 @@ class ScaffoldSkeleton extends StatelessWidget {
                         child: Icon(
                           const IconData(0xf201, fontFamily: "Gemairo"),
                           size: 64 * .8,
-                          color: Theme.of(context).colorScheme.surfaceVariant,
+                          color: Theme.of(context).colorScheme.surfaceContainerHighest,
                         ),
                       ),
                     ),

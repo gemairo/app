@@ -167,54 +167,66 @@ class _SubjectStatisticsView extends State<SubjectStatisticsView> {
           title: Text(widget.subject.name),
         ),
         body: BottomBanner(
-          child: ListView(children: [
-            Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: FactsHeader(
-                  grades: grades.useable,
-                )),
-            Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: FilterChips(
-                  grades: widget.subject.grades,
-                )),
-            GemairoCardList(
-              maxCrossAxisExtent: 250,
-              children: widgets,
-            ),
-            ...grades
-                .sortByDate((e) => e.addedDate, doNotSort: true)
-                .entries
-                .map(
-                  (e) => Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Column(children: [
-                      ListTile(
-                        title: Text(e.key,
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleMedium
-                                ?.copyWith(
-                                    color:
-                                        Theme.of(context).colorScheme.primary)),
-                        dense: true,
-                      ),
-                      ...e.value.map((e) => GradeTile(
-                            grade: e,
-                            grades: grades,
-                            onTap: () => showGemairoModalBottomSheet(children: [
-                              GradeInformation(
-                                context: context,
-                                grade: e,
-                                grades: grades,
-                                showGradeCalculate: true,
-                              )
-                            ], context: context),
-                          ))
-                    ]),
-                  ),
-                )
-          ]),
+          child: RefreshIndicator.adaptive(
+            onRefresh: () async {
+              // We can't really refresh a specific subject, so we will just
+              // perform a global refresh
+              AccountProvider acP =
+                  Provider.of<AccountProvider>(context, listen: false);
+              await acP.account.api.refreshAll(acP.person);
+              acP.changeAccount(null);
+            },
+            child: ListView(children: [
+              Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: FactsHeader(
+                    grades: grades.useable,
+                  )),
+              Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: FilterChips(
+                    grades: widget.subject.grades,
+                  )),
+              GemairoCardList(
+                maxCrossAxisExtent: 250,
+                children: widgets,
+              ),
+              ...grades
+                  .sortByDate((e) => e.addedDate, doNotSort: true)
+                  .entries
+                  .map(
+                    (e) => Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Column(children: [
+                        ListTile(
+                          title: Text(e.key,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium
+                                  ?.copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primary)),
+                          dense: true,
+                        ),
+                        ...e.value.map((e) => GradeTile(
+                              grade: e,
+                              grades: grades,
+                              onTap: () =>
+                                  showGemairoModalBottomSheet(children: [
+                                GradeInformation(
+                                  context: context,
+                                  grade: e,
+                                  grades: grades,
+                                  showGradeCalculate: true,
+                                )
+                              ], context: context),
+                            ))
+                      ]),
+                    ),
+                  )
+            ]),
+          ),
         ));
   }
 }

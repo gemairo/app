@@ -290,8 +290,8 @@ class _GradeInformation extends State<GradeInformation> {
                   return ListTile(
                     title: Text(AppLocalizations.of(context)!.impactOnAverage),
                     subtitle: Text(AppLocalizations.of(context)!.changeInAverage(
-                        "${change.isNegative ? '' : '+'}${change.displayNumber()}",
-                        averageAfter.displayNumber())),
+                        "${change.isNegative ? '' : '+'}${change.displayNumber(decimalDigits: 2)}",
+                        averageAfter.displayNumber(decimalDigits: 2))),
                     leading: RotatedBox(
                       quarterTurns: change.isNegative ? 1 : 0,
                       child: (change * 100).round() == 0

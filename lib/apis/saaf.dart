@@ -202,7 +202,7 @@ class Saaf {
         errorWidget: fallback,
         baseUrl: baseUrl,
         style: saaf.BannerAdStyle(
-          backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+          backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
           titleColor: Theme.of(context).textTheme.titleLarge!.color!,
           textColor: Theme.of(context).textTheme.bodyMedium!.color!,
           primaryColor: Theme.of(context).colorScheme.primary,
@@ -231,7 +231,7 @@ class Saaf {
       },
       baseUrl: baseUrl,
       style: saaf.TakeoverAdStyle(
-        backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+        backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
         titleColor: Theme.of(context).textTheme.titleLarge!.color!,
         textColor: Theme.of(context).textTheme.bodyMedium!.color!,
         primaryColor: Theme.of(context).colorScheme.primary,

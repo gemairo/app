@@ -56,8 +56,8 @@ class _LineChartGradesState extends State<LineChartGrades> {
                   }
                   if (snapshot.hasData) {
                     return LineChart(
-                      swapAnimationDuration: const Duration(milliseconds: 150),
-                      swapAnimationCurve: Curves.linear,
+                      duration: const Duration(milliseconds: 150),
+                      curve: Curves.linear,
                       LineChartData(
                         borderData: FlBorderData(
                           show: false,
@@ -65,8 +65,8 @@ class _LineChartGradesState extends State<LineChartGrades> {
                         ),
                         maxY: 10,
                         minY: 1,
-                        gridData: FlGridData(drawVerticalLine: false),
-                        clipData: FlClipData.none(),
+                        gridData: const FlGridData(drawVerticalLine: false),
+                        clipData: const FlClipData.none(),
                         lineBarsData: [
                           LineChartBarData(
                             spots: gradeData,
@@ -92,8 +92,8 @@ class _LineChartGradesState extends State<LineChartGrades> {
                                   LineChartBarData bar, int index) {
                                 return FlDotCirclePainter(
                                   radius: 2,
-                                  color: bar.color,
-                                  strokeColor: bar.color,
+                                  color: bar.color!,
+                                  strokeColor: bar.color!,
                                 );
                               },
                             ),
@@ -104,7 +104,7 @@ class _LineChartGradesState extends State<LineChartGrades> {
                               isCurved: true,
                               isStrokeCapRound: true,
                               barWidth: 3,
-                              dotData: FlDotData(
+                              dotData: const FlDotData(
                                 show: false,
                               ),
                               color: (constraints.maxWidth / 3) /
@@ -145,7 +145,7 @@ class _LineChartGradesState extends State<LineChartGrades> {
                                         TextStyle(
                                             color: Theme.of(context)
                                                 .colorScheme
-                                                .onBackground,
+                                                .onSurface,
                                             fontWeight: FontWeight.bold,
                                             height: 1.5),
                                         children: value
@@ -157,8 +157,8 @@ class _LineChartGradesState extends State<LineChartGrades> {
                                                         FontWeight.normal,
                                                     height: 1.25)))
                                             .toList()),
-                                    LineTooltipItem(
-                                        "", const TextStyle(height: 0))
+                                    const LineTooltipItem(
+                                        "", TextStyle(height: 0))
                                   ];
                                 },
                                 fitInsideHorizontally: true,
@@ -169,9 +169,9 @@ class _LineChartGradesState extends State<LineChartGrades> {
                                     color:
                                         Theme.of(context).colorScheme.outline,
                                     width: 1),
-                                tooltipBgColor: Theme.of(context)
+                                getTooltipColor: (line) => Theme.of(context)
                                     .colorScheme
-                                    .background
+                                    .surface
                                     .withOpacity(1.00))),
                         extraLinesData: ExtraLinesData(
                           horizontalLines: [
@@ -184,7 +184,7 @@ class _LineChartGradesState extends State<LineChartGrades> {
                           ],
                         ),
                         titlesData: FlTitlesData(
-                          bottomTitles: AxisTitles(
+                          bottomTitles: const AxisTitles(
                               sideTitles: SideTitles(showTitles: false)),
                           leftTitles: AxisTitles(
                             sideTitles: SideTitles(
@@ -199,9 +199,9 @@ class _LineChartGradesState extends State<LineChartGrades> {
                               ),
                             ),
                           ),
-                          rightTitles: AxisTitles(
+                          rightTitles: const AxisTitles(
                               sideTitles: SideTitles(showTitles: false)),
-                          topTitles: AxisTitles(
+                          topTitles: const AxisTitles(
                               sideTitles: SideTitles(showTitles: false)),
                         ),
                       ),

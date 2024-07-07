@@ -112,14 +112,15 @@ class _FetchWeightsScreenState extends State<FetchWeightsScreen> {
           in widget.account.profiles.expand<SchoolYear>((e) => e.schoolYears))
         s: ValueNotifier({0: 0})
     };
-    if (widget.forcedEnabledId == null)
+    if (widget.forcedEnabledId == null) {
       selected.addAll({schoolyearsMap.keys.first: schoolyearsMap.values.first});
-    if (widget.forcedEnabledId != null)
+    } else {
       selected.addAll(schoolyearsMap.entries
           .where((e) => e.key.id == widget.forcedEnabledId)
           .map<Map<SchoolYear, ValueNotifier<Map<int, int>>>>(
               (e) => {e.key: e.value})
           .first);
+    }
     super.initState();
   }
 
@@ -193,7 +194,7 @@ class _FetchWeightsScreenState extends State<FetchWeightsScreen> {
           children: schoolyearsMap.entries
               .map((e) => Card(
                   elevation: 0,
-                  color: Theme.of(context).colorScheme.surfaceVariant,
+                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
                   child: ValueListenableBuilder(
                       valueListenable: e.value,
                       builder: (context, value, widget) {
@@ -329,19 +330,20 @@ Future<Map<dynamic, dynamic>?> showMagisterLoginDialog(
                           ..loadRequest(Uri.parse(generateLoginURL())));
                   } else {
                     return AlertDialog(
-                      title: Text("Browser-login"),
-                      content:
-                          Text("Please login with the opened browser instance"),
+                      title: const Text("Browser-login"),
+                      content: const Text(
+                          "Please login with the opened browser instance"),
                       actions: [
                         FilledButton.tonalIcon(
                             onPressed: () =>
                                 loginWithBrowser(useWebview: false),
-                            icon: Icon(Icons.open_in_browser),
-                            label: Text("Open in browser")),
+                            icon: const Icon(Icons.open_in_browser),
+                            label: const Text("Open in browser")),
                         FilledButton.icon(
-                            onPressed: () => loginWithBrowser(),
-                            icon: Icon(Icons.open_in_new),
-                            label: Text("Openen"))
+                          onPressed: () => loginWithBrowser(),
+                          icon: const Icon(Icons.open_in_new),
+                          label: const Text("Openen"),
+                        )
                       ],
                     );
                   }

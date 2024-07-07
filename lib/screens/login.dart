@@ -46,13 +46,13 @@ class _LoginView extends State<LoginView> {
         extendBodyBehindAppBar: true,
         appBar: AppBar(
           backgroundColor:
-              Theme.of(context).colorScheme.background.withOpacity(0.2),
+              Theme.of(context).colorScheme.surface.withOpacity(0.2),
         ),
         body: Stack(children: [
           Container(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
-            color: Theme.of(context).colorScheme.background,
+            color: Theme.of(context).colorScheme.surface,
             child: Wrap(
               alignment: WrapAlignment.spaceEvenly,
               spacing: 5,
@@ -60,7 +60,7 @@ class _LoginView extends State<LoginView> {
               children: icons
                   .map((e) => Icon(
                         e,
-                        color: Theme.of(context).colorScheme.surfaceVariant,
+                        color: Theme.of(context).colorScheme.surfaceContainerHighest,
                       ))
                   .toList(),
             ),

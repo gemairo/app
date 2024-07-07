@@ -126,124 +126,129 @@ class AccountSwitcher extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
+        backgroundColor: Theme.of(context).colorScheme.surfaceContainerHigh,
         child: ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: 350),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              const Padding(
-                padding: EdgeInsets.all(12),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      IconData(0xf201, fontFamily: "Gemairo"),
-                      weight: 700,
-                      size: 28 * 0.8,
-                    ),
-                    Text(
-                      "  Gemairo",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                    )
-                  ],
-                ),
-              ),
-              Card(
-                elevation: 0,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: Column(
-                    children: [
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: AccountManager().personList.length,
-                        prototypeItem: ListTile(
-                          title:
-                              Text(AccountManager().personList.first.firstName),
+          constraints: const BoxConstraints(maxWidth: 350),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  const Padding(
+                    padding: EdgeInsets.all(12),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          IconData(0xf201, fontFamily: "Gemairo"),
+                          weight: 700,
+                          size: 28 * 0.8,
                         ),
-                        itemBuilder: (context, index) {
-                          Person person = AccountManager().personList[index];
-                          return ListTile(
+                        Text(
+                          "  Gemairo",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 15),
+                        )
+                      ],
+                    ),
+                  ),
+                  Card(
+                    elevation: 0,
+                    color: Theme.of(context).colorScheme.surfaceBright,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      child: Column(
+                        children: [
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: AccountManager().personList.length,
+                            prototypeItem: ListTile(
+                              title: Text(
+                                  AccountManager().personList.first.firstName),
+                            ),
+                            itemBuilder: (context, index) {
+                              Person person =
+                                  AccountManager().personList[index];
+                              return ListTile(
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  changeProfile(context, newid: person.uuid);
+                                },
+                                enabled: !(person.uuid ==
+                                    AccountManager()
+                                        .getActive()
+                                        .activeProfile!
+                                        .uuid),
+                                title: Text([
+                                  person.firstName,
+                                  person.middleName,
+                                  person.lastName
+                                ].nonNulls.join(" ")),
+                                leading: CircleAvatar(
+                                    radius: 25,
+                                    child: ClipOval(
+                                        child: AspectRatio(
+                                            aspectRatio: 1,
+                                            child: person.profilePicture != null
+                                                ? Image.memory(
+                                                    base64Decode(
+                                                        person.profilePicture!),
+                                                    gaplessPlayback: true,
+                                                    fit: BoxFit.cover,
+                                                  )
+                                                : const Icon(Icons.person)))),
+                              );
+                            },
+                          ),
+                          Divider(
+                            color: ElevationOverlay.applySurfaceTint(
+                                Theme.of(context).colorScheme.surfaceBright,
+                                Theme.of(context).colorScheme.surfaceTint,
+                                1),
+                            thickness: 4,
+                          ),
+                          ListTile(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const LoginView()));
+                            },
+                            title:
+                                Text(AppLocalizations.of(context)!.addAccount),
+                            leading: const CircleAvatar(
+                                radius: 25,
+                                child: ClipOval(child: Icon(Icons.person_add))),
+                          ),
+                          ListTile(
                             onTap: () {
                               Navigator.pop(context);
-                              changeProfile(context, newid: person.uuid);
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const SettingsView()));
                             },
-                            enabled: !(person.uuid ==
-                                AccountManager()
-                                    .getActive()
-                                    .activeProfile!
-                                    .uuid),
-                            title: Text([
-                              person.firstName,
-                              person.middleName,
-                              person.lastName
-                            ].nonNulls.join(" ")),
-                            leading: CircleAvatar(
+                            title: Text(AppLocalizations.of(context)!.settings),
+                            leading: const CircleAvatar(
                                 radius: 25,
-                                child: ClipOval(
-                                    child: AspectRatio(
-                                        aspectRatio: 1,
-                                        child: person.profilePicture != null
-                                            ? Image.memory(
-                                                base64Decode(
-                                                    person.profilePicture!),
-                                                gaplessPlayback: true,
-                                                fit: BoxFit.cover,
-                                              )
-                                            : const Icon(Icons.person)))),
-                          );
-                        },
+                                child: ClipOval(child: Icon(Icons.settings))),
+                          ),
+                        ],
                       ),
-                      Divider(
-                        color: ElevationOverlay.applySurfaceTint(
-                            Theme.of(context).colorScheme.background,
-                            Theme.of(context).colorScheme.surfaceTint,
-                            1),
-                        thickness: 4,
-                      ),
-                      ListTile(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const LoginView()));
-                        },
-                        title: Text(AppLocalizations.of(context)!.addAccount),
-                        leading: const CircleAvatar(
-                            radius: 25,
-                            child: ClipOval(child: Icon(Icons.person_add))),
-                      ),
-                      ListTile(
-                        onTap: () {
-                          Navigator.pop(context);
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const SettingsView()));
-                        },
-                        title: Text(AppLocalizations.of(context)!.settings),
-                        leading: const CircleAvatar(
-                            radius: 25,
-                            child: ClipOval(child: Icon(Icons.settings))),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Center(child: Text("© Gemairo Group • HarryDeKat")),
+                  ),
+                ],
               ),
-              const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Center(child: Text("© Gemairo Group • HarryDeKat")),
-              ),
-            ],
+            ),
           ),
-        ),
-      ),
-    ));
+        ));
   }
 }

@@ -233,8 +233,8 @@ class MagisterApi extends Magister {
         Map children = (await dio
                 .get("api/personen/${account.id}/kinderen?openData=%27%27"))
             .data;
-        for (var child in children["Items"]) {
-          //TODO: Check if parent is allowed to see child
+        for (var child in children["Items"]
+            .where((k) => k["ZichtbaarVoorOuder"] == true)) {
           await initPerson(Person(
               id: child["Id"],
               firstName: child["Roepnaam"] ?? child["Voorletters"],

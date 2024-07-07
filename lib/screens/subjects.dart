@@ -61,7 +61,7 @@ class _SubjectsListView extends State<SubjectsListView> {
                                   .truncate() /
                               pow(10, subject.roundOnDecimals!))
                           .toString()
-                      : subject.grades.average.toString(),
+                      : subject.grades.average.displayNumber(decimalDigits: 2),
             ),
             contentPadding: const EdgeInsets.symmetric(horizontal: 16),
             trailing: Wrap(
@@ -100,7 +100,7 @@ class _SubjectsListView extends State<SubjectsListView> {
                       child: CircleAvatar(
                         backgroundColor: Colors.transparent,
                         foregroundColor:
-                            Theme.of(context).colorScheme.onBackground,
+                            Theme.of(context).colorScheme.onSurface,
                         child: Icon(
                           subject.grades.sufficientSafety <
                                   config.sufficientFrom
@@ -114,7 +114,7 @@ class _SubjectsListView extends State<SubjectsListView> {
                       )),
                 CircleAvatar(
                     backgroundColor: Colors.transparent,
-                    foregroundColor: Theme.of(context).colorScheme.onBackground,
+                    foregroundColor: Theme.of(context).colorScheme.onSurface,
                     child: const Icon(Icons.navigate_next)),
               ],
             ),
@@ -144,7 +144,8 @@ class _SubjectsListView extends State<SubjectsListView> {
       }
     }
 
-    return ScaffoldSkeleton(injectOverlap: true,
+    return ScaffoldSkeleton(
+        injectOverlap: true,
         onRefresh: () async {
           AccountProvider acP =
               Provider.of<AccountProvider>(context, listen: false);

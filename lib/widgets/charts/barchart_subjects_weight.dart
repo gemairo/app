@@ -37,40 +37,42 @@ class BarChartSubjectsWeight extends StatelessWidget {
               barTouchData: BarTouchData(
                 touchCallback: (p0, p1) {},
                 touchTooltipData: BarTouchTooltipData(
-                    tooltipHorizontalAlignment: FLHorizontalAlignment.center,
-                    tooltipMargin: 5,
-                    fitInsideHorizontally: true,
-                    fitInsideVertically: true,
-                    getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                      TextStyle itemTextStyle =
-                          const TextStyle(fontWeight: FontWeight.normal);
-                      return BarTooltipItem(
-                        textAlign: TextAlign.left,
-                        '${subjects[group.x].name}\n',
-                        TextStyle(
-                            color: Theme.of(context).colorScheme.onBackground,
-                            fontWeight: FontWeight.bold),
-                        children: <TextSpan>[
-                          TextSpan(
-                              text: AppLocalizations.of(context)!
-                                  .totalWeight(rod.toY),
-                              style: itemTextStyle),
-                        ],
-                      );
-                    },
-                    tooltipPadding:
-                        const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                    tooltipRoundedRadius: 4,
-                    tooltipBorder: BorderSide(
-                        color: Theme.of(context).colorScheme.outline, width: 1),
-                    tooltipBgColor: Theme.of(context).colorScheme.background),
+                  tooltipHorizontalAlignment: FLHorizontalAlignment.center,
+                  tooltipMargin: 5,
+                  fitInsideHorizontally: true,
+                  fitInsideVertically: true,
+                  getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                    TextStyle itemTextStyle =
+                        const TextStyle(fontWeight: FontWeight.normal);
+                    return BarTooltipItem(
+                      textAlign: TextAlign.left,
+                      '${subjects[group.x].name}\n',
+                      TextStyle(
+                          color: Theme.of(context).colorScheme.onSurface,
+                          fontWeight: FontWeight.bold),
+                      children: <TextSpan>[
+                        TextSpan(
+                            text: AppLocalizations.of(context)!
+                                .totalWeight(rod.toY),
+                            style: itemTextStyle),
+                      ],
+                    );
+                  },
+                  tooltipPadding:
+                      const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                  tooltipRoundedRadius: 4,
+                  tooltipBorder: BorderSide(
+                      color: Theme.of(context).colorScheme.outline, width: 1),
+                  getTooltipColor: (line) =>
+                      Theme.of(context).colorScheme.surface,
+                ),
               ),
               titlesData: FlTitlesData(
                 show: true,
-                rightTitles: AxisTitles(
+                rightTitles: const AxisTitles(
                   sideTitles: SideTitles(showTitles: false),
                 ),
-                topTitles: AxisTitles(
+                topTitles: const AxisTitles(
                   sideTitles: SideTitles(showTitles: false),
                 ),
                 bottomTitles: AxisTitles(
@@ -106,7 +108,7 @@ class BarChartSubjectsWeight extends StatelessWidget {
                 show: false,
               ),
               barGroups: barData,
-              gridData: FlGridData(show: true, verticalInterval: 1),
+              gridData: const FlGridData(show: true, verticalInterval: 1),
             )));
   }
 }
