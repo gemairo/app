@@ -64,7 +64,7 @@ class _SettingsReminder extends State<SettingsReminder> {
                                 await flutterLocalNotificationsPlugin
                                     .resolvePlatformSpecificImplementation<
                                         AndroidFlutterLocalNotificationsPlugin>()
-                                    ?.requestPermission();
+                                    ?.requestNotificationsPermission();
                             final bool? iOSResult =
                                 await flutterLocalNotificationsPlugin
                                     .resolvePlatformSpecificImplementation<

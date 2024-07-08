@@ -298,7 +298,7 @@ class _SettingsView extends State<SettingsView> {
             final bool? androidResult = await flutterLocalNotificationsPlugin
                 .resolvePlatformSpecificImplementation<
                     AndroidFlutterLocalNotificationsPlugin>()
-                ?.requestPermission();
+                ?.requestNotificationsPermission();
             final bool? iOSResult = await flutterLocalNotificationsPlugin
                 .resolvePlatformSpecificImplementation<
                     IOSFlutterLocalNotificationsPlugin>()
