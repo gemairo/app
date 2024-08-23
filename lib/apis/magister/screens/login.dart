@@ -174,7 +174,15 @@ class _FetchWeightsScreenState extends State<FetchWeightsScreen> {
                           .expand((e) => e.schoolYears)
                           .firstWhere((e) => e.id == widget.forcedEnabledId)
                           .grades
-                          .isNotEmpty)
+                          .isNotEmpty ||
+                  // When a new used signs up that does not have any grades yet,
+                  // it should also be possible to continue. There will have to
+                  // be schoolyears though.
+                  widget.account.profiles.every(
+                    (e) =>
+                        e.schoolYears.every((e) => e.grades.isEmpty) &&
+                        e.schoolYears.isNotEmpty,
+                  ))
               ? widget.customContinue ??
                   () {
                     AccountManager().addAccount(widget.account);
