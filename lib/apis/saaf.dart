@@ -172,19 +172,6 @@ class Saaf {
     setAdRequest(force: true);
   }
 
-  bool shouldShowSaaf() {
-    Map<String, int> chances = Map<String, int>.from(
-        jsonDecode(FirebaseRemoteConfig.instance.getString("ads_provider")));
-    List<String> pool = [];
-    chances.forEach((key, value) {
-      for (int i = 0; i < value; i++) {
-        pool.add(key);
-      }
-    });
-    pool.shuffle();
-    return pool[0] == 'saaf' ? true : false;
-  }
-
   Widget bannerAd(BuildContext context, Widget fallback) {
     return Container(
       constraints: const BoxConstraints(minHeight: 70.0 + 7.0 + 7.0),
@@ -202,7 +189,8 @@ class Saaf {
         errorWidget: fallback,
         baseUrl: baseUrl,
         style: saaf.BannerAdStyle(
-          backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+          backgroundColor:
+              Theme.of(context).colorScheme.surfaceContainerHighest,
           titleColor: Theme.of(context).textTheme.titleLarge!.color!,
           textColor: Theme.of(context).textTheme.bodyMedium!.color!,
           primaryColor: Theme.of(context).colorScheme.primary,

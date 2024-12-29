@@ -288,7 +288,7 @@ Future<Map<dynamic, dynamic>?> showMagisterLoginDialog(
           mode: LaunchMode.externalNonBrowserApplication,
           webViewConfiguration:
               const WebViewConfiguration(enableDomStorage: false));
-      AppLinks().allUriLinkStream.listen((uri) => redirectUrl.value = uri);
+      AppLinks().uriLinkStream.listen((uri) => redirectUrl.value = uri);
     }
   }
 
