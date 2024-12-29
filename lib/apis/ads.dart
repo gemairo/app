@@ -65,11 +65,12 @@ class Ads {
 
   Future<void> handleNavigate(String screenName) async {
     navigations++;
-
     int showInterstitialEvery = FirebaseRemoteConfig.instance
         .getInt('ads_interstial_every_x_navigations');
+    print(
+        'navigations: $navigations showInterstitialEvery: $showInterstitialEvery');
     if (showInterstitialEvery != 0) {
-      navigations++;
+      // navigations++;
 
       if (navigations % showInterstitialEvery == 0) {
         showInterstitial();
