@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:gemairo/apis/saaf.dart';
 import 'package:gemairo/widgets/ads.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Ads {
   String app;
@@ -126,7 +127,7 @@ class Ads {
     }
   }
 
-  bool shouldShowSaaf() {
+  String shouldShow() {
     Map<String, int> chances = Map<String, int>.from(
         jsonDecode(FirebaseRemoteConfig.instance.getString("ads_provider")));
     List<String> pool = [];
@@ -136,7 +137,7 @@ class Ads {
       }
     });
     pool.shuffle();
-    return pool[0] == 'saaf' ? true : false;
+    return pool[0];
   }
 
   Widget bannerAd(BuildContext context, {AdSize size = AdSize.largeBanner}) {
@@ -151,11 +152,20 @@ class Ads {
       ),
     );
 
-    if (shouldShowSaaf() == false) {
+    String provider = shouldShow();
+    if (provider == 'google') {
       return googleAd;
     }
 
-    return Saaf.instance?.bannerAd(context, googleAd) ?? const SizedBox();
+    if (provider == 'saaf') {
+      return Saaf.instance?.bannerAd(context, googleAd) ?? const SizedBox();
+    }
+
+    // if (provider == 'swipefy') {
+    //   return SwipefyAd(size: size);
+    // }
+
+    return const SizedBox();
   }
 
   Future<void> showInterstitial() async {
