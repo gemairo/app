@@ -50,6 +50,7 @@ dependencies:
   cross_file: ^0.3.3+4
   package_info_plus: ^8.1.2
   google_mobile_ads: ^5.2.0
+  gma_mediation_applovin: ^1.2.0
   app_tracking_transparency: ^2.0.4
   cr_file_saver: ^0.0.2+1
   expandable_page_view: ^1.0.17

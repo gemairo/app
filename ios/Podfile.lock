@@ -3,6 +3,7 @@ PODS:
     - Flutter
   - app_tracking_transparency (0.0.1):
     - Flutter
+  - AppLovinSDK (12.6.1)
   - background_fetch (1.3.7):
     - Flutter
   - cr_file_saver (0.0.1):
@@ -122,6 +123,9 @@ PODS:
   - Flutter (1.0.0)
   - flutter_local_notifications (0.0.1):
     - Flutter
+  - gma_mediation_applovin (1.2.0):
+    - Flutter
+    - GoogleMobileAdsMediationAppLovin (~> 12.6.1.0)
   - Google-Mobile-Ads-SDK (11.10.0):
     - GoogleUserMessagingPlatform (>= 1.1)
   - google_mobile_ads (5.2.0):
@@ -151,6 +155,9 @@ PODS:
   - GoogleDataTransport (10.1.0):
     - nanopb (~> 3.30910.0)
     - PromisesObjC (~> 2.4)
+  - GoogleMobileAdsMediationAppLovin (12.6.1.0):
+    - AppLovinSDK (= 12.6.1)
+    - Google-Mobile-Ads-SDK (~> 11.0)
   - GoogleUserMessagingPlatform (2.7.0)
   - GoogleUtilities/AppDelegateSwizzler (8.0.2):
     - GoogleUtilities/Environment
@@ -220,6 +227,7 @@ DEPENDENCIES:
   - firebase_remote_config (from `.symlinks/plugins/firebase_remote_config/ios`)
   - Flutter (from `Flutter`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
+  - gma_mediation_applovin (from `.symlinks/plugins/gma_mediation_applovin/ios`)
   - google_mobile_ads (from `.symlinks/plugins/google_mobile_ads/ios`)
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
   - in_app_review (from `.symlinks/plugins/in_app_review/ios`)
@@ -232,6 +240,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - AppLovinSDK
     - DKImagePickerController
     - DKPhotoGallery
     - Firebase
@@ -247,6 +256,7 @@ SPEC REPOS:
     - Google-Mobile-Ads-SDK
     - GoogleAppMeasurement
     - GoogleDataTransport
+    - GoogleMobileAdsMediationAppLovin
     - GoogleUserMessagingPlatform
     - GoogleUtilities
     - nanopb
@@ -277,6 +287,8 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_local_notifications:
     :path: ".symlinks/plugins/flutter_local_notifications/ios"
+  gma_mediation_applovin:
+    :path: ".symlinks/plugins/gma_mediation_applovin/ios"
   google_mobile_ads:
     :path: ".symlinks/plugins/google_mobile_ads/ios"
   image_picker_ios:
@@ -299,6 +311,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   app_links: e7a6750a915a9e161c58d91bc610e8cd1d4d0ad0
   app_tracking_transparency: e169b653478da7bb15a6c61209015378ca73e375
+  AppLovinSDK: a892bbeff744749a8121bd863aa1399f7eef6ef1
   background_fetch: 39f11371c0dce04b001c4bfd5e782bcccb0a85e2
   cr_file_saver: b2b8ba1ddb30b4040b51a3d6670c7896b45c1f3e
   DKImagePickerController: 946cec48c7873164274ecc4624d19e3da4c1ef3c
@@ -320,10 +333,12 @@ SPEC CHECKSUMS:
   FirebaseSharedSwift: a4e5dfca3e210633bb3a3dfb94176c019211948b
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   flutter_local_notifications: df98d66e515e1ca797af436137b4459b160ad8c9
+  gma_mediation_applovin: 59193fbfe1adad4588cdc6a0eab3ebb637d0ea05
   Google-Mobile-Ads-SDK: 13e6e98edfd78ad8d8a791edb927658cc260a56f
   google_mobile_ads: 2a538d8e42b1813809782792e48f8cf4374c2180
   GoogleAppMeasurement: 987769c4ca6b968f2479fbcc9fe3ce34af454b8e
   GoogleDataTransport: aae35b7ea0c09004c3797d53c8c41f66f219d6a7
+  GoogleMobileAdsMediationAppLovin: 767903aa18db97cc810148bbc3f017a09059e9d1
   GoogleUserMessagingPlatform: a8b56893477f67212fbc8411c139e61d463349f5
   GoogleUtilities: 26a3abef001b6533cf678d3eb38fd3f614b7872d
   image_picker_ios: c560581cceedb403a6ff17f2f816d7fea1421fc1

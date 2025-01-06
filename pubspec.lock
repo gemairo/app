@@ -621,6 +621,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.2"
+  gma_mediation_applovin:
+    dependency: "direct main"
+    description:
+      name: gma_mediation_applovin
+      sha256: "2d10da7501ae9e036366f25f0330fda948c817002cffedad52ce03d9c3a1635c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.0"
   google_mobile_ads:
     dependency: "direct main"
     description:
