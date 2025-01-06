@@ -73,10 +73,16 @@ class _Advertisement extends State<Advertisement> {
 }
 
 class BottomBanner extends StatelessWidget {
-  const BottomBanner({super.key, required this.child, this.isEnabled});
+  const BottomBanner({
+    super.key,
+    required this.child,
+    required this.placement,
+    // this.isEnabled,
+  });
 
   final Widget child;
-  final bool? isEnabled;
+  // final bool? isEnabled;
+  final String placement;
 
   @override
   Widget build(BuildContext context) {
@@ -87,22 +93,31 @@ class BottomBanner extends StatelessWidget {
         ? ""
         : FirebaseRemoteConfig.instance.getString('ads_bottom_size');
 
-    if (isEnabled != null) {
-      showAd = isEnabled!;
-    }
+    // if (isEnabled != null) {
+    //   showAd = isEnabled!;
+    // }
 
     return Column(children: <Widget>[
       Expanded(child: child),
-      if (showAd)
+      if (showAd && placement == 'main')
+        Container(
+          decoration: BoxDecoration(
+              color: Theme.of(context).navigationBarTheme.backgroundColor),
+          child: Advertisement(
+            size: bannerSize == 'large' ? AdSize.largeBanner : AdSize.banner,
+            type: 'static_banner_$placement',
+          ),
+        ),
+      if (showAd && placement == 'subject')
         SafeArea(
           child: Container(
-              decoration: BoxDecoration(
-                  color: Theme.of(context).navigationBarTheme.backgroundColor),
-              child: Advertisement(
-                size:
-                    bannerSize == 'large' ? AdSize.largeBanner : AdSize.banner,
-                type: 'static_banner',
-              )),
+            decoration: BoxDecoration(
+                color: Theme.of(context).navigationBarTheme.backgroundColor),
+            child: Advertisement(
+              size: bannerSize == 'large' ? AdSize.largeBanner : AdSize.banner,
+              type: 'static_banner_$placement',
+            ),
+          ),
         ),
     ]);
   }

@@ -430,7 +430,7 @@ class _Start extends State<Start> {
               ),
             Expanded(
               child: BottomBanner(
-                isEnabled: constraints.maxWidth >= 600,
+                placement: 'main',
                 child: NestedScrollView(
                   headerSliverBuilder:
                       (BuildContext context, bool innerBoxIsScrolled) {

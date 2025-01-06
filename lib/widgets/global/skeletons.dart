@@ -101,54 +101,53 @@ class ScaffoldSkeleton extends StatelessWidget {
       appBar: appBar,
       bottomNavigationBar: bottomNavigationBar,
       backgroundColor: backgroundColor,
-      body: BottomBanner(
-        isEnabled: false,
-        child: RefreshIndicator.adaptive(
-          edgeOffset: (injectOverlap
-                  ? NestedScrollView.sliverOverlapAbsorberHandleFor(context)
-                      .layoutExtent
-                  : 0) ??
-              0,
-          onRefresh: onRefresh ?? () => Future(() {}),
-          notificationPredicate: (notificationPredicate) =>
-              onRefresh != null ? true : false,
-          child: CustomScrollView(
-            slivers: [
-              if (injectOverlap)
-                SliverOverlapInjector(
-                  handle:
-                      NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-                ),
-              if (sliverAppBar != null)
-                DefaultTextStyle(
-                  maxLines: 2,
-                  style: const TextStyle(overflow: TextOverflow.ellipsis),
-                  child: sliverAppBar!,
-                ),
-              children.isNotEmpty
-                  ? SliverList.builder(
-                      addAutomaticKeepAlives: true,
-                      itemCount: children.length + 1,
-                      itemBuilder: (BuildContext context, int index) => index ==
-                              children.length
-                          ? SizedBox(
-                              height:
-                                  MediaQuery.of(context).viewInsets.bottom + 16,
-                            )
-                          : children[index],
-                    )
-                  : SliverFillRemaining(
-                      hasScrollBody: false,
-                      child: Center(
-                        child: Icon(
-                          const IconData(0xf201, fontFamily: "Gemairo"),
-                          size: 64 * .8,
-                          color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                        ),
+      body: RefreshIndicator.adaptive(
+        edgeOffset: (injectOverlap
+                ? NestedScrollView.sliverOverlapAbsorberHandleFor(context)
+                    .layoutExtent
+                : 0) ??
+            0,
+        onRefresh: onRefresh ?? () => Future(() {}),
+        notificationPredicate: (notificationPredicate) =>
+            onRefresh != null ? true : false,
+        child: CustomScrollView(
+          slivers: [
+            if (injectOverlap)
+              SliverOverlapInjector(
+                handle:
+                    NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+              ),
+            if (sliverAppBar != null)
+              DefaultTextStyle(
+                maxLines: 2,
+                style: const TextStyle(overflow: TextOverflow.ellipsis),
+                child: sliverAppBar!,
+              ),
+            children.isNotEmpty
+                ? SliverList.builder(
+                    addAutomaticKeepAlives: true,
+                    itemCount: children.length + 1,
+                    itemBuilder: (BuildContext context, int index) => index ==
+                            children.length
+                        ? SizedBox(
+                            height:
+                                MediaQuery.of(context).viewInsets.bottom + 16,
+                          )
+                        : children[index],
+                  )
+                : SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: Center(
+                      child: Icon(
+                        const IconData(0xf201, fontFamily: "Gemairo"),
+                        size: 64 * .8,
+                        color: Theme.of(context)
+                            .colorScheme
+                            .surfaceContainerHighest,
                       ),
                     ),
-            ],
-          ),
+                  ),
+          ],
         ),
       ),
     );

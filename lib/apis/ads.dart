@@ -91,6 +91,8 @@ class Ads {
         return {
           'banner': 'ca-app-pub-3940256099942544/6300978111',
           'static_banner': 'ca-app-pub-3940256099942544/6300978111',
+          'static_banner_main': 'ca-app-pub-3940256099942544/6300978111',
+          'static_banner_subject': 'ca-app-pub-3940256099942544/6300978111',
           'leaderboard': 'ca-app-pub-3940256099942544/6300978111',
           'native': 'ca-app-pub-3940256099942544/2247696110',
           'interstitial': 'ca-app-pub-3940256099942544/1033173712',
@@ -100,6 +102,8 @@ class Ads {
         return {
           'banner': 'ca-app-pub-3940256099942544/2934735716',
           'static_banner': 'ca-app-pub-3940256099942544/2934735716',
+          'static_banner_main': 'ca-app-pub-3940256099942544/2934735716',
+          'static_banner_subject': 'ca-app-pub-3940256099942544/2934735716',
           'leaderboard': 'ca-app-pub-3940256099942544/2934735716',
           'native': 'ca-app-pub-3940256099942544/3986624511',
           'interstitial': 'ca-app-pub-3940256099942544/4411468910',
@@ -141,6 +145,10 @@ class Ads {
   }
 
   Widget bannerAd(BuildContext context, {AdSize size = AdSize.largeBanner}) {
+    if (FirebaseRemoteConfig.instance.getBool('ads_random_enabled') == false) {
+      return const SizedBox();
+    }
+
     Widget googleAd = Container(
       constraints: BoxConstraints(
         minHeight: size == AdSize.banner ? 10 : 70.0 + 7.0 + 7.0,

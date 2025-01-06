@@ -167,6 +167,7 @@ class _SubjectStatisticsView extends State<SubjectStatisticsView> {
           title: Text(widget.subject.name),
         ),
         body: BottomBanner(
+          placement: 'subject',
           child: RefreshIndicator.adaptive(
             onRefresh: () async {
               // We can't really refresh a specific subject, so we will just
